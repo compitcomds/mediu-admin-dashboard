@@ -3,6 +3,7 @@
       <!-- Sidebar -->
       <Sidenav />
       <div class="ml-64 flex-1 overflow-y-auto p-8 mt-10 bg-gray-100 ">
+        <NavigationButton />
         <div>
           <!-- Header -->
           <div class="flex justify-between items-center mb-4">

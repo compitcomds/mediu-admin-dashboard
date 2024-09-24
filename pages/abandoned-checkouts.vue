@@ -3,6 +3,7 @@
       <!-- Sidebar -->
       <Sidenav />
       <div class="ml-64 flex-1 overflow-y-auto p-8 mt-10">
+        <NavigationButton />
         <div>
           <!-- Header -->
           <h1 class="text-2xl font-semibold mb-4">Abandoned Checkouts</h1>

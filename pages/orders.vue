@@ -2,6 +2,7 @@
   <div class="flex h-screen">
     <Sidenav />
     <div class="ml-64 flex-1 overflow-y-auto p-8 mt-10 bg-gray-100 ">
+      <NavigationButton />
       <div class="">
         <div class="flex justify-between items-center mb-4">
           <h1 class="text-2xl font-semibold">Orders: All locations</h1>
@@ -12,11 +13,11 @@
             <button class="bg-gray-200 py-2 px-4 rounded hover:bg-gray-300">
               More actions
             </button>
-            <button
+            <nuxt-link to="/create-order"
               class="bg-black text-white py-2 px-4 rounded hover:bg-gray-800"
             >
               Create order
-            </button>
+            </nuxt-link>
           </div>
         </div>
 

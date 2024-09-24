@@ -23,7 +23,7 @@
                 <span :class="{'rotate-180': dropdowns.products}" class="transition-transform transform"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg></span>
               </div>
               <ul v-if="dropdowns.products" class="ml-4 space-y-1 mt-1">
-                <li><a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded">All Products</a></li>
+                <li><a href="/product" class="block py-1 px-2 hover:bg-gray-400 rounded">All Products</a></li>
                 <li><a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded">Collections</a></li>
                 <li><a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded">Inventory</a></li>
                 <li><a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded">Purchase Orders</a></li>

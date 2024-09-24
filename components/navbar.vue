@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-black flex items-center justify-between px-4 py-4 fixed w-full">
+    <div class="bg-black flex items-center justify-between px-4 py-4 fixed z-50 w-full">
       <!-- Shopify Logo -->
       <div class="flex items-center space-x-2">
         <span class="text-white text-lg font-bold">MediU Admin Dashboard</span>
