@@ -1,5 +1,5 @@
 <template>
-    <aside class="w-64 bg-gray-200 text-black p-4 fixed inset-y-0 left-0 top-16">
+    <aside class="w-64 bg-gray-200 text-black p-4 fixed inset-y-0 left-0 top-16 hidden lg:block">
         <h1 class="text-2xl font-bold mb-6">Admin Dashboard</h1>
         <nav>
           <ul>
@@ -24,7 +24,7 @@
               </div>
               <ul v-if="dropdowns.products" class="ml-4 space-y-1 mt-1">
                 <li><a href="/product" class="block py-1 px-2 hover:bg-gray-400 rounded">All Products</a></li>
-                <li><a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded">Collections</a></li>
+                <li><a href="/collections" class="block py-1 px-2 hover:bg-gray-400 rounded">Collections</a></li>
                 <li><a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded">Inventory</a></li>
                 <li><a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded">Purchase Orders</a></li>
                 <li><a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded">Transfers</a></li>
