@@ -1,15 +1,16 @@
 <template>
-  <div class="border rounded-md p-4 bg-white w-full mx-auto">
+  <div class="border rounded-md p-4 bg-white w-full  mx-auto">
     <h3 class="font-bold text-lg mb-4">Products</h3>
-    <div class="flex items-center mb-4">
-      <div class="relative mr-2">
-        <button class="bg-white border px-4 py-2 rounded flex items-center" @click="toggleSearchCriteriaDropdown">
+    <div class="flex flex-wrap items-center mb-4 space-y-2 sm:space-y-0">
+      <!-- Search Criteria Dropdown -->
+      <div class="relative w-full sm:w-auto sm:mr-2">
+        <button class="bg-white border px-4 py-2 w-full sm:w-auto rounded flex items-center justify-between" @click="toggleSearchCriteriaDropdown">
           Search by: {{ selectedSearchCriteria }}
           <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
-        <div v-if="showSearchCriteriaDropdown" class="absolute mt-1 left-0 w-48 bg-white border rounded shadow-lg z-10">
+        <div v-if="showSearchCriteriaDropdown" class="absolute mt-1 left-0 w-full sm:w-48 bg-white border rounded shadow-lg z-10">
           <ul>
             <li v-for="criteria in searchCriteria" :key="criteria" class="px-4 py-2 cursor-pointer hover:bg-gray-100" @click="selectSearchCriteria(criteria)">
               {{ criteria }}
@@ -17,23 +18,29 @@
           </ul>
         </div>
       </div>
+      
+      <!-- Search Input -->
       <input
         type="text"
         :placeholder="'Search products by ' + selectedSearchCriteria"
-        class="border p-2 rounded-md flex-1 mr-2"
+        class="border p-2 rounded-md flex-1 w-full sm:w-auto"
         v-model="searchText"
       />
-      <button @click="openModal" class="bg-blue-600 text-white px-4 py-2 rounded mr-2">
+      
+      <!-- Browse Button -->
+      <button @click="openModal" class="bg-blue-600 text-white px-4 py-2 md:ml-1 rounded w-full sm:w-auto">
         Browse
       </button>
-      <div class="relative">
-        <button class="bg-white border px-4 py-2 rounded flex items-center" @click="toggleSortDropdown">
+      
+      <!-- Sort Dropdown -->
+      <div class="relative w-full sm:w-auto sm:ml-2 mt-2 sm:mt-0">
+        <button class="bg-white border px-4 py-2 w-full sm:w-auto rounded flex items-center justify-between" @click="toggleSortDropdown">
           Sort: {{ selectedSort }}
           <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
-        <div v-if="showSortDropdown" class="absolute mt-1 right-0 w-48 bg-white border rounded shadow-lg z-10">
+        <div v-if="showSortDropdown" class="absolute mt-1 right-0 w-full sm:w-48 bg-white border rounded shadow-lg z-10">
           <ul>
             <li v-for="option in sortOptions" :key="option" class="px-4 py-2 cursor-pointer hover:bg-gray-100" @click="selectSortOption(option)">
               {{ option }}
@@ -42,6 +49,8 @@
         </div>
       </div>
     </div>
+    
+    <!-- Product List or Placeholder -->
     <div v-if="filteredProducts.length === 0" class="text-center p-8 text-gray-500">
       <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M9 12h6M6 17h12M3 7l3 14h12l3-14H3z"></path>
@@ -52,21 +61,21 @@
       <div
         v-for="(product, index) in sortedProducts"
         :key="index"
-        class="flex items-center justify-between p-4 border-b"
+        class="flex flex-wrap items-center justify-between p-4 border-b"
       >
-        <div class="flex items-center">
+        <div class="flex items-center w-full sm:w-auto">
           <img :src="product.image" alt="product image" class="w-12 h-12 rounded mr-4"/>
           <span class="mr-4">{{ index + 1 }}.</span>
           <span>{{ product.name }}</span>
         </div>
-        <div class="text-sm text-green-600">{{ product.status }}</div>
-        <button class="text-red-500 ml-4" @click="removeProduct(index)">x</button>
+        <div class="text-sm text-green-600 mt-2 sm:mt-0">{{ product.status }}</div>
+        <button class="text-red-500 ml-4 mt-2 sm:mt-0" @click="removeProduct(index)">x</button>
       </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal for Adding Products -->
     <div class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50" v-if="isModalOpen">
-      <div class="bg-white rounded-lg shadow-xl w-full max-w-lg">
+      <div class="bg-white rounded-lg shadow-xl w-full max-w-lg lg:max-w-xl xl:max-w-2xl">
         <div class="p-4 border-b">
           <h2 class="text-xl font-semibold">Add products</h2>
         </div>
