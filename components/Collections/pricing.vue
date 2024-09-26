@@ -1,60 +1,33 @@
 <template>
-    <div class="bg-white p-6 rounded-xl shadow-md">
-        <!-- Pricing -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Pricing</label>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
-            <div>
-              <label class="block text-sm font-medium text-gray-500">Price</label>
-              <input type="number"
-                class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="0.00" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-500">Compare at price</label>
-              <input type="number"
-                class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="0.00" />
-            </div>
-          </div>
-  
-          <div class="mt-4 flex items-center">
-            <input id="tax-checkbox" name="tax-checkbox" type="checkbox"
-              class="h-4 w-4 text-blue-600 border-gray-300 rounded" />
-            <label for="tax-checkbox" class="ml-2 block text-sm text-gray-900">Charge tax on this product</label>
-          </div>
-          <h2 class="text-blue-600 my-4">Manage international pricing</h2>
-          <div class="border-t"></div>
-          <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-500">Cost per item</label>
-              <input type="number"
-                class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="0.00" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-500">Profit</label>
-              <input type="number"
-                class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="0.00" />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-500">Margin</label>
-              <input type="number"
-                class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                placeholder="0.00" />
-            </div>
-          </div>
-        </div>
-      </div>
+  <div class="border rounded-md p-4 bg-white w-full  mx-auto">
+    <h3 class="font-bold text-lg mb-2">Collection type</h3>
+    <div>
+      <label class="flex items-center space-x-2 mb-4">
+        <input type="radio" name="collectionType" value="manual" class="form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" v-model="selectedType" />
+        <span class="text-sm">Manual</span>
+      </label>
+      <p class="text-sm text-gray-500 mb-6">Add products to this collection one by one. <a href="#" class="text-blue-600">Learn more about manual collections</a>.</p>
+      <label class="flex items-center space-x-2">
+        <input type="radio" name="collectionType" value="automated" class="form-radio h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500" v-model="selectedType" />
+        <span class="text-sm">Automated</span>
+      </label>
+      <p class="text-sm text-gray-500">Existing and future products that match the conditions you set will automatically be added to this collection. <a href="#" class="text-blue-600">Learn more about automated collections</a>.</p>
+    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-        
-    }
+export default {
+  data() {
+    return {
+      selectedType: 'manual',
+    };
+  },
+};
 </script>
 
 <style scoped>
-
+.form-radio {
+  @apply h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500;
+}
 </style>

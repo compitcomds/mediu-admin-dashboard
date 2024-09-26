@@ -1,17 +1,8 @@
 <!-- components/AdditionalDetails.vue -->
 <template>
   <div class="space-y-8 h-fit">
-    <!-- Status -->
-    <div class=" bg-white p-6 rounded-2xl">
-      <label class="block text-sm font-medium text-gray-700">Status</label>
-      <select
-        class="mt-1 block w-full border p-3 border-gray-300 p-3 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-        <option>Active</option>
-        <option>Draft</option>
-        <!-- <option>Archived</option> -->
-      </select>
-    </div>
-
+    
+    
     <!-- Publishing -->
     <div class=" bg-white p-6 rounded-2xl">
       <div class="flex items-center justify-between">
@@ -47,25 +38,7 @@
         </div>
       </div>
     </div>
-
-    <!-- Product Organization -->
-    <div class=" bg-white p-6 rounded-2xl">
-      <label class="block text-sm font-medium text-gray-700">Product organization</label>
-      <div class="grid grid-cols-1 gap-4 mt-1">
-        <input type="text"
-          class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          placeholder="Product type">
-        <input type="text"
-          class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          placeholder="Vendor">
-        <input type="text"
-          class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          placeholder="Collections">
-        <input type="text"
-          class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-          placeholder="Tags">
-      </div>
-    </div>
+    <CollectionsMedia />   
 
     <!-- Theme Template -->
     <div class=" bg-white p-6 rounded-2xl">

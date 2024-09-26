@@ -20,7 +20,7 @@
         <NavigationButton />
   
         <!-- Header Section -->
-        <HeaderSection class="mb-6" />
+        <CollectionsHeader class="mb-6" />
   
         <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
           <!-- Main Form Section -->

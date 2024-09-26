@@ -5,15 +5,11 @@
       <!-- Title and Description -->
       <CollectionsTitle />
 
-      <!-- Media Upload -->
-      <CollectionsMedia />
-      <!-- <CollectionsCategory /> -->
+      
     </div>
     <CollectionsPricing />
     <CollectionsInventory />
-    <CollectionsShipping />
-    <CollectionsVarients />
-    <CollectionsMetafields />
+    
     <CollectionsSearchEngine />
   </div>
 </template>
