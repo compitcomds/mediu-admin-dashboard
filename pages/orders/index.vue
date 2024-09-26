@@ -60,7 +60,7 @@
                 <th class="px-4 py-3 border-b border-gray-200">
                   Delivery method
                 </th>
-                <th class="px-4 py-3 border-b border-gray-200">Tags</th>
+                <th class="px-4 py-3 border-b border-gray-200">View</th>
               </tr>
             </thead>
             <tbody>
@@ -127,7 +127,7 @@
                   
                 </td>
                 <td class="px-4 py-3 border-b border-gray-200 ">
-                  
+                  <nuxt-link :to="`/orders/${order.id}`" class="bg-black text-white font-semibold px-2 py-1 rounded-md shadow-gray-800">Click</nuxt-link>
                 </td>
               </tr>
             </tbody>
