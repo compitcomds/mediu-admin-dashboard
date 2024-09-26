@@ -1,8 +1,8 @@
 <template>
-    <div class="bg-black flex items-center justify-between px-4 py-4 fixed z-50 w-full">
+    <div class="bg-[#28574e] flex items-center justify-between px-4 py-4 fixed z-50 w-full">
       <!-- Shopify Logo -->
       <div class="flex items-center space-x-2">
-        <span class="text-white text-lg font-bold">MediU Admin Dashboard</span>
+        <img src="https://ccdstest.b-cdn.net/Medi%20u/logo%202.png" alt="" class="w-5/6">
       </div>
   
   
