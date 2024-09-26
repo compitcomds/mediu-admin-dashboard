@@ -7,8 +7,8 @@
 
       
     </div>
-    <CollectionsPricing />
-    <CollectionsInventory />
+    <CollectionsType />
+    <CollectionsProductAdd />
     
     <CollectionsSearchEngine />
   </div>
