@@ -73,3 +73,47 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+
+
+orders: [
+        {
+          id: "#1002",
+          date: "Aug 13 at 5:09 am",
+          customer: "No customer",
+          channel: "Headless",
+          total: "₹1,045.42",
+          paymentStatus: "Paid",
+          fulfillmentStatus: "Unfulfilled",
+          items: "1 item",
+          deliveryStatus: "Standard",
+          deliveryMethod: "Standard",
+          tags: "-",
+        },
+        {
+          id: "#1001",
+          date: "Aug 13 at 4:32 am",
+          customer: "No customer",
+          channel: "Headless",
+          total: "₹1,045.42",
+          paymentStatus: "Paid",
+          fulfillmentStatus: "Unfulfilled",
+          items: "2 items",
+          deliveryStatus: "Standard",
+          deliveryMethod: "Standard",
+          tags: "-",
+        },
+        {
+          id: "#1003",
+          date: "Aug 13 at 4:32 am",
+          customer: "No customer",
+          channel: "Headless",
+          total: "₹1,045.42",
+          paymentStatus: "Paid",
+          fulfillmentStatus: "Unfulfilled",
+          items: "2 items",
+          deliveryStatus: "Standard",
+          deliveryMethod: "Standard",
+          tags: "-",
+        },
+      ],

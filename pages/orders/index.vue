@@ -76,52 +76,58 @@
                   {{ order.id }}
                 </td>
                 <td class="px-4 py-3 border-b border-gray-200">
-                  {{ order.date }}
+                  {{ order.created_at }}
                 </td>
                 <td class="px-4 py-3 border-b border-gray-200">
-                  {{ order.customer }}
+                  {{ order.customer?.first_name }}
+                  {{ order.customer?.last_name }}
                 </td>
                 <td class="px-4 py-3 border-b border-gray-200">
                   {{ order.channel }}
                 </td>
                 <td class="px-4 py-3 border-b border-gray-200">
-                  {{ order.total }}
+                  {{ order.total_price }}
                 </td>
                 <td class="px-4 py-3 border-b border-gray-200">
                   <span
                     class="inline-flex items-center px-2 py-1 text-xs font-semibold leading-none"
                     :class="
-                      order.paymentStatus === 'Paid'
-                        ? 'text-gray-700 bg-gray-200'
-                        : 'text-red-700 bg-red-100'
+                      order.financial_status === 'paid'
+                        ? 'text-gray-700 bg-gray-200 p-1 rounded-full'
+                        : 'text-red-700 bg-red-100 p-1 rounded-full '
                     "
                   >
-                    {{ order.paymentStatus }}
+                    {{ order.financial_status }}
                   </span>
                 </td>
                 <td class="px-4 py-3 border-b border-gray-200">
                   <span
                     class="inline-flex items-center px-2 py-1 text-xs font-semibold leading-none"
                     :class="
-                      order.fulfillmentStatus === 'Unfulfilled'
-                        ? 'text-yellow-800 bg-yellow-100'
-                        : 'text-green-700 bg-green-100'
+                      order.fulfillment_status !== null
+                        ? 'text-yellow-800 bg-yellow-100 p-1 rounded-full'
+                        : 'text-red-600 bg-red-100 p-1 rounded-full'
                     "
                   >
-                    {{ order.fulfillmentStatus }}
+                    {{
+                      order.fulfillment_status !== null
+                        ? order.fulfillment_status
+                        : "unfulfilled"
+                    }}
                   </span>
                 </td>
-                <td class="px-4 py-3 border-b border-gray-200">
-                  {{ order.items }}
+                <td class="px-4 py-3 border-b border-gray-200   ">
+                  {{order.line_items.length}}
+                  
                 </td>
-                <td class="px-4 py-3 border-b border-gray-200">
-                  {{ order.deliveryStatus }}
+                <td class="px-4 py-3 border-b border-gray-200 ">
+                  
                 </td>
-                <td class="px-4 py-3 border-b border-gray-200">
-                  {{ order.deliveryMethod }}
+                <td class="px-4 py-3 border-b border-gray-200 ">
+                  
                 </td>
-                <td class="px-4 py-3 border-b border-gray-200">
-                  {{ order.tags }}
+                <td class="px-4 py-3 border-b border-gray-200 ">
+                  
                 </td>
               </tr>
             </tbody>
@@ -130,7 +136,8 @@
 
         <!-- Order Help Link -->
         <div class="mt-4 text-center text-gray-500">
-          Learn more about <a href="#" class="text-blue-600">orders</a>
+          Learn more about <a href="#" class="text-blue-600">orders</a> data --
+        
         </div>
       </div>
     </div>
@@ -139,55 +146,38 @@
 
 <script>
 export default {
-  name: "OrdersPage",
   data() {
     return {
-      orders: [
-        {
-          id: "#1002",
-          date: "Aug 13 at 5:09 am",
-          customer: "No customer",
-          channel: "Headless",
-          total: "₹1,045.42",
-          paymentStatus: "Paid",
-          fulfillmentStatus: "Unfulfilled",
-          items: "1 item",
-          deliveryStatus: "Standard",
-          deliveryMethod: "Standard",
-          tags: "-",
-        },
-        {
-          id: "#1001",
-          date: "Aug 13 at 4:32 am",
-          customer: "No customer",
-          channel: "Headless",
-          total: "₹1,045.42",
-          paymentStatus: "Paid",
-          fulfillmentStatus: "Unfulfilled",
-          items: "2 items",
-          deliveryStatus: "Standard",
-          deliveryMethod: "Standard",
-          tags: "-",
-        },
-        {
-          id: "#1003",
-          date: "Aug 13 at 4:32 am",
-          customer: "No customer",
-          channel: "Headless",
-          total: "₹1,045.42",
-          paymentStatus: "Paid",
-          fulfillmentStatus: "Unfulfilled",
-          items: "2 items",
-          deliveryStatus: "Standard",
-          deliveryMethod: "Standard",
-          tags: "-",
-        },
-      ],
+      orders: [],
+      error: null,
     };
+  },
+  async mounted() {
+    const isAuthenticated = localStorage.getItem("authenticated") === "true";
+    if (!true) {
+      this.$router.push("/login");
+    } else {
+      await this.fetchOrders();
+    }
+  },
+  methods: {
+    async fetchOrders() {
+      try {
+        const response = await fetch("/api/orders");
+        const data = await response.json();
+
+        if (response.ok) {
+          this.orders = data.orders;
+        } else {
+          this.error = data.error || "Failed to fetch orders";
+        }
+      } catch (error) {
+        this.error = error.message;
+      }
+    },
   },
 };
 </script>
-
 <style scoped>
 /* Custom styles for the page if needed */
 </style>
