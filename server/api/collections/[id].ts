@@ -15,6 +15,7 @@ export default defineEventHandler(async (event) => {
     if (
       !body.title ||
       !body.body_html ||
+      
       typeof body.published === "undefined"
     ) {
       throw new Error(

@@ -9,45 +9,52 @@
       <div
         class="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0"
       >
-        <h1 class="text-xl md:text-2xl font-semibold">Products</h1>
-        <nuxt-link
-          to="/createCollection"
+        <h1 class="text-xl md:text-2xl font-semibold">Collections</h1>
+        <!-- <nuxt-link
+          to="/collections/createCollection"
           class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
         >
           Create Collection
-        </nuxt-link>
+        </nuxt-link> -->
+        <button class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4" @click="createCollection">Create New Collection</button>
       </div>
 
       <FilterBarCollections @changeTab="setTab" />
 
-      <!-- Responsive Product Cards for Small and Medium Screens -->
+      <!-- Responsive Collection Cards for Small and Medium Screens -->
       <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:hidden">
         <div
-          v-for="(product, index) in filteredProducts"
-          :key="product.id"
+          v-for="(collection, index) in filteredCollections"
+          :key="collection.id"
           class="bg-white p-4 rounded-lg shadow-md space-y-2"
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center">
               <img
-                :src="product.image"
-                alt="Product Image"
+                :src="collection.image?.src || '/default-image.jpg'"
+                alt="Collection Image"
                 class="w-16 h-16 mr-4 rounded"
               />
               <div>
-                <p class="text-lg font-semibold">{{ product.name }}</p>
-                <p class="text-sm text-gray-500">{{ product.desc }}</p>
+                <p class="text-lg font-semibold">{{ collection.title }}</p>
+                <p class="text-sm text-gray-500">{{ collection.body_html }}</p>
               </div>
             </div>
             <input type="checkbox" />
           </div>
-          <div class="text-sm text-gray-700 space-y-1">
-            <p><strong>Inventory:</strong> {{ product.inventory }}</p>
-            <p><strong>Vendor:</strong> {{ product.vendor }}</p>
-          </div>
           <div class="flex justify-end space-x-2">
-            <button class="bg-gray-200 text-sm px-3 py-1 rounded-md">Edit</button>
-            <button class="bg-gray-200 text-sm px-3 py-1 rounded-md">Delete</button>
+            <button
+              @click="selectCollection(collection)"
+              class="bg-gray-200 text-sm px-3 py-1 rounded-md"
+            >
+              Edit
+            </button>
+            <button
+              @click="deleteCollection(collection.id)"
+              class="bg-red-500 text-white text-sm px-3 py-1 rounded-md"
+            >
+              Delete
+            </button>
           </div>
         </div>
       </div>
@@ -67,101 +74,109 @@
               <th
                 class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
+                Image
+              </th>
+              <th
+                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Title
               </th>
-
               <th
                 class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
-                Products
-              </th>
-
-              <th
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Product Conditions
+                Description
               </th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
             <tr
-              v-for="(product, index) in filteredProducts"
-              :key="product.id"
+              v-for="(collection, index) in filteredCollections"
+              :key="collection.id"
               class="hover:bg-gray-100"
             >
               <td class="px-4 py-4 whitespace-nowrap">
                 <input type="checkbox" />
               </td>
-              <td class="px-4 py-4 break-words whitespace-normal relative group">
-                <a :href="product.link" class="flex items-center hover:text-blue-600">
+              <td class="px-4 py-4 break-words whitespace-normal">
+                <div class="flex items-center">
                   <img
-                    :src="product.image"
-                    alt="Product Image"
-                    class="w-10 h-10 mr-3 rounded"
+                    :src="collection.image?.src || '/default-image.jpg'"
+                    alt="Collection Image"
+                    class="w-16 h-16 mr-4 rounded"
                   />
                   <div>
-                    <p class="hover:underline">{{ product.name }}</p>
-                    <div class="relative group inline-block">
-                      {{ product.desc }}
-                      <div
-                        class="opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute w-48 mt-2 bg-white text-gray-800 border border-gray-300 rounded-lg shadow-lg py-2 z-10"
-                      >
-                        <p class="px-4 py-2">{{ product.hover }}</p>
-                      </div>
-                    </div>
+                    <p class="hover:underline">{{ collection.title }}</p>
                   </div>
-                </a>
+                </div>
               </td>
-
               <td class="px-4 py-4 break-words whitespace-normal">
-                {{ product.inventory }}
-              </td>
-
-              <td class="px-4 py-4 break-words whitespace-normal">
-                {{ product.vendor }}
+                {{ collection.body_html }}
               </td>
             </tr>
           </tbody>
         </table>
-        
-        {{collections }}
+        {{ collections[0] }}
       </div>
     </div>
   </div>
- 
 </template>
 
 <script>
+import FilterBarCollections from "~/components/FilterBarCollections"; // Assuming the component is named FilterBarCollections
+import Sidenav from "~/components/Sidenav";
+import NavigationButton from "~/components/NavigationButton";
 import axios from "axios";
 
 export default {
+  components: {
+    FilterBarCollections,
+    Sidenav,
+    NavigationButton,
+  },
   data() {
     return {
       collections: [],
+      activeTab: "All",
       selectedCollection: null,
     };
   },
-  // async mounted() {
-  //   const isAuthenticated = localStorage.getItem('authenticated') === 'true';
-  //   if (!isAuthenticated) {
-  //     // Redirect to login page if not authenticated
-  //     this.$router.push('/login');
-  //   } else {
-  //     await this.fetchCollections();
-  //   }
-  // },
+  async mounted() {
+    const isAuthenticated = localStorage.getItem("authenticated") === "true";
+    if (!true) {
+      // Redirect to login page if not authenticated
+      this.$router.push("/login");
+    } else {
+      await this.fetchCollections();
+    }
+  },
+  computed: {
+    filteredCollections() {
+      return this.collections; // Return all collections without filtering
+    },
+  },
   methods: {
+    setTab(tab) {
+      this.activeTab = tab;
+    },
     async fetchCollections() {
       try {
         const response = await axios.get("/api/collections");
         this.collections = response.data;
-        console.log(this.collections)
       } catch (error) {
         console.error("Error fetching collections:", error);
       }
     },
+    async deleteCollection(id) {
+      try {
+        await axios.delete(`/api/collections/${id}`);
+        this.collections = this.collections.filter((collection) => collection.id !== id);
+      } catch (error) {
+        console.error("Error deleting collection:", error);
+      }
+    },
     selectCollection(collection) {
       this.selectedCollection = { ...collection };
+      this.$router.push(`/collections/edit/${collection.id}`); // Redirect to edit page
     },
     cancelEdit() {
       this.selectedCollection = null;
@@ -171,7 +186,6 @@ export default {
         const newCollection = {
           title: "New Collection",
           body_html: "Description of the new collection",
-          published: true,
         };
 
         const response = await axios.post("/api/create-collections", newCollection);
@@ -191,7 +205,6 @@ export default {
         const updatedCollection = {
           title: this.selectedCollection.title,
           body_html: this.selectedCollection.body_html,
-          published: true,
         };
 
         const response = await axios.put(
@@ -215,6 +228,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 /* Responsive grid layout for small and medium screens */
