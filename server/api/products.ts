@@ -36,6 +36,7 @@ export default defineEventHandler(async (event) => {
           images: productImages.map((image: any) => ({
             attachment: image.split(",")[1],
           })),
+          metafields: product?.metafields || [],
           variants: [
             {
               price: product.price,
@@ -60,6 +61,7 @@ export default defineEventHandler(async (event) => {
       }
 
       const data = await response.json();
+
       return data;
     } catch (error) {
       return { error: error };

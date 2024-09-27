@@ -150,26 +150,6 @@
             </div>
           </div>
 
-          <!-- Category -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700"
-              >Category</label
-            >
-            <select
-              v-model="selectedCategory"
-              class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            >
-              <option disabled value="">Select a category</option>
-              <option
-                v-for="(category, index) in categories"
-                :key="index"
-                :value="category"
-              >
-                {{ category }}
-              </option>
-            </select>
-          </div>
-
           <!-- Pricing -->
           <div class="bg-white p-6 rounded-xl shadow-md">
             <label class="block text-sm font-medium text-gray-700"
@@ -248,12 +228,60 @@
               </div>
             </div>
           </div>
+
+          <!-- Metafields -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mt-6"
+              >Safety Information & Precaution</label
+            >
+            <textarea
+              v-model="customMetafields.safety_information_precaution"
+              class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              rows="4"
+              placeholder="Safety information & precaution"
+            ></textarea>
+
+            <label class="block text-sm font-medium text-gray-700 mt-6"
+              >How to use?</label
+            >
+            <textarea
+              v-model="customMetafields.how_to_use"
+              class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              rows="4"
+              placeholder="How to use"
+            ></textarea>
+
+            <label class="block text-sm font-medium text-gray-700 mt-6"
+              >Key Benefits</label
+            >
+            <textarea
+              v-model="customMetafields.key_benefits"
+              class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              rows="4"
+              placeholder="Key benefits"
+            ></textarea>
+
+            <label class="block text-sm font-medium text-gray-700 mt-6"
+              >Manufacturer</label
+            >
+            <textarea
+              v-model="customMetafields.manufacturers"
+              class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              rows="4"
+              placeholder="Manufacturers"
+            ></textarea>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+const richTextMetafields = [
+  "safety_information_precaution",
+  "how_to_use",
+  "key_benefits",
+];
 export default {
   data() {
     return {
@@ -265,6 +293,12 @@ export default {
       },
       files: [], // To store uploaded images
       maxFiles: 5, // Max number of allowed images
+      customMetafields: {
+        safety_information_precaution: "",
+        how_to_use: "",
+        key_benefits: "",
+        manufacturers: "",
+      },
     };
   },
   methods: {
@@ -284,13 +318,22 @@ export default {
         const base64Images = await Promise.all(
           this.files.map((fileObj) => convertFileToBase64(fileObj.file))
         );
+
+        const metafields = Object.keys(this.customMetafields).map((key) => ({
+          key,
+          value: richTextMetafields.includes(key)
+            ? convertTextToRichText(this.customMetafields[key])
+            : this.customMetafields[key],
+          namespace: "custom",
+        }));
+
         const response = await fetch("/api/products", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            product: this.newProduct,
+            product: { ...this.newProduct, metafields },
             productImages: base64Images,
           }),
         });
