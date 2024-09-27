@@ -66,8 +66,8 @@
               <label class="block text-gray-700">Image</label>
               <input type="file" @change="onImageSelected" />
               <img
-                v-if="newCollection.image"
-                :src="newCollection.image"
+                v-if="collectionImage.image"
+                :src="collectionImage.preview"
                 class="mt-2 w-32 h-32 object-cover"
               />
             </div>
@@ -123,9 +123,9 @@ export default {
       newCollection: {
         title: "",
         body_html: "",
-
         collects: [],
       },
+      collectionImage: { image: null, preview: null },
       sidebarVisible: false,
     };
   },
@@ -162,16 +162,21 @@ export default {
     onImageSelected(event) {
       const file = event.target.files[0];
       if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.newCollection.image = e.target.result; // Store base64 string
-        };
-        reader.readAsDataURL(file);
+        this.collectionImage.image = file;
+        this.collectionImage.preview = URL.createObjectURL(file);
       }
     },
     async createCollection() {
       try {
         const { title, body_html, collects } = this.newCollection; // Collects should be directly from newCollection
+
+        let image = null;
+        if (this.collectionImage.image)
+          image = {
+            attachment: (
+              await convertFileToBase64(this.collectionImage.image)
+            ).split(",")[1],
+          };
 
         // Construct the payload as per the valid format
         const newCollection = {
@@ -179,16 +184,19 @@ export default {
             title,
             body_html,
             collects, // This should be an array of objects like [{ product_id: 123 }]
+            image,
           },
         };
 
-        const response = await axios.post("/api/collections", newCollection);
-        console.log("Response data:", response.data); // Log the complete response
+        const response = await axios.post(
+          "/api/create-collections",
+          newCollection
+        );
 
         // Check if the response has the expected format
         if (response.data && response.data.custom_collection) {
           this.collections.push(response.data.custom_collection);
-          console.log("Collection created:", response.data.custom_collection);
+          alert("Successfully created the collection");
           this.newCollection = {
             title: "",
             body_html: "",
@@ -196,9 +204,12 @@ export default {
             collects: [],
           };
         } else {
-          console.error("Unexpected response format:", response);
+          throw new Error(
+            response.statusText || "Error while creating the collection"
+          );
         }
       } catch (error) {
+        alert(error.message);
         console.error("Error creating collection:", error);
       }
     },
