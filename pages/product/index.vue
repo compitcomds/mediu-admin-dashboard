@@ -36,22 +36,25 @@
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center">
-             
               <img
-                  v-if="product.image"
-                  :src="product.image.src"
-                  :alt="product.title"
-                 class="w-16 h-16 mr-4 rounded"
-                />
+                v-if="product.image"
+                :src="product.image.src"
+                :alt="product.title"
+                class="w-16 h-16 mr-4 rounded"
+              />
               <div>
-                <p class="text-lg font-semibold">{{ product.title }}</p>
+                <p class="text-lg font-semibold" @click="redirectToEditPage(product.id)">
+                  {{ product.title }}
+                </p>
                 <p class="text-sm text-gray-500">{{ product.status }}</p>
               </div>
             </div>
           </div>
           <div class="text-sm text-gray-700 space-y-1">
-            <p><strong>Inventory:</strong> {{ product.variants[0].inventory_quantity  }}</p>
-            
+            <p>
+              <strong>Inventory:</strong> {{ product.variants[0].inventory_quantity }}
+            </p>
+
             <p><strong>Type:</strong> {{ product.product_type }}</p>
             <p><strong>Vendor:</strong> {{ product.vendor }}</p>
           </div>
@@ -83,7 +86,7 @@
               >
                 Inventory
               </th>
-              
+
               <th
                 class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
@@ -110,7 +113,10 @@
                   class="product-image w-36"
                 />
               </td>
-              <td class="px-4 py-4 break-words whitespace-normal relative group">
+              <td
+                class="px-4 py-4 break-words whitespace-normal relative group cursor-pointer text-blue-600 hover:underline"
+                @click="redirectToEditPage(product.id)"
+              >
                 {{ product.title }}
               </td>
               <td class="px-4 py-4 break-words whitespace-normal">
@@ -125,11 +131,11 @@
                   {{ product.status }}
                 </span>
               </td>
-              
+
               <td class="px-4 py-4 break-words whitespace-normal">
                 {{ product.variants[0].inventory_quantity }}
               </td>
-              
+
               <td class="px-4 py-4 break-words whitespace-normal">
                 {{ product.product_type }}
               </td>
@@ -139,7 +145,6 @@
             </tr>
           </tbody>
         </table>
-       
       </div>
     </div>
   </div>
@@ -164,7 +169,10 @@ export default {
   },
   methods: {
     goToAddProductPage() {
-      this.$router.push("/product/addProduct"); // Ensure this route exists in your router
+      this.$router.push("/product/addProduct");
+    },
+    redirectToEditPage(productId) {
+      this.$router.push(`/product/edit/${productId}`);
     },
     async fetchProducts() {
       try {

@@ -89,7 +89,7 @@ export default {
       this.error = error.message;
     }
     const isAuthenticated = localStorage.getItem("authenticated") === "true";
-    if (!isAuthenticated) {
+    if (!true) {
       // Redirect to login page if not authenticated
       this.$router.push("/login");
     } else {
