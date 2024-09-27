@@ -31,7 +31,9 @@
       @close="toggleSidebar"
     />
 
-    <div class="lg:ml-64 flex-1 overflow-y-auto p-4 mt-10 bg-gray-100 md:p-8 lg:mt-10">
+    <div
+      class="lg:ml-64 flex-1 overflow-y-auto p-4 mt-10 bg-gray-100 md:p-8 lg:mt-10"
+    >
       <NavigationButton />
 
       <!-- Header Section -->
@@ -44,6 +46,7 @@
           <form @submit.prevent="createCollection">
             <div class="mb-4">
               <label class="block text-gray-700">Title</label>
+              {{ newCollection.title }}
               <input
                 type="text"
                 v-model="newCollection.title"
@@ -77,14 +80,17 @@
               >
                 <input
                   type="checkbox"
-                  :value="product.id"
-                  v-model="newCollection.products"
+                  :value="{ product_id: product.id }"
+                  v-model="newCollection.collects"
                   class="mr-2"
                 />
                 <span>{{ product.title }}</span>
               </div>
             </div>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">
+            <button
+              type="submit"
+              class="bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
               Create Collection
             </button>
           </form>
@@ -94,6 +100,8 @@
         <div class="w-full lg:w-1/3">
           <!-- Placeholder for additional details section -->
           <CollectionsAdditionalDetails />
+
+          {{ newCollection }}
         </div>
       </div>
     </div>
@@ -108,12 +116,6 @@ import NavigationButton from "~/components/NavigationButton";
 // import CollectionsAdditionalDetails from "~/components/CollectionsAdditionalDetails";
 
 export default {
-  components: {
-    Sidenav,
-    NavigationButton,
-    CollectionsHeader,
-    CollectionsAdditionalDetails,
-  },
   data() {
     return {
       collections: [],
@@ -121,8 +123,8 @@ export default {
       newCollection: {
         title: "",
         body_html: "",
-        image: null,
-        products: [],
+
+        collects: [],
       },
       sidebarVisible: false,
     };
@@ -169,35 +171,29 @@ export default {
     },
     async createCollection() {
       try {
-        const { title, body_html, image, products } = this.newCollection;
+        const { title, body_html, collects } = this.newCollection; // Collects should be directly from newCollection
 
-        // Prepare image data for Shopify
-        let imageFile = null;
-        if (image) {
-          imageFile = {
-            attachment: image.split(",")[1], // Remove base64 prefix
-            alt: title,
-          };
-        }
-
+        // Construct the payload as per the valid format
         const newCollection = {
-          title,
-          body_html,
-          image: imageFile,
-          products,
+          custom_collection: {
+            title,
+            body_html,
+            collects, // This should be an array of objects like [{ product_id: 123 }]
+          },
         };
 
         const response = await axios.post("/api/collections", newCollection);
+        console.log("Response data:", response.data); // Log the complete response
 
-        if (response.data && response.data.id) {
-          this.collections.push(response.data);
-          console.log("Collection created:", response.data);
-          // Reset form
+        // Check if the response has the expected format
+        if (response.data && response.data.custom_collection) {
+          this.collections.push(response.data.custom_collection);
+          console.log("Collection created:", response.data.custom_collection);
           this.newCollection = {
             title: "",
             body_html: "",
             image: null,
-            products: [],
+            collects: [],
           };
         } else {
           console.error("Unexpected response format:", response);
