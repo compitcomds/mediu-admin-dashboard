@@ -14,8 +14,10 @@
         >
           Create Collection
         </nuxt-link> -->
-        <button class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4" @click="createCollection">Create New
-          Collection</button>
+        <!-- <button class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4" @click="createCollection">Create New
+          Collection</button> -->
+          <nuxt-link class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4" to="collections/createCollection">Create New
+            Collection</nuxt-link>
       </div>
 
       <FilterBarCollections @changeTab="setTab" />
@@ -71,7 +73,7 @@
                 <input type="checkbox" />
               </td>
               <td class="px-4 py-4 break-words whitespace-normal">
-                <img :src="collection.image?.src || '/default-image.jpg'" alt="Collection Image"
+                <img :src="collection.image?.src || 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'" alt="Collection Image"
                   class="w-16 h-16 mr-4 rounded" />
               </td>
               <td class="px-4 py-4 break-words whitespace-normal">
