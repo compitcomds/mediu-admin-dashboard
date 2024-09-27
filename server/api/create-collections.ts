@@ -5,12 +5,13 @@ import config from "~/utils/config";
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event); // Use readBody to get the request body
-
+    console.log('Received body:', body); // Log the body
     const newCollection = {
       custom_collection: {
         title: body.title,
         body_html: body.body_html,
         published: body.published,
+        collects:body.collects
       },
     };
 
