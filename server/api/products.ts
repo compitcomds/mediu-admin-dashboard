@@ -3,10 +3,9 @@ import fetch from "node-fetch";
 
 const shopDomain = "dev-mediu.myshopify.com";
 const accessToken = "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";
+const apiUrl = `https://${shopDomain}/admin/api/2024-07/products.json`;
 
 export default defineEventHandler(async (event) => {
-  const apiUrl = `https://${shopDomain}/admin/api/2024-07/products.json`;
-
   if (event.req.method === "GET") {
     try {
       const response = await fetch(apiUrl, {
@@ -40,7 +39,8 @@ export default defineEventHandler(async (event) => {
           variants: [
             {
               price: product.price,
-              inventory_quantity: product.quantity,
+              inventory_management: "shopify",
+              inventory_quantity: parseInt(product.quantity),
             },
           ],
         },
