@@ -37,14 +37,34 @@
 export default {
   data() {
     return {
-      sidebarVisible: false // Controls the visibility of the sidebar on mobile
+      newProduct: {
+        title: "",
+        price: "",
+        quantity: "",
+      },
     };
   },
   methods: {
-    toggleSidebar() {
-      this.sidebarVisible = !this.sidebarVisible;
-    }
-  }
+    async addProduct() {
+      try {
+        const response = await fetch("/api/products", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(this.newProduct),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to add product");
+        }
+
+        this.$router.push("/product"); // Redirect to product list page
+      } catch (error) {
+        console.error(error.message);
+      }
+    },
+  },
 };
 </script>
 
