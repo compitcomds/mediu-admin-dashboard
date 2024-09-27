@@ -36,22 +36,23 @@
         >
           <div class="flex items-center justify-between">
             <div class="flex items-center">
+             
               <img
-                :src="product.image"
-                alt="Product Image"
-                class="w-16 h-16 mr-4 rounded"
-              />
+                  v-if="product.image"
+                  :src="product.image.src"
+                  :alt="product.title"
+                 class="w-16 h-16 mr-4 rounded"
+                />
               <div>
-                <p class="text-lg font-semibold">{{ product.name }}</p>
+                <p class="text-lg font-semibold">{{ product.title }}</p>
                 <p class="text-sm text-gray-500">{{ product.status }}</p>
               </div>
             </div>
           </div>
           <div class="text-sm text-gray-700 space-y-1">
-            <p><strong>Inventory:</strong> {{ product.inventory }}</p>
-            <p><strong>Total Products:</strong> {{ product.totalProducts }}</p>
-            <p><strong>Category:</strong> {{ product.category }}</p>
-            <p><strong>Type:</strong> {{ product.type }}</p>
+            <p><strong>Inventory:</strong> {{ product.variants[0].inventory_quantity  }}</p>
+            
+            <p><strong>Type:</strong> {{ product.product_type }}</p>
             <p><strong>Vendor:</strong> {{ product.vendor }}</p>
           </div>
         </div>
@@ -82,16 +83,7 @@
               >
                 Inventory
               </th>
-              <th
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Total Products
-              </th>
-              <th
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Category
-              </th>
+              
               <th
                 class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
               >
@@ -115,7 +107,7 @@
                   v-if="product.image"
                   :src="product.image.src"
                   :alt="product.title"
-                  class="product-image"
+                  class="product-image w-36"
                 />
               </td>
               <td class="px-4 py-4 break-words whitespace-normal relative group">
@@ -133,15 +125,11 @@
                   {{ product.status }}
                 </span>
               </td>
-              <td class="px-4 py-4 break-words whitespace-normal">
-                {{ product.inventory }}
-              </td>
+              
               <td class="px-4 py-4 break-words whitespace-normal">
                 {{ product.variants[0].inventory_quantity }}
               </td>
-              <td class="px-4 py-4 break-words whitespace-normal">
-                {{ product.category }}
-              </td>
+              
               <td class="px-4 py-4 break-words whitespace-normal">
                 {{ product.product_type }}
               </td>
