@@ -44,7 +44,7 @@
         <ul>
           <li v-for="event in customer.timeline" :key="event.id" class="mb-4">
             <p class="text-gray-600">{{ event.message }}</p>
-            <p class="text-gray-400">{{ event.time }}</p>
+            <p class="text-gray-400">{{ event.time }}</p> 
           </li>
         </ul>
       </div>
