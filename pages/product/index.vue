@@ -151,7 +151,7 @@
             </tr>
           </tbody>
         </table>
-        {{ products[0] }}
+       
       </div>
     </div>
   </div>
