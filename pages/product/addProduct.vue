@@ -2,6 +2,7 @@
   <div class="flex h-screen">
     <!-- Sidebar -->
     <Sidenav />
+
     <div class="lg:ml-64 flex-1 overflow-y-auto p-8 mt-10 bg-gray-100">
       <NavigationButton />
       <div class="flex justify-between items-center mb-8 border-b pb-4">
@@ -13,7 +14,10 @@
           >
             Discard
           </button>
-          <button @click="addProduct" class="bg-blue-600 text-white px-4 py-2 rounded-md">
+          <button
+            @click="addProduct"
+            class="bg-blue-600 text-white px-4 py-2 rounded-md"
+          >
             Save
           </button>
         </div>
@@ -85,7 +89,9 @@
             </div>
 
             <!-- Display Uploaded Images -->
-            <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div
+              class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+            >
               <div
                 v-if="files.length > 0"
                 class="relative col-span-2 row-span-2 sm:col-span-2 sm:row-span-2 h-60 w-full"
@@ -101,7 +107,11 @@
                   Remove
                 </button>
               </div>
-              <div v-for="(file, index) in files.slice(1)" :key="index" class="relative">
+              <div
+                v-for="(file, index) in files.slice(1)"
+                :key="index"
+                class="relative"
+              >
                 <img
                   :src="file.preview"
                   class="h-24 w-24 object-cover border rounded-md"
@@ -130,7 +140,11 @@
                       d="M12 4v16m8-8H4"
                     />
                   </svg>
-                  <input type="file" class="sr-only" @change="handleFileUpload" />
+                  <input
+                    type="file"
+                    class="sr-only"
+                    @change="handleFileUpload"
+                  />
                 </label>
               </div>
             </div>
@@ -138,7 +152,9 @@
 
           <!-- Category -->
           <div>
-            <label class="block text-sm font-medium text-gray-700">Category</label>
+            <label class="block text-sm font-medium text-gray-700"
+              >Category</label
+            >
             <select
               v-model="selectedCategory"
               class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -156,10 +172,14 @@
 
           <!-- Pricing -->
           <div class="bg-white p-6 rounded-xl shadow-md">
-            <label class="block text-sm font-medium text-gray-700">Pricing</label>
+            <label class="block text-sm font-medium text-gray-700"
+              >Pricing</label
+            >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
               <div>
-                <label class="block text-sm font-medium text-gray-500">Price</label>
+                <label class="block text-sm font-medium text-gray-500"
+                  >Price</label
+                >
                 <input
                   v-model="newProduct.price"
                   type="number"
@@ -194,7 +214,9 @@
 
             <!-- Inventory -->
             <div>
-              <label class="block text-sm font-medium text-gray-700">Inventory</label>
+              <label class="block text-sm font-medium text-gray-700"
+                >Inventory</label
+              >
               <div class="mt-1">
                 <div class="flex items-center">
                   <input
@@ -204,7 +226,9 @@
                     class="h-4 w-4 text-blue-600 border-gray-300 rounded"
                     required
                   />
-                  <label for="track-quantity" class="ml-2 block text-sm text-gray-900"
+                  <label
+                    for="track-quantity"
+                    class="ml-2 block text-sm text-gray-900"
                     >Track quantity</label
                   >
                 </div>
@@ -257,18 +281,26 @@ export default {
     },
     async addProduct() {
       try {
+        const base64Images = await Promise.all(
+          this.files.map((fileObj) => convertFileToBase64(fileObj.file))
+        );
         const response = await fetch("/api/products", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(this.newProduct),
+          body: JSON.stringify({
+            product: this.newProduct,
+            productImages: base64Images,
+          }),
         });
 
         if (!response.ok) {
+          alert("Failed");
           throw new Error("Failed to add product");
         }
 
+        alert("Success");
         this.$router.push("/product"); // Redirect to product list page
       } catch (error) {
         console.error(error.message);
