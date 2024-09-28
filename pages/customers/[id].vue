@@ -17,7 +17,7 @@
               <p class="text-[#28574e] text-lg font-semibold p-6">All time</p>
               <div class="flex flex-col space-y-1 items-center p-6">
                 <h2 class="text-[#28574e] text-lg font-semibold">Amount spent</h2>
-                <p class="text-xl font-semibold">₹{{ formatPrice(customer.amountSpent) }}</p>
+                <p class="text-xl font-semibold">₹{{ formatPrice(totalAmountSpent) }}</p>
               </div>
               <div class="flex flex-col space-y-1 items-center p-6">
                 <h2 class="text-[#28574e] text-lg font-semibold">Orders</h2>
@@ -37,7 +37,7 @@
                     customer.lastOrder.history }}</p>
                 </div>
                 <div class="font-semibold text-red-500">
-                  ₹{{ formatPrice(customer.lastOrder.totalAmount) }}
+                  ₹{{ formatPrice(lastOrderTotalAmount) }}
                 </div>
               </div>
               <div v-for="item in customer.lastOrder.items" :key="item.id"
@@ -51,7 +51,7 @@
                   </div>
                 </div>
                 <p>x {{ item.quantity }} </p>
-                <span>₹{{ formatPrice(item.price) }}</span>
+                <span>₹{{ formatPrice(item.price * item.quantity) }}</span>
               </div>
               <div class="flex justify-between items-center">
                 <nuxt-link to="/customers" class="text-blue-500">View all orders</nuxt-link>
@@ -145,6 +145,16 @@ export default {
       newMessage: '', // to store new comment message
     };
   },
+  computed: {
+    // Computed property to calculate total amount spent
+    totalAmountSpent() {
+      return this.customer.orders * this.customer.amountSpent;
+    },
+    // Computed property to calculate total amount for the last order
+    lastOrderTotalAmount() {
+      return this.customer.lastOrder.items.reduce((total, item) => total + item.price * item.quantity, 0);
+    },
+  },
   mounted() {
     const customerId = this.$route.params.id;
     this.fetchCustomerDetails(customerId);
@@ -166,7 +176,7 @@ export default {
             history: 'Drafts Orders',
             totalAmount: 5500,
             items: [
-              { id: 2, name: 'blowshine', size: 10, quantity: 1, price: 2000, imageUrl: 'https://via.placeholder.com/40?text=Blowshine' },
+              { id: 2, name: 'blowshine', size: 10, quantity: 2, price: 2000, imageUrl: 'https://via.placeholder.com/40?text=Blowshine' },
               { id: 1, name: 'blowshine', size: 10, quantity: 1, price: 1000, imageUrl: 'https://via.placeholder.com/40?text=Blowshine' },
               { id: 3, name: 'blowshine', size: 10, quantity: 1, price: 2500, imageUrl: 'https://via.placeholder.com/40?text=Blowshine' },
             ],
@@ -193,7 +203,7 @@ export default {
             history: 'Drafts Orders',
             totalAmount: 5500,
             items: [
-              { id: 2, name: 'blowshine', size: 10, quantity: 1, price: 2000, imageUrl: 'https://via.placeholder.com/40?text=Blowshine' },
+              { id: 2, name: 'blowshine', size: 10, quantity: 2, price: 2000, imageUrl: 'https://via.placeholder.com/40?text=Blowshine' },
               { id: 1, name: 'blowshine', size: 10, quantity: 1, price: 1000, imageUrl: 'https://via.placeholder.com/40?text=Blowshine' },
               { id: 3, name: 'blowshine', size: 10, quantity: 1, price: 2500, imageUrl: 'https://via.placeholder.com/40?text=Blowshine' },
             ],
