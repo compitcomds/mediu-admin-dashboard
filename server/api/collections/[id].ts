@@ -3,49 +3,75 @@ import axios from "axios";
 import config from "~/utils/config";
 
 export default defineEventHandler(async (event) => {
+  const method = event.req.method; // Get the HTTP method (GET, PUT, POST, etc.)
+  const id = event.context.params?.id; // Get the collection ID from the route params
+
+  // Ensure collection ID is provided
+  if (!id) {
+    throw new Error("Collection ID is missing");
+  }
+
   try {
-    if (!event.context.params || !event.context.params.id) {
-      throw new Error("Collection ID is missing");
-    }
-
-    const id = event.context.params.id;
-    const body = await readBody(event);
-
-    // Ensure the body contains the necessary properties
-    if (
-      !body.title ||
-      !body.body_html ||
-      
-      typeof body.published === "undefined"
-    ) {
-      throw new Error(
-        "Missing required fields: title, body_html, or published status"
-      );
-    }
-
-    const response = await axios.put(
-      `https://${config.shopifyDomain}/admin/api/2024-07/custom_collections/${id}.json`,
-      {
-        custom_collection: {
-          title: body.title,
-          body_html: body.body_html,
-          published: body.published, // Ensure this is coming from the client correctly
-        },
-      },
-      {
-        headers: {
-          "X-Shopify-Access-Token": config.shopifyAccessToken,
-        },
+    // Handle HTTP Methods (GET, PUT)
+    switch (method) {
+      case "GET": {
+        // Fetch the collection
+        const response = await axios.get(
+          `https://${config.shopifyDomain}/admin/api/2024-07/custom_collections/${id}.json`,
+          {
+            headers: {
+              "X-Shopify-Access-Token": config.shopifyAccessToken,
+            },
+          }
+        );
+        return response.data.custom_collection;
       }
-    );
 
-    return response.data.custom_collection;
+      case "PUT": {
+        // Read the request body to get the new collection data
+        const body = await readBody(event);
+
+        // Ensure required fields are present in the body
+        if (
+          !body.title ||
+          !body.body_html ||
+          typeof body.published === "undefined"
+        ) {
+          throw new Error(
+            "Missing required fields: title, body_html, or published status"
+          );
+        }
+
+        // Update the collection with the new data
+        const response = await axios.put(
+          `https://${config.shopifyDomain}/admin/api/2024-07/custom_collections/${id}.json`,
+          {
+            custom_collection: {
+              title: body.title,
+              body_html: body.body_html,
+              published: body.published,
+            },
+          },
+          {
+            headers: {
+              "X-Shopify-Access-Token": config.shopifyAccessToken,
+            },
+          }
+        );
+
+        return response.data.custom_collection;
+      }
+
+      // If the method is not allowed, return a 405 Method Not Allowed
+      default: {
+        throw new Error(`HTTP method ${method} is not allowed`);
+      }
+    }
   } catch (error) {
-    console.error("Error updating collection:", error);
-    throw new Error("Failed to update collection: " + error);
+    console.error("Error handling request:", error);
+    throw new Error(`Failed to handle request: ${error}`);
   }
 });
-
 // Get products in a collection
 // Fetch products in a collection
 export const fetchProductsInCollection = defineEventHandler(async (event) => {
@@ -115,6 +141,33 @@ interface Collect {
   id: number;
   collection_id: number;
   product_id: number;
+}
+export async function fetchSingleCollection(
+  CollectionId: string
+): Promise<any> {
+  const url = `https://${config.shopifyDomain}/admin/api/2024-07/custom_collections.json?product_id=${CollectionId}`;
+
+  try {
+    // Use GET to fetch data
+    const response = await fetch(url, {
+      method: "GET", // Changed method to GET
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": config.shopifyAccessToken, // Ensure access token is correct
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching collection: ${response.statusText}`);
+    }
+
+    // Parse the response JSON
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching collection:", error);
+    return null;
+  }
 }
 
 export const removeProductFromCollection = defineEventHandler(async (event) => {

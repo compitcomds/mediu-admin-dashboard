@@ -54,6 +54,10 @@
       />
 
       <button type="submit">Save Product</button>
+      <!-- Add Delete Button -->
+      <button type="button" @click="deleteProduct" class="delete-button">
+        Delete Product
+      </button>
     </form>
   </div>
 </template>
@@ -173,6 +177,31 @@ export default {
         this.error = error.message;
       }
     },
+    async deleteProduct() {
+      const productId = this.$route.params.id;
+      try {
+        const response = await fetch(`/api/products/${productId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const data = await response.json(); // Parse the response data
+
+        if (response.ok) {
+          alert("Product deleted successfully!");
+          console.log("Deleted product response:", data); // Log the response for debugging
+          this.$router.push("/product"); // Redirect to product list page
+        } else {
+          console.error("Failed to delete product:", data);
+          this.error = data.error || "Failed to delete product";
+        }
+      } catch (error) {
+        console.error("Error during delete operation:", error);
+        this.error = error.message;
+      }
+    },
   },
 };
 </script>
@@ -204,6 +233,12 @@ button {
 }
 button:hover {
   background-color: #45a049;
+}
+.delete-button {
+  background-color: #f44336;
+}
+.delete-button:hover {
+  background-color: #e53935;
 }
 .error {
   color: red;
