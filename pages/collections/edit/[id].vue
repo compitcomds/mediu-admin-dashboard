@@ -11,8 +11,19 @@
         <button @click="goBack" class="bg-gray-200 px-3 py-1.5 rounded-md">Back</button>
       </div>
 
+      <!-- Loading Message -->
+      <div v-if="loading" class="text-center">
+        <p>Loading collection...</p>
+      </div>
+
+      <!-- Error Message -->
+      <div v-if="error" class="text-center text-red-500">
+        <p>{{ error }}</p>
+      </div>
+
       <!-- Collection Edit Form -->
       <form
+        v-if="selectedCollection && selectedCollection.id"
         @submit.prevent="updateCollection"
         class="space-y-6 bg-white p-6 rounded-lg shadow-md"
       >
@@ -20,7 +31,7 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
           <input
-            v-model="collection.title"
+            v-model="selectedCollection.title"
             type="text"
             class="w-full p-2 border border-gray-300 rounded"
             required
@@ -31,44 +42,11 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
           <textarea
-            v-model="collection.body_html"
+            v-model="selectedCollection.body_html"
             class="w-full p-2 border border-gray-300 rounded"
             required
           ></textarea>
         </div>
-
-        <!-- Image -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Image</label>
-          <div class="flex items-center space-x-4">
-            <img
-              :src="collection.image?.src || '/default-image.jpg'"
-              alt="Collection Image"
-              class="w-20 h-20 rounded"
-            />
-            <input type="file" @change="handleImageUpload" />
-          </div>
-        </div>
-
-        <!-- Associated Products -->
-        <!-- <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Products</label>
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <div
-              v-for="product in products"
-              :key="product.id"
-              class="flex items-center p-2 border border-gray-300 rounded space-x-2"
-            >
-              <input
-                type="checkbox"
-                :value="product.id"
-                v-model="selectedProducts"
-                class="form-checkbox h-5 w-5 text-blue-600"
-              />
-              <p>{{ product.title }}</p>
-            </div>
-          </div>
-        </div> -->
 
         <!-- Update Button -->
         <div class="flex justify-end">
@@ -77,121 +55,92 @@
           </button>
         </div>
       </form>
+
+      <!-- No Collection Selected Message -->
+      <div v-else class="text-center text-gray-500">
+        <p>No collection selected. Please select a collection to edit.</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Sidenav from "~/components/Sidenav";
-import NavigationButton from "~/components/NavigationButton";
 import axios from "axios";
 
 export default {
-  components: {
-    Sidenav,
-    NavigationButton,
-  },
   data() {
     return {
-      collection: {
-        title: "",
-        body_html: "",
-        image: null,
-        products: [],
+      selectedCollection: {
+        id: '',
+        title: '',
+        body_html: ''
       },
-      products: [], // List of all products to choose from
-      selectedProducts: [], // Selected products in this collection
+      loading: false, // Loading state for fetching collections
+      error: null // Error state
     };
   },
+
   async mounted() {
-    const collectionId = this.$route.params.id; // Get the collection ID from the route parameters
-    await this.fetchCollection(collectionId);
-    await this.fetchProducts();
+    const isAuthenticated = localStorage.getItem('authenticated') === 'true';
+    if (!true) {
+      // Redirect to login page if not authenticated
+      this.$router.push('/login');
+    } else {
+      await this.fetchCollection();
+    }
   },
+
   methods: {
-    async fetchCollection(id) {
-      try {
-        const response = await axios.get(`/api/collections/${id}`);
-        this.collection = response.data;
-        this.selectedProducts = this.collection.products.map((product) => product.id); // Populate selected products
-      } catch (error) {
-        console.error("Error fetching collection:", error);
-      }
-    },
-    async fetchProducts() {
-      try {
-        const response = await axios.get(`/api/products`); // Fetch all products
-        this.products = response.data;
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    },
-    handleImageUpload(event) {
-      const file = event.target.files[0];
-      this.collection.image = URL.createObjectURL(file); // Preview the image
-      this.uploadImage(file); // Optionally, upload the image to your server
-    },
-    async uploadImage(file) {
-      const formData = new FormData();
-      formData.append("image", file);
+    // Fetch the collection by ID from the URL
+    async fetchCollection() {
+      this.loading = true;
+      this.error = null;
 
       try {
-        const response = await axios.post(`/api/upload-image`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const collectionId = this.$route.params.id;
+        const response = await axios.get(`/api/collections/${collectionId}`); // Use API endpoint correctly
 
-        if (response.data && response.data.url) {
-          this.collection.image = { src: response.data.url }; // Ensure image object is structured correctly
+        if (response.data) {
+          this.selectedCollection = { ...response.data };
+        } else {
+          throw new Error("Collection not found");
         }
       } catch (error) {
-        console.error("Error uploading image:", error);
+        this.error = `Failed to fetch collection: ${error.message}`;
+      } finally {
+        this.loading = false;
       }
     },
+
+    // Update the selected collection with the new data
     async updateCollection() {
-      if (!this.collection.title || !this.collection.body_html) {
-        console.error("Title and body_html are required");
-        return;
-      }
-
       try {
-        console.log("Updating collection ID:", this.collection.id); // Log the ID
+        if (!this.selectedCollection.id) {
+          throw new Error("No collection ID found");
+        }
 
-        // Update the collection with the selected products
         const updatedCollection = {
-          title: this.collection.title,
-          body_html: this.collection.body_html,
-          image: this.collection.image?.src,
-          products: this.selectedProducts,
-          published: true,
+          title: this.selectedCollection.title,
+          body_html: this.selectedCollection.body_html,
+          published: true
         };
 
         const response = await axios.put(
-          `/api/collections/${this.collection.id}`,
+          `/api/collections/${this.selectedCollection.id}`,
           updatedCollection
         );
-        console.log("Collection updated:", response.data);
-        this.$router.push("/collections"); // Redirect after successful update
+
+        alert("Collection updated successfully!");
+
       } catch (error) {
-        console.error(
-          "Error updating collection:",
-          error.response?.data || error.message
-        ); // Log detailed error
+        this.error = `Failed to update collection: ${error.message}`;
       }
     },
 
+    // Navigate back to the previous page
     goBack() {
-      this.$router.push("/collections");
-    },
-  },
+      this.$router.go(-1);
+    }
+  }
 };
 </script>
-
-<style scoped>
-/* Additional styles to enhance form appearance */
-form {
-  max-width: 800px;
-  margin: 0 auto;
-}
-</style>
