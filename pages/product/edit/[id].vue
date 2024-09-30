@@ -1,64 +1,96 @@
 <template>
-  <div>
-    <h1 v-if="product">Edit Product: {{ product.title }}</h1>
-    <div v-if="error" class="error">{{ error }}</div>
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <Sidenav />
 
-    <form v-if="product" @submit.prevent="saveProduct">
-      <div class="form-group">
-        <label for="title">Product Title</label>
-        <input type="text" v-model="product.title" id="title" />
-      </div>
+    <div class="lg:ml-64 flex-1 overflow-y-auto p-8 mt-10 bg-gray-100">
+      <NavigationButton />
+      <h1 class="text-2xl font-bold" v-if="product">Edit Product: {{ product.title }}</h1>
+      <div v-if="error" class="error">{{ error }}</div>
 
-      <div class="form-group">
-        <label for="description">Product Description</label>
-        <textarea v-model="product.body_html" id="description"></textarea>
-      </div>
+      <form v-if="product" @submit.prevent="saveProduct">
+        <div class="space-y-8">
+          <div class="bg-white p-6 rounded-xl shadow-md space-y-8">
+            <div>
+              <div class="form-group">
+                <label class="block text-sm font-medium text-gray-700" for="title">Product Title</label>
+                <input
+                  class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  type="text" v-model="product.title" id="title" />
+              </div>
 
-      <div class="form-group">
-        <label for="price">Price</label>
-        <input type="number" v-model="product.variants[0].price" id="price" />
-      </div>
+              <div class="form-group">
+                <label class="block text-sm font-medium text-gray-700 mt-6" for="description">Product
+                  Description</label>
+                <textarea rows="4"
+                  class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  v-model="product.body_html" id="description"></textarea>
+              </div>
+            </div>
+            <!-- Media -->
+            <div>
+              <ProductImages :images="product.images" v-model:removed-images="removedImages"
+                v-model:added-images="addedImages" />
+              <h2 class="block text-sm font-medium text-gray-700">Product Collections</h2>
+              <ProductCollectionBox v-model="collections" />
 
-      <div class="form-group">
-        <label for="compare-price">Compare Price</label>
-        <input
-          type="number"
-          v-model="product.variants[0].compare_at_price"
-          id="compare-price"
-        />
-      </div>
 
-      <h2>Product Metafields</h2>
-      <div v-for="metafield in metafields" :key="metafield.id" class="form-group">
-        <label>{{ formatLabel(metafield) }}</label>
-        <div v-if="metafield.namespace.startsWith('custom')">
-          <textarea v-model="metafield.value"></textarea>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-md">
+              <label class="block text-sm font-medium text-gray-700">Pricing</label>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
+                <div>
+                  <label for="price">Price</label>
+                  <input class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" type="number" v-model="product.variants[0].price" id="price" />
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-500" for="compare-price">Compare Price</label>
+                  <input
+                    class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    type="number" v-model="product.variants[0].compare_at_price" id="compare-price" />
+                </div>
+              </div>
+            </div>
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Product Metafields</h2>
+            <div v-for="(metafield, index) in metafields.slice(0, 3)" :key="metafield.id" class="form-group mb-4">
+
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                {{ formatLabel(metafield) }}
+              </label>
+              
+              <div v-if="metafield.namespace.startsWith('custom')">
+                <textarea
+                  v-model="metafield.value"
+                  class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-y"
+                  rows="3"
+                ></textarea>
+              </div>
+              
+              <div v-else>
+                <ul v-if="Array.isArray(metafield.value)" class="space-y-2">
+                  <li v-for="value in metafield.value" :key="value" class="bg-gray-50 p-2 rounded-md border border-gray-200 shadow-sm">
+                    {{ formatMetaobject(value) }}
+                  </li>
+                </ul>
+                <input
+                  v-else
+                  type="text"
+                  v-model="metafield.value"
+                  class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+            
+
+
+
+            <button type="submit">Save Product</button>
+          </div>
         </div>
-        <div v-else>
-          <ul v-if="Array.isArray(metafield.value)">
-            <li v-for="value in metafield.value" :key="value">
-              {{ formatMetaobject(value) }}
-            </li>
-          </ul>
-          <input v-else type="text" v-model="metafield.value" />
-        </div>
-      </div>
-
-      <h2>Product Collections</h2>
-      <ProductCollectionBox v-model="collections" />
-
-      <ProductImages
-        :images="product.images"
-        v-model:removed-images="removedImages"
-        v-model:added-images="addedImages"
-      />
-
-      <button type="submit">Save Product</button>
-      <!-- Add Delete Button -->
-      <button type="button" @click="deleteProduct" class="delete-button">
-        Delete Product
-      </button>
-    </form>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -124,9 +156,8 @@ export default {
       }
     },
     formatLabel(metafield) {
-      return `${metafield.namespace.replace("custom:", "").replace("-", " ")}: ${
-        metafield.key
-      }`;
+      return `${metafield.namespace.replace("custom:", "").replace("-", " ")}: ${metafield.key
+        }`;
     },
     formatMetaobject(gid) {
       const gidParts = gid.split("/");
@@ -210,20 +241,24 @@ export default {
 .form-group {
   margin-bottom: 15px;
 }
+
 label {
   display: block;
   margin-bottom: 5px;
 }
+
 input,
 textarea {
   padding: 8px;
   width: 100%;
   box-sizing: border-box;
 }
+
 textarea {
   resize: vertical;
   height: 100px;
 }
+
 button {
   padding: 10px 15px;
   background-color: #4caf50;
@@ -231,15 +266,11 @@ button {
   border: none;
   cursor: pointer;
 }
+
 button:hover {
   background-color: #45a049;
 }
-.delete-button {
-  background-color: #f44336;
-}
-.delete-button:hover {
-  background-color: #e53935;
-}
+
 .error {
   color: red;
 }

@@ -1,20 +1,11 @@
 <template>
   <div class="image-gallery">
-    <h2>Product Images</h2>
-
-    <div class="image-list">
+    <h2 class="block text-sm font-medium text-gray-700">Product Images</h2>
+    <div class="image-list-container">
       <!-- Display images passed via props, hiding those in removedImages -->
-      <template v-for="(image, index) in images">
-        <div
-          :key="image.id"
-          v-if="!removedImages.includes(image)"
-          class="image-item"
-        >
-          <img
-            :src="image.src"
-            :alt="image.alt || 'Product Image'"
-            class="product-image"
-          />
+      <template v-for="(image, index) in images" :key="image.id">
+        <div v-if="!removedImages.includes(image)" :class="['image-item', index === 0 ? 'first-image' : '']">
+          <img :src="image.src" :alt="image.alt || 'Product Image'" class="product-image" />
           <button type="button" @click="removeImage(image)" class="remove-btn">
             X
           </button>
@@ -22,21 +13,9 @@
       </template>
 
       <!-- Display newly added images -->
-      <div
-        v-for="(image, index) in addedImages"
-        :key="image.name"
-        class="image-item"
-      >
-        <img
-          :src="image.base64"
-          :alt="image.name || 'New Image'"
-          class="product-image"
-        />
-        <button
-          type="button"
-          @click="removeAddedImage(index)"
-          class="remove-btn"
-        >
+      <div v-for="(image, index) in addedImages" :key="image.name" :class="['image-item', images.length === 0 && index === 0 ? 'first-image' : '']">
+        <img :src="image.base64" :alt="image.name || 'New Image'" class="product-image" />
+        <button type="button" @click="removeAddedImage(index)" class="remove-btn">
           X
         </button>
       </div>
@@ -83,20 +62,36 @@ const removeAddedImage = (index) => {
   flex-direction: column;
   align-items: flex-start;
   margin-bottom: 20px;
+  width: 100%;
 }
-.image-list {
+
+.image-list-container {
   display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 50px;
+  flex-wrap: nowrap;
+  overflow-x: auto; /* Allows scrolling for overflowing images */
 }
+
 .image-item {
   position: relative;
-  margin: 10px;
+  margin: 0 10px;
 }
+
+.first-image .product-image {
+  width: 200px; /* Larger width for the first image */
+  height: 200px;
+}
+
 .product-image {
   width: 100px;
-  height: auto;
+  height: 100px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  border-radius: 8px;
 }
+
 .remove-btn {
   position: absolute;
   top: 5px;
@@ -105,6 +100,12 @@ const removeAddedImage = (index) => {
   color: white;
   border: none;
   border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
+  padding: 2px;
+  height: 25px;
+  width: 25px;
 }
 </style>
