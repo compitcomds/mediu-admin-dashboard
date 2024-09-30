@@ -10,8 +10,12 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "appwrite": "^15.0.0",
     "axios": "^1.7.7",
+    "bwip-js": "^4.5.1",
+    "jsbarcode": "^3.11.6",
     "nuxt": "^3.13.0",
+    "uuid": "^10.0.0",
     "vue": "latest",
     "vue-router": "latest"
   },
