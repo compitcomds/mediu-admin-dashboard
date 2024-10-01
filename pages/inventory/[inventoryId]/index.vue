@@ -36,7 +36,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="batch in batches" :key="batch.BatchNumber" class="hover:bg-gray-100">
+                        <tr v-for="batch in batches" :key="batch.$id" class="hover:bg-gray-100">
                             <td >
                                 <svg :id="'barcode-' + batch.BatchNumber" class="barcode"></svg>
                             </td>
@@ -56,55 +56,32 @@
 </template>
 
 <script>
+import { getInventory } from "~/appwrite/inventory"; // Import your getInventory function
 import JsBarcode from "jsbarcode";
 
 export default {
     data() {
         return {
-            
-batches: [
-                {
-                    BatchNumber: "BN001sjdfi4",
-                    BatchDate: "2023-01-15T08:00:00Z",
-                    ExpiryDate: "2024-01-15T08:00:00Z",
-                    ProductId: "P001",
-                    Quantity: 100,
-                },
-                {
-                    BatchNumber: "BN002",
-                    BatchDate: "2023-02-20T08:00:00Z",
-                    ExpiryDate: "2024-02-20T08:00:00Z",
-                    ProductId: "P002",
-                    Quantity: 200,
-                },
-                {
-                    BatchNumber: "BN003",
-                    BatchDate: "2023-03-10T08:00:00Z",
-                    ExpiryDate: "2024-03-10T08:00:00Z",
-                    ProductId: "P003",
-                    Quantity: 150,
-                },
-                {
-                    BatchNumber: "BN004",
-                    BatchDate: "2023-04-05T08:00:00Z",
-                    ExpiryDate: "2024-04-05T08:00:00Z",
-                    ProductId: "P004",
-                    Quantity: 300,
-                },
-                {
-                    BatchNumber: "BN005",
-                    BatchDate: "2023-05-25T08:00:00Z",
-                    ExpiryDate: "2024-05-25T08:00:00Z",
-                    ProductId: "P005",
-                    Quantity: 250,
-                },
-            ],
+            batches: [], // Initially empty, will be populated by fetched data
         };
     },
-    mounted() {
+    async mounted() {
+        await this.fetchBatches(); // Fetch inventory data on mount
         this.generateBarcodes();
     },
     methods: {
+        async fetchBatches() {
+            try {
+                const result = await getInventory(); // Call the getInventory function
+                if (result.documents) {
+                    this.batches = result.documents; // Store the fetched data
+                } else {
+                    console.error("Failed to fetch batches");
+                }
+            } catch (error) {
+                console.error("Error fetching inventory:", error);
+            }
+        },
         generateBarcodes() {
             this.batches.forEach((batch) => {
                 const barcodeElement = document.getElementById(`barcode-${batch.BatchNumber}`);
@@ -125,7 +102,7 @@ batches: [
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${batchNumber}.svg`; // Change extension to .png if you want PNG format
+            a.download = `${batchNumber}.svg`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
