@@ -61,18 +61,22 @@
         <p class="text-gray-700">Product ID: {{ submittedData.ProductId }}</p>
       </div>
     </div>
+    
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted } from "vue";
 import { createInventory, generateUniqueNumber } from "~/appwrite/inventory";
+import { useRoute } from "vue-router"; // Import the useRoute composable
+
+// Get the route to access the parameters
+const route = useRoute();
 
 // Form data
 const batchNumber = ref("");
 const expiryDate = ref("");
 const quantity = ref(1);
-const productId = ref("some-product-id"); // Set your product ID here
+const productId = ref(route.params.inventoryId); // Extract productId from the route parameter
 
 // Submission data feedback
 const submittedData = ref(null);
