@@ -407,7 +407,7 @@ export default {
 .slide-leave-active {
   transition: transform 0.3s ease;
 }
-.slide-enter, .slide-leave-to /* .slide-leave-active in <2.1.8 */ {
+.slide-enter, .slide-leave-to /* .slide-leave-active in <2.1.8> */ {
   transform: translateX(-100%);
 }
 </style>
