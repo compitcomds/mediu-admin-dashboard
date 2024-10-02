@@ -4,18 +4,47 @@ import fetch from "node-fetch";
 const shopDomain = "dev-mediu.myshopify.com";
 const accessToken = "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";
 
-// Function to update inventory level using Shopify API
+async function getCurrentInventoryLevel(inventoryItemId: string, locationId: string): Promise<number> {
+  const url = `https://${shopDomain}/admin/api/2024-07/inventory_levels.json?inventory_item_ids=${inventoryItemId}&location_ids=${locationId}`;
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": accessToken,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching current inventory level: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const inventoryLevel = data.inventory_levels[0]?.available || 0;
+    return inventoryLevel;
+  } catch (error) {
+    console.error("Error fetching current inventory level:", error);
+    return 0;
+  }
+}
+
 async function updateInventoryLevel(
   inventoryItemId: string,
   locationId: string,
   newQuantity: number
 ): Promise<any> {
+  
+  const currentQuantity = await getCurrentInventoryLevel(inventoryItemId, locationId);
+
+  const updatedQuantity = currentQuantity + newQuantity;
+
   const url = `https://${shopDomain}/admin/api/2024-07/inventory_levels/set.json`;
 
   const body = {
     location_id: locationId,
     inventory_item_id: inventoryItemId,
-    available: newQuantity,
+    available: updatedQuantity,
   };
 
   try {
@@ -39,7 +68,6 @@ async function updateInventoryLevel(
   }
 }
 
-// Main event handler
 export default defineEventHandler(async (event) => {
   if (event.method === "PUT") {
     const body = await readBody(event);
@@ -51,11 +79,7 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    const result = await updateInventoryLevel(
-      inventoryItemId,
-      locationId,
-      quantity
-    );
+    const result = await updateInventoryLevel(inventoryItemId, locationId, quantity);
 
     if (result) {
       return {

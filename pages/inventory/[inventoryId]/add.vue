@@ -69,9 +69,7 @@ import { ref, onMounted } from "vue";
 import { createInventory, generateUniqueNumber } from "~/appwrite/inventory";
 import { useRoute } from "vue-router";
 
-
 const route = useRoute();
-
 const batchNumber = ref("");
 const expiryDate = ref("");
 const quantity = ref(1);
@@ -82,14 +80,13 @@ const submittedData = ref(null);
 onMounted(async () => {
   batchNumber.value = await generateUniqueNumber();
 });
-console.log()
-// Update inventory quantity
-const updateInventory = async (inventoryItemId=productId, locationId="69352587337", newQuantity=quantity) => {
+
+const updateInventory = async (inventoryItemId, locationId, newQuantity) => {
   try {
-    const response = await fetch(`/api/inventory`, {
-      method: 'PUT',
+    const response = await fetch("/api/inventory", {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         inventoryItemId,
@@ -99,13 +96,13 @@ const updateInventory = async (inventoryItemId=productId, locationId="6935258733
     });
 
     if (!response.ok) {
-      throw new Error('Failed to update inventory');
+      throw new Error("Failed to update inventory");
     }
 
     return await response.json();
   } catch (error) {
-    console.error('Error updating inventory:', error);
-    throw error; // Propagate error
+    console.error("Error updating inventory:", error);
+    throw error;
   }
 };
 
@@ -126,9 +123,7 @@ const handleSubmit = async () => {
       data.Quantity
     );
 
-    // Call the updateInventory function here after creating the inventory
-    await updateInventory(data.ProductId, "your-location-id", data.Quantity); // Replace with actual location ID
-
+    await updateInventory(data.ProductId, "69352587337", data.Quantity);
     submittedData.value = data;
     alert("Inventory item created and quantity updated successfully!");
   } catch (error) {

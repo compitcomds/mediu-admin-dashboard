@@ -112,7 +112,9 @@ export default defineEventHandler(async (event) => {
       });
 
       if (!productResponse.ok) {
-        throw new Error(`Error updating product: ${productResponse.statusText}`);
+        throw new Error(
+          `Error updating product: ${productResponse.statusText}`
+        );
       }
 
       const updatedProduct = await productResponse.json();
@@ -182,5 +184,3 @@ export default defineEventHandler(async (event) => {
     console.error("Error fetching product or metafields:", error);
   }
 });
-
-

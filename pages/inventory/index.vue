@@ -1,11 +1,8 @@
 <template>
   <div class="flex flex-col h-screen py-10 lg:py-0">
-  
     <!-- Sidebar -->
     <Sidenav />
-    <div
-      class="lg:ml-64 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 mt-4 bg-gray-100"
-    >
+    <div class="lg:ml-64 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 mt-4 bg-gray-100">
       <NavigationButton />
 
       <!-- Header Buttons -->
@@ -14,15 +11,9 @@
       >
         <h1 class="text-xl md:text-2xl font-semibold">Products</h1>
         <div class="flex flex-wrap space-x-2">
-          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">
-            Export
-          </button>
-          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">
-            Import
-          </button>
-          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">
-            More actions
-          </button>
+          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">Export</button>
+          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">Import</button>
+          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">More actions</button>
           <div>
             <button
               @click="goToAddProductPage"
@@ -40,7 +31,6 @@
       <div class="lg:hidden bg-white shadow-md rounded-lg p-4">
         <template v-for="product in products" :key="product.id">
           <template v-for="variant in product.variants" :key="variant.id">
-          
             <div
               class="border border-gray-200 rounded-lg p-4 mb-4 hover:shadow-md transition-shadow"
             >
@@ -87,9 +77,7 @@
       </div>
 
       <!-- Responsive Table for Large Screens -->
-      <div
-        class="hidden lg:block overflow-x-auto bg-white shadow-md rounded-lg"
-      >
+      <div class="hidden lg:block overflow-x-auto bg-white shadow-md rounded-lg">
         <table class="min-w-full table-auto divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
@@ -124,19 +112,14 @@
             <template v-for="product in products" :key="product.id">
               <template v-for="variant in product.variants" :key="variant.id">
                 <tr class="hover:bg-gray-100">
-                  <td
-                    class="px-4 py-4 whitespace-nowrap flex gap-2 items-center"
-                  >
+                  <td class="px-4 py-4 whitespace-nowrap flex gap-2 items-center">
                     <img
                       v-if="product.image"
                       :src="product.image.src"
                       :alt="product.title"
                       class="product-image w-14 bg-white rounded-md border aspect-square"
                     />
-                    <p
-                      class="text-xs p-1 rounded-full bg-gray-100"
-                      v-if="variant.sku"
-                    >
+                    <p class="text-xs p-1 rounded-full bg-gray-100" v-if="variant.sku">
                       {{ variant.sku }}
                     </p>
                   </td>
@@ -146,7 +129,6 @@
                     <NuxtLink :to="`/product/edit/${product.id}`">
                       {{ product.title }}</NuxtLink
                     >
-                    
                   </td>
 
                   <td class="px-4 py-4 break-words whitespace-normal">
@@ -168,11 +150,11 @@
                   </td>
                   <td class="px-4 py-4 break-words whitespace-normal">
                     <nuxt-link
-                  :to="`/inventory/${variant.inventory_item_id}`"
-                  class="bg-black text-white font-semibold p-2 rounded-lg mt-2 inline-block"
-                >
-                  View
-                </nuxt-link>
+                      :to="`/inventory/${variant.inventory_item_id}`"
+                      class="bg-black text-white font-semibold p-2 rounded-lg mt-2 inline-block"
+                    >
+                      View
+                    </nuxt-link>
                   </td>
                 </tr>
               </template>
@@ -185,6 +167,7 @@
 </template>
 
 <script>
+import { getInventory } from '~/appwrite/inventory';
 export default {
   data() {
     return {
@@ -195,7 +178,6 @@ export default {
   async mounted() {
     const isAuthenticated = localStorage.getItem("authenticated") === "true";
     if (!true) {
-      // Redirect to login page if not authenticated
       this.$router.push("/login");
     } else {
       await this.fetchProducts();

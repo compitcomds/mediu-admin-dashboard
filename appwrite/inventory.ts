@@ -1,5 +1,5 @@
 import { database, account } from "./config";
-import { ID } from "appwrite";
+import { ID,Query } from "appwrite";
 
 export async function createInventory(
   BatchNumber: string,
@@ -9,19 +9,17 @@ export async function createInventory(
   Quantity: number
 ) {
   try {
-    // Ensure dates are stored as strings
     const batchDateString = BatchDate.toISOString();
     const expiryDateString = ExpiryDate.toISOString();
 
-    // Create document in Appwrite
     const upload_data = await database.createDocument(
       config.Appwrite_Database_Id,
       config.Appwrite_Inventory_Batches_Id,
       ID.unique(),
       {
         BatchNumber,
-        BatchDate: batchDateString, // Convert Date to string
-        ExpiryDate: expiryDateString, // Convert Date to string
+        BatchDate: batchDateString,
+        ExpiryDate: expiryDateString,
         ProductId,
         Quantity,
       }
@@ -52,14 +50,12 @@ export async function generateUniqueNumber() {
   return `${year}${month}${day}${hours}${minutes}${seconds}${milliseconds}${randomNumber}`;
 }
 
-
-export async function getInventory() {
-    const data = await database.listDocuments(
-       config.Appwrite_Database_Id,
-       config.Appwrite_Inventory_Batches_Id
-        
-    )
-    console.log("Multiple Inventory",data)
-    if (data.documents) return data;
-    else return "Failed to Fetch"
+export async function getInventory(product_id:any) {
+  const data = await database.listDocuments(
+    config.Appwrite_Database_Id,
+    config.Appwrite_Inventory_Batches_Id,[Query.equal("ProductId",product_id)]
+  );
+  console.log("Multiple Inventory", data);
+  if (data.documents) return data;
+  else return "Failed to Fetch";
 }
