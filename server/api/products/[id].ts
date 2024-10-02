@@ -182,3 +182,5 @@ export default defineEventHandler(async (event) => {
     console.error("Error fetching product or metafields:", error);
   }
 });
+
+

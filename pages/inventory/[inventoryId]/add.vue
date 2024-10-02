@@ -2,13 +2,13 @@
   <div class="flex w-full h-screen justify-center items-center">
     <div class="w-1/3 p-6 bg-gray-100 rounded-md">
       <h1 class="text-2xl font-bold mb-4">Add Item</h1>
-      <p>Product ID: {{ productId }}</p>
+      <p>Product ID: {{ route.params.inventoryId }}</p>
 
       <form @submit.prevent="handleSubmit" class="bg-white p-6 rounded shadow-md">
         <div class="mb-4">
-          <label for="batchNumber" class="block text-sm font-medium text-gray-700"
-            >Batch Number (Auto-Generated):</label
-          >
+          <label for="batchNumber" class="block text-sm font-medium text-gray-700">
+            Batch Number (Auto-Generated):
+          </label>
           <input
             type="text"
             v-model="batchNumber"
@@ -19,9 +19,9 @@
         </div>
 
         <div class="mb-4">
-          <label for="expiryDate" class="block text-sm font-medium text-gray-700"
-            >Expiry Date:</label
-          >
+          <label for="expiryDate" class="block text-sm font-medium text-gray-700">
+            Expiry Date:
+          </label>
           <input
             type="date"
             v-model="expiryDate"
@@ -32,9 +32,9 @@
         </div>
 
         <div class="mb-4">
-          <label for="quantity" class="block text-sm font-medium text-gray-700"
-            >Quantity:</label
-          >
+          <label for="quantity" class="block text-sm font-medium text-gray-700">
+            Quantity:
+          </label>
           <input
             type="number"
             v-model="quantity"
@@ -61,56 +61,79 @@
         <p class="text-gray-700">Product ID: {{ submittedData.ProductId }}</p>
       </div>
     </div>
-    
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { createInventory, generateUniqueNumber } from "~/appwrite/inventory";
-import { useRoute } from "vue-router"; // Import the useRoute composable
+import { useRoute } from "vue-router";
 
-// Get the route to access the parameters
+
 const route = useRoute();
 
-// Form data
 const batchNumber = ref("");
 const expiryDate = ref("");
 const quantity = ref(1);
-const productId = ref(route.params.inventoryId); // Extract productId from the route parameter
+const productId = ref(route.params.inventoryId);
 
-// Submission data feedback
 const submittedData = ref(null);
 
-// Automatically generate batch number on component mount
 onMounted(async () => {
   batchNumber.value = await generateUniqueNumber();
 });
+console.log()
+// Update inventory quantity
+const updateInventory = async (inventoryItemId=productId, locationId="69352587337", newQuantity=quantity) => {
+  try {
+    const response = await fetch(`/api/inventory`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        inventoryItemId,
+        locationId,
+        quantity: newQuantity,
+      }),
+    });
 
-// Handle form submission
+    if (!response.ok) {
+      throw new Error('Failed to update inventory');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error updating inventory:', error);
+    throw error; // Propagate error
+  }
+};
+
 const handleSubmit = async () => {
   try {
     const data = {
       BatchNumber: batchNumber.value,
-      ExpiryDate: new Date(expiryDate.value), // Convert to Date object
+      ExpiryDate: new Date(expiryDate.value),
       ProductId: productId.value,
       Quantity: quantity.value,
     };
 
-    // Call the createInventory function
     await createInventory(
       data.BatchNumber,
-      new Date(), // Assuming BatchDate is the current date
+      new Date(),
       data.ExpiryDate,
       data.ProductId,
       data.Quantity
     );
 
-    // Store submitted data for display
+    // Call the updateInventory function here after creating the inventory
+    await updateInventory(data.ProductId, "your-location-id", data.Quantity); // Replace with actual location ID
+
     submittedData.value = data;
-    alert("Inventory item created successfully!");
+    alert("Inventory item created and quantity updated successfully!");
   } catch (error) {
     console.error("Error submitting form:", error);
-    alert("Failed to create inventory item");
+    alert("Failed to create inventory item or update quantity");
   }
 };
 </script>

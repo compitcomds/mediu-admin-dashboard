@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-col h-screen py-10 lg:py-0">
+  
     <!-- Sidebar -->
     <Sidenav />
     <div
@@ -39,6 +40,7 @@
       <div class="lg:hidden bg-white shadow-md rounded-lg p-4">
         <template v-for="product in products" :key="product.id">
           <template v-for="variant in product.variants" :key="variant.id">
+          
             <div
               class="border border-gray-200 rounded-lg p-4 mb-4 hover:shadow-md transition-shadow"
             >
@@ -73,7 +75,7 @@
                   Inventory: {{ variant.inventory_quantity }}
                 </div>
                 <nuxt-link
-                  :to="`/inventory/${product.id}`"
+                  :to="`/inventory/${variant.inventory_item_id}`"
                   class="bg-black text-white font-semibold p-2 rounded-lg mt-2 inline-block"
                 >
                   View
@@ -144,6 +146,7 @@
                     <NuxtLink :to="`/product/edit/${product.id}`">
                       {{ product.title }}</NuxtLink
                     >
+                    
                   </td>
 
                   <td class="px-4 py-4 break-words whitespace-normal">
@@ -165,10 +168,11 @@
                   </td>
                   <td class="px-4 py-4 break-words whitespace-normal">
                     <nuxt-link
-                      :to="`/inventory/${product.id}`"
-                      class="bg-black text-white font-semibold p-2 rounded-lg"
-                      >View</nuxt-link
-                    >
+                  :to="`/inventory/${variant.inventory_item_id}`"
+                  class="bg-black text-white font-semibold p-2 rounded-lg mt-2 inline-block"
+                >
+                  View
+                </nuxt-link>
                   </td>
                 </tr>
               </template>
