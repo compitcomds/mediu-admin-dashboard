@@ -110,8 +110,8 @@
 
 <script>
 import axios from "axios";
-import Sidenav from "~/components/Sidenav";
-import NavigationButton from "~/components/NavigationButton";
+// import Sidenav from "~/components/Sidenav";
+// import NavigationButton from "~/components/NavigationButton";
 // import CollectionsHeader from "~/components/CollectionsHeader";
 // import CollectionsAdditionalDetails from "~/components/CollectionsAdditionalDetails";
 
