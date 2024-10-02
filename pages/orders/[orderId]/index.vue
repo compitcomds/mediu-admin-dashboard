@@ -24,6 +24,7 @@
         <div class="bg-slate-200 h-fit flex gap-5 items-top w-full p-10">
           <div class="bg-white border w-1/2 rounded-md p-2">
             <div class="bg-green-800 p-2 text-white font-bold w-fit rounded-md">
+              {{ order.fulfillment_status }}
               <p
                 v-text="
                   order.fulfillment_status === null
@@ -157,8 +158,9 @@
             >
               Confirm
             </button>
-            <nuxt-link :to="`/orders/${$route.params.orderId}/fulfill`">click</nuxt-link>
-            
+            <nuxt-link :to="`/orders/${$route.params.orderId}/fulfill`"
+              >click</nuxt-link
+            >
           </div>
         </div>
         {{ order }}
@@ -198,14 +200,16 @@ export default {
   methods: {
     async confirmOrder() {
       const orderId = this.$route.params.orderId;
-      const response = await fetch(`/api/orders/fulfill`, {
+      const response = await fetch(`/api/orders/${orderId}/fulfill`, {
         method: "POST",
-        body: JSON.stringify({ id: orderId }),
         headers: { "Content-Type": "application/json" },
       });
       const responseBody = await response.json();
       if (responseBody?.error) alert(responseBody.error);
-      else alert("Fulfilled the product");
+      else {
+        alert("Fulfilled the product");
+        this.order.fulfillment_status = responseBody.status;
+      }
     },
   },
 };

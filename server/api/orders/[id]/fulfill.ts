@@ -10,17 +10,33 @@ export default defineEventHandler(async (event) => {
     return { error: "Order ID not provided" };
   }
 
-  const fulfillmentUrl = `https://${config.shopifyDomain}/admin/api/2024-07/orders/${id}/fulfillments.json`;
-
-  console.log("Fulfillment URL:", fulfillmentUrl); // Log the request URL
-
   try {
-    const fulfillmentResponse = await axios.post(
+    const getFullfillmentIdUrl = `https://${config.shopifyDomain}/admin/api/2024-07/orders/${id}/fulfillment_orders.json`;
+    const { data: orderFulfillmentData } = await axios.get(
+      getFullfillmentIdUrl,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-Shopify-Access-Token": config.shopifyAccessToken,
+        },
+      }
+    );
+
+    if (orderFulfillmentData.fulfillment_orders.length === 0)
+      throw new Error("Invalid order.");
+
+    const fulfillment_order_id = orderFulfillmentData.fulfillment_orders[0].id;
+
+    const fulfillmentUrl = `https://${config.shopifyDomain}/admin/api/2024-07/fulfillments.json`;
+    const { data: fulfillmentResponse } = await axios.post(
       fulfillmentUrl,
       {
         fulfillment: {
-          location_id: 69352587337,  // Ensure this is a valid location_id
-          notify_customer: true,
+          line_items_by_fulfillment_order: [
+            {
+              fulfillment_order_id,
+            },
+          ],
         },
       },
       {
@@ -31,16 +47,14 @@ export default defineEventHandler(async (event) => {
       }
     );
 
-    console.log("Fulfillment Response:", fulfillmentResponse.data); // Log the response
-
-    const fulfillment = fulfillmentResponse.data.fulfillment;
+    const fulfillment = fulfillmentResponse.fulfillment;
     if (!fulfillment) {
       return { error: "Unable to fulfill order." };
     }
 
     return { fulfillment };
   } catch (error) {
-    console.error("Error fulfilling order:", error || error); // Log the error response
+    console.error("Error fulfilling order:", error || error);
     return { error: "Unable to fulfill order." };
   }
 });
