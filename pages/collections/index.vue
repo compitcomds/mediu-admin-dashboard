@@ -136,9 +136,6 @@
 </template>
 
 <script>
-// import FilterBarCollections from "~/components/FilterBarCollections"; // Assuming the component is named FilterBarCollections
-// import Sidenav from "~/components/Sidenav";
-// import NavigationButton from "~/components/NavigationButton";
 import axios from "axios";
 
 export default {
