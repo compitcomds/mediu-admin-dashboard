@@ -24,8 +24,8 @@
           >Create New Collection</nuxt-link
         >
       </div>
-
-      <FilterBarCollections @changeTab="setTab" />
+      <!-- 
+      <FilterBarCollections @changeTab="setTab" /> -->
 
       <!-- Responsive Collection Cards for Small and Medium Screens -->
       <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:hidden">
@@ -139,11 +139,7 @@
 import axios from "axios";
 
 export default {
-  components: {
-    FilterBarCollections,
-    Sidenav,
-    NavigationButton,
-  },
+  components: {},
   data() {
     return {
       collections: [],
