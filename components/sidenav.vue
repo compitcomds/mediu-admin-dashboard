@@ -70,6 +70,9 @@
             <li class="mb-2">
                 <a href="#" class="block py-2 px-4 hover:bg-gray-400 rounded">Discounts</a>
             </li>
+            <li class="mb-2">
+                <a href="/consultancy" class="block py-2 px-4 hover:bg-gray-400 rounded">Consultancy</a>
+            </li>
           </ul>
         </nav>
       </aside>
