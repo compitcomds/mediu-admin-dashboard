@@ -65,6 +65,7 @@
                 <strong>Phone:</strong> {{ order.billing_address.phone }}
               </p>
             </div>
+
             <div class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white">
               <template v-for="(item, index) in order.line_items">
                 <div
@@ -94,6 +95,16 @@
                   </div>
                 </div>
               </template>
+            </div>
+
+            <div
+              v-if="prescriptionImage"
+              class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white"
+            >
+              <h3 class="text-xl font-semibold mb-4 text-gray-800">
+                Prescription Image
+              </h3>
+              <img :src="prescriptionImage" alt="Prescription Image" />
             </div>
           </div>
           <div class="bg-white border w-1/4 rounded-md p-2">
@@ -177,6 +188,7 @@ export default {
       order: null,
       error: [],
       loading: true,
+      prescriptionImage: null,
     };
   },
   async mounted() {
@@ -188,6 +200,10 @@ export default {
 
       if (response.ok) {
         this.order = data.order;
+        this.prescriptionImage =
+          data.order?.metafields?.find(
+            (field) => field.key === "prescriptionUrl"
+          ).value || null;
       } else {
         this.error.push(data.error || "Error fetching order details");
       }

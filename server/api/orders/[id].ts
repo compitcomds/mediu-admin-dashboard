@@ -11,8 +11,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const shopifyOrderUrl = `https://${config.shopifyDomain}/admin/api/2024-07/orders/${id}.json`;
-
-  console.log("Shopify Order URL:", shopifyOrderUrl); // Log the URL being used
+  const orderMetafieldUrl = `https://${config.shopifyDomain}/admin/api/2024-07/orders/${id}/metafields.json`;
 
   try {
     const orderResponse = await axios.get(shopifyOrderUrl, {
@@ -22,7 +21,12 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    console.log("Order Response:", orderResponse.data); // Log the order data
+    const orderMetafields = await axios.get(orderMetafieldUrl, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": config.shopifyAccessToken,
+      },
+    });
 
     const order = orderResponse.data.order;
     if (!order) {
@@ -30,10 +34,10 @@ export default defineEventHandler(async (event) => {
     }
 
     return {
-      order,
+      order: { ...order, metafields: orderMetafields.data.metafields },
     };
   } catch (error) {
-    console.error("Error fetching order:", error || error); // Log the error message
+    console.error("Error fetching order:", error || error);
     return { error: "Unable to fetch order data." };
   }
 });
