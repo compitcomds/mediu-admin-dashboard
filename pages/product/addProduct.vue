@@ -14,10 +14,7 @@
           >
             Discard
           </button>
-          <button
-            @click="addProduct"
-            class="bg-blue-600 text-white px-4 py-2 rounded-md"
-          >
+          <button @click="addProduct" class="bg-blue-600 text-white px-4 py-2 rounded-md">
             Save
           </button>
         </div>
@@ -89,9 +86,7 @@
             </div>
 
             <!-- Display Uploaded Images -->
-            <div
-              class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
-            >
+            <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
               <div
                 v-if="files.length > 0"
                 class="relative col-span-2 row-span-2 sm:col-span-2 sm:row-span-2 h-60 w-full"
@@ -107,11 +102,7 @@
                   Remove
                 </button>
               </div>
-              <div
-                v-for="(file, index) in files.slice(1)"
-                :key="index"
-                class="relative"
-              >
+              <div v-for="(file, index) in files.slice(1)" :key="index" class="relative">
                 <img
                   :src="file.preview"
                   class="h-24 w-24 object-cover border rounded-md"
@@ -140,11 +131,7 @@
                       d="M12 4v16m8-8H4"
                     />
                   </svg>
-                  <input
-                    type="file"
-                    class="sr-only"
-                    @change="handleFileUpload"
-                  />
+                  <input type="file" class="sr-only" @change="handleFileUpload" />
                 </label>
               </div>
             </div>
@@ -152,14 +139,10 @@
 
           <!-- Pricing -->
           <div class="bg-white p-6 rounded-xl shadow-md">
-            <label class="block text-sm font-medium text-gray-700"
-              >Pricing</label
-            >
+            <label class="block text-sm font-medium text-gray-700">Pricing</label>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
               <div>
-                <label class="block text-sm font-medium text-gray-500"
-                  >Price</label
-                >
+                <label class="block text-sm font-medium text-gray-500">Price</label>
                 <input
                   v-model="newProduct.price"
                   type="number"
@@ -194,9 +177,7 @@
 
             <!-- Inventory -->
             <div>
-              <label class="block text-sm font-medium text-gray-700"
-                >Inventory</label
-              >
+              <label class="block text-sm font-medium text-gray-700">Inventory</label>
               <div class="mt-1">
                 <div class="flex items-center">
                   <input
@@ -206,11 +187,28 @@
                     class="h-4 w-4 text-blue-600 border-gray-300 rounded"
                     required
                   />
-                  <label
-                    for="track-quantity"
-                    class="ml-2 block text-sm text-gray-900"
+                  <label for="track-quantity" class="ml-2 block text-sm text-gray-900"
                     >Track quantity</label
                   >
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mt-6"
+                    >Category</label
+                  >
+                  <select
+                    v-model="newProduct.category"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    required
+                  >
+                    <option value="" disabled>Select a category</option>
+                    <option
+                      v-for="category in categories"
+                      :key="category.id"
+                      :value="category.name"
+                    >
+                      {{ category.name }}
+                    </option>
+                  </select>
                 </div>
                 <div class="mt-4">
                   <label class="block text-sm font-medium text-gray-500"
@@ -290,6 +288,7 @@ export default {
         description: "",
         price: "",
         quantity: "",
+        category: "",
       },
       files: [], // To store uploaded images
       maxFiles: 5, // Max number of allowed images
@@ -299,6 +298,13 @@ export default {
         key_benefits: "",
         manufacturers: "",
       },
+      categories: [
+        // Add your categories here
+        { id: 1, name: "Skin Care" },
+        { id: 2, name: "Hair Care" },
+        { id: 3, name: "Baby Care" },
+        // Add more categories as needed
+      ],
     };
   },
   methods: {

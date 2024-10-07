@@ -42,6 +42,7 @@ export default defineEventHandler(async (event) => {
               price: product.price,
               inventory_management: "shopify",
               inventory_quantity: parseInt(product.quantity),
+              product_type: product.category || "",
             },
           ],
         },
