@@ -23,7 +23,8 @@ export default defineNuxtConfig({
       shopifyPublicAccessToken: "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",
 
       
-      baseURL: "http://localhost:3001 ",
+      baseURL: "http://localhost:3001",
+      basaeURl:" https://admin.mediu.in/"
     },
   },
 })
