@@ -13,28 +13,40 @@
           <div class="bg-white p-6 rounded-xl shadow-md space-y-8">
             <div>
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700" for="title">Product Title</label>
+                <label class="block text-sm font-medium text-gray-700" for="title"
+                  >Product Title</label
+                >
                 <input
                   class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  type="text" v-model="product.title" id="title" />
+                  type="text"
+                  v-model="product.title"
+                  id="title"
+                />
               </div>
 
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mt-6" for="description">Product
-                  Description</label>
-                <textarea rows="4"
+                <label
+                  class="block text-sm font-medium text-gray-700 mt-6"
+                  for="description"
+                  >Product Description</label
+                >
+                <textarea
+                  rows="4"
                   class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                  v-model="product.body_html" id="description"></textarea>
+                  v-model="product.body_html"
+                  id="description"
+                ></textarea>
               </div>
             </div>
             <!-- Media -->
             <div>
-              <ProductImages :images="product.images" v-model:removed-images="removedImages"
-                v-model:added-images="addedImages" />
+              <ProductImages
+                :images="product.images"
+                v-model:removed-images="removedImages"
+                v-model:added-images="addedImages"
+              />
               <h2 class="block text-sm font-medium text-gray-700">Product Collections</h2>
               <ProductCollectionBox v-model="collections" />
-
-
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-md">
@@ -42,24 +54,38 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
                 <div>
                   <label for="price">Price</label>
-                  <input class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm" type="number" v-model="product.variants[0].price" id="price" />
+                  <input
+                    class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    type="number"
+                    v-model="product.variants[0].price"
+                    id="price"
+                  />
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-500" for="compare-price">Compare Price</label>
+                  <label
+                    class="block text-sm font-medium text-gray-500"
+                    for="compare-price"
+                    >Compare Price</label
+                  >
                   <input
                     class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    type="number" v-model="product.variants[0].compare_at_price" id="compare-price" />
+                    type="number"
+                    v-model="product.variants[0].compare_at_price"
+                    id="compare-price"
+                  />
                 </div>
               </div>
             </div>
             <h2 class="text-xl font-semibold text-gray-800 mb-4">Product Metafields</h2>
-            <div v-for="(metafield, index) in metafields.slice(0, 3)" :key="metafield.id" class="form-group mb-4">
-
+            <div
+              v-for="(metafield, index) in metafields.slice(0, 3)"
+              :key="metafield.id"
+              class="form-group mb-4"
+            >
               <label class="block text-sm font-medium text-gray-700 mb-2">
                 {{ formatLabel(metafield) }}
               </label>
-              
               <div v-if="metafield.namespace.startsWith('custom')">
                 <textarea
                   v-model="metafield.value"
@@ -67,10 +93,13 @@
                   rows="3"
                 ></textarea>
               </div>
-              
               <div v-else>
                 <ul v-if="Array.isArray(metafield.value)" class="space-y-2">
-                  <li v-for="value in metafield.value" :key="value" class="bg-gray-50 p-2 rounded-md border border-gray-200 shadow-sm">
+                  <li
+                    v-for="value in metafield.value"
+                    :key="value"
+                    class="bg-gray-50 p-2 rounded-md border border-gray-200 shadow-sm"
+                  >
                     {{ formatMetaobject(value) }}
                   </li>
                 </ul>
@@ -82,13 +111,14 @@
                 />
               </div>
             </div>
-            
-
-
 
             <button type="submit">Save Product</button>
-            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded" onclick="deleteProduct()">Delete Product</button>
-
+            <button
+              class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              @click="deleteProduct"
+            >
+              Delete Product
+            </button>
           </div>
         </div>
       </form>
@@ -158,8 +188,9 @@ export default {
       }
     },
     formatLabel(metafield) {
-      return `${metafield.namespace.replace("custom:", "").replace("-", " ")}: ${metafield.key
-        }`;
+      return `${metafield.namespace.replace("custom:", "").replace("-", " ")}: ${
+        metafield.key
+      }`;
     },
     formatMetaobject(gid) {
       const gidParts = gid.split("/");
@@ -202,6 +233,7 @@ export default {
         });
 
         if (!response.ok) {
+          const data = await response.json(); // Parse the response data
           this.error = data.error || "Failed to save product";
         } else {
           alert("Product updated successfully!");
@@ -275,5 +307,13 @@ button:hover {
 
 .error {
   color: red;
+}
+
+.bg-red-600 {
+  background-color: #e3342f;
+}
+
+.bg-red-600:hover {
+  background-color: #cc1f24;
 }
 </style>

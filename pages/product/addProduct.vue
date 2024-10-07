@@ -321,10 +321,12 @@ export default {
     },
     async addProduct() {
       try {
+        // Convert uploaded images to base64
         const base64Images = await Promise.all(
           this.files.map((fileObj) => convertFileToBase64(fileObj.file))
         );
 
+        // Prepare metafields
         const metafields = Object.keys(this.customMetafields).map((key) => ({
           key,
           value: richTextMetafields.includes(key)
@@ -333,13 +335,23 @@ export default {
           namespace: "custom",
         }));
 
+        // Ensure the selected category is part of the request body
+        const selectedCategoryId = this.categories.find(
+          (category) => category.name === this.newProduct.category
+        )?.id;
+
         const response = await fetch("/api/products", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            product: { ...this.newProduct, metafields },
+            product: {
+              ...this.newProduct,
+              metafields,
+              // Include the category or collection ID
+              collection_id: selectedCategoryId, // Adjust as necessary based on your API
+            },
             productImages: base64Images,
           }),
         });
