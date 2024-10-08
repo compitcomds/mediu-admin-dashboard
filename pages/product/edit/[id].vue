@@ -156,13 +156,6 @@ export default {
     } catch (error) {
       this.error = error.message;
     }
-    const isAuthenticated = localStorage.getItem("authenticated") === "true";
-    if (!true) {
-      // Redirect to login page if not authenticated
-      this.$router.push("/login");
-    } else {
-      await this.fetchProducts();
-    }
   },
   methods: {
     processMetafields(metafields) {

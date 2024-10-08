@@ -1,23 +1,23 @@
-import { defineEventHandler } from 'h3';
-import fetch from 'node-fetch';
-
-const shopDomain = 'dev-mediu.myshopify.com';
-const accessToken = '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';
+import { defineEventHandler } from "h3";
+import fetch from "node-fetch";
+import config from "~/utils/config";
 
 export default defineEventHandler(async () => {
-  const apiUrl = `https://${shopDomain}/admin/api/2024-07/checkouts.json`;
+  const apiUrl = `https://${config.shopifyDomain}/admin/api/2024-07/checkouts.json`;
 
   try {
     const response = await fetch(apiUrl, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Access-Token': accessToken,
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": config.shopifyAccessToken,
       },
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch Shopify checkouts: ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch Shopify checkouts: ${response.statusText}`
+      );
     }
 
     const data = await response.json();
