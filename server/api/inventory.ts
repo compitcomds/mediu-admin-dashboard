@@ -1,23 +1,27 @@
 import { defineEventHandler, readBody } from "h3";
 import fetch from "node-fetch";
+import config from "~/utils/config";
 
-const shopDomain = "dev-mediu.myshopify.com";
-const accessToken = "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";
 
-async function getCurrentInventoryLevel(inventoryItemId: string, locationId: string): Promise<number> {
-  const url = `https://${shopDomain}/admin/api/2024-07/inventory_levels.json?inventory_item_ids=${inventoryItemId}&location_ids=${locationId}`;
+async function getCurrentInventoryLevel(
+  inventoryItemId: string,
+  locationId: string
+): Promise<number> {
+  const url = `https://${config.shopifyDomain}/admin/api/2024-07/inventory_levels.json?inventory_item_ids=${inventoryItemId}&location_ids=${locationId}`;
 
   try {
     const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Access-Token": accessToken,
+        "X-Shopify-Access-Token": config.shopifyAccessToken,
       },
     });
 
     if (!response.ok) {
-      throw new Error(`Error fetching current inventory level: ${response.statusText}`);
+      throw new Error(
+        `Error fetching current inventory level: ${response.statusText}`
+      );
     }
 
     const data = await response.json();
@@ -34,12 +38,14 @@ async function updateInventoryLevel(
   locationId: string,
   newQuantity: number
 ): Promise<any> {
-  
-  const currentQuantity = await getCurrentInventoryLevel(inventoryItemId, locationId);
+  const currentQuantity = await getCurrentInventoryLevel(
+    inventoryItemId,
+    locationId
+  );
 
   const updatedQuantity = currentQuantity + newQuantity;
 
-  const url = `https://${shopDomain}/admin/api/2024-07/inventory_levels/set.json`;
+  const url = `https://${config.shopifyDomain}/admin/api/2024-07/inventory_levels/set.json`;
 
   const body = {
     location_id: locationId,
@@ -52,7 +58,7 @@ async function updateInventoryLevel(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Access-Token": accessToken,
+        "X-Shopify-Access-Token": config.shopifyAccessToken,
       },
       body: JSON.stringify(body),
     });
@@ -79,7 +85,11 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    const result = await updateInventoryLevel(inventoryItemId, locationId, quantity);
+    const result = await updateInventoryLevel(
+      inventoryItemId,
+      locationId,
+      quantity
+    );
 
     if (result) {
       return {

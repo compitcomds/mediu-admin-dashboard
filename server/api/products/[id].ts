@@ -1,18 +1,16 @@
 import { defineEventHandler, readBody } from "h3";
 import fetch from "node-fetch";
-
-const shopDomain = "dev-mediu.myshopify.com";
-const accessToken = "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";
+import config from "~/utils/config";
 
 async function fetchProductCollections(productId: string): Promise<any> {
-  const url = `https://${shopDomain}/admin/api/2024-07/custom_collections.json?product_id=${productId}`;
+  const url = `https://${config.shopifyDomain}/admin/api/2024-07/custom_collections.json?product_id=${productId}`;
 
   try {
     const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Access-Token": accessToken,
+        "X-Shopify-Access-Token": config.shopifyAccessToken,
       },
     });
 
@@ -29,14 +27,14 @@ async function fetchProductCollections(productId: string): Promise<any> {
 }
 
 async function fetchProductCollects(productId: string): Promise<any> {
-  const url = `https://${shopDomain}/admin/api/2024-07/collects.json?product_id=${productId}`;
+  const url = `https://${config.shopifyDomain}/admin/api/2024-07/collects.json?product_id=${productId}`;
 
   try {
     const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Access-Token": accessToken,
+        "X-Shopify-Access-Token": config.shopifyAccessToken,
       },
     });
 
@@ -53,12 +51,12 @@ async function fetchProductCollects(productId: string): Promise<any> {
 }
 
 async function fetchMetafields(productId: string) {
-  const metafieldsUrl = `https://${shopDomain}/admin/api/2024-07/products/${productId}/metafields.json`;
+  const metafieldsUrl = `https://${config.shopifyDomain}/admin/api/2024-07/products/${productId}/metafields.json`;
   const response = await fetch(metafieldsUrl, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "X-Shopify-Access-Token": accessToken,
+      "X-Shopify-Access-Token": config.shopifyAccessToken,
     },
   });
 
@@ -70,12 +68,12 @@ async function fetchMetafields(productId: string) {
 }
 
 async function updateMetafield(metafield: any) {
-  const metafieldUrl = `https://${shopDomain}/admin/api/2024-07/metafields/${metafield.id}.json`;
+  const metafieldUrl = `https://${config.shopifyDomain}/admin/api/2024-07/metafields/${metafield.id}.json`;
   const response = await fetch(metafieldUrl, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      "X-Shopify-Access-Token": accessToken,
+      "X-Shopify-Access-Token": config.shopifyAccessToken,
     },
     body: JSON.stringify({ metafield }),
   });
@@ -96,7 +94,7 @@ export default defineEventHandler(async (event) => {
     };
   }
 
-  const apiUrl = `https://${shopDomain}/admin/api/2024-07/products/${productId}.json`;
+  const apiUrl = `https://${config.shopifyDomain}/admin/api/2024-07/products/${productId}.json`;
 
   if (event.method === "PUT") {
     const body = await readBody(event);
@@ -106,7 +104,7 @@ export default defineEventHandler(async (event) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "X-Shopify-Access-Token": accessToken,
+          "X-Shopify-Access-Token": config.shopifyAccessToken,
         },
         body: JSON.stringify({ product: body }),
       });
@@ -135,7 +133,7 @@ export default defineEventHandler(async (event) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          "X-Shopify-Access-Token": accessToken,
+          "X-Shopify-Access-Token": config.shopifyAccessToken,
         },
       });
 
@@ -161,7 +159,7 @@ export default defineEventHandler(async (event) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Access-Token": accessToken,
+        "X-Shopify-Access-Token": config.shopifyAccessToken,
       },
     });
 
