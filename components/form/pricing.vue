@@ -5,13 +5,13 @@
           <label class="block text-sm font-medium text-gray-700">Pricing</label>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
             <div>
-              <label class="block text-sm font-medium text-gray-500">Price</label>
+              <label class="block text-sm font-medium text-gray-500">Discounted Price</label>
               <input type="number"
                 class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 placeholder="0.00" />
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-500">Compare at price</label>
+              <label class="block text-sm font-medium text-gray-500">Price</label>
               <input type="number"
                 class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 placeholder="0.00" />

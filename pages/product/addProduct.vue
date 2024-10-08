@@ -142,7 +142,7 @@
             <label class="block text-sm font-medium text-gray-700">Pricing</label>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
               <div>
-                <label class="block text-sm font-medium text-gray-500">Price</label>
+                <label class="block text-sm font-medium text-gray-500">Discounted Price</label>
                 <input
                   v-model="newProduct.price"
                   type="number"
@@ -153,7 +153,7 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-500"
-                  >Compare at price</label
+                  >MRP</label
                 >
                 <input
                   type="number"
@@ -197,7 +197,7 @@
                   >
                   <select
                     v-model="newProduct.category"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                     required
                   >
                     <option value="" disabled>Select a category</option>

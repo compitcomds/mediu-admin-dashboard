@@ -174,7 +174,7 @@
             >
           </div>
         </div>
-        {{ order }}
+        <!-- {{ order }} -->
       </div>
       <div v-else>loading the data</div>
     </div>
