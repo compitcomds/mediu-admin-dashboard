@@ -137,12 +137,21 @@
             </div>
           </div>
 
+          <!-- Collection Selection -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mt-6">Collection</label>
+            <h2 class="block text-sm font-medium text-gray-700">Product Collections</h2>
+            <ProductCollectionBox v-model="collections" />
+          </div>
+
           <!-- Pricing -->
           <div class="bg-white p-6 rounded-xl shadow-md">
             <label class="block text-sm font-medium text-gray-700">Pricing</label>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
               <div>
-                <label class="block text-sm font-medium text-gray-500">Discounted Price</label>
+                <label class="block text-sm font-medium text-gray-500"
+                  >Discounted Price</label
+                >
                 <input
                   v-model="newProduct.price"
                   type="number"
@@ -152,9 +161,7 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-500"
-                  >MRP</label
-                >
+                <label class="block text-sm font-medium text-gray-500">MRP</label>
                 <input
                   type="number"
                   class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -170,9 +177,9 @@
                 type="checkbox"
                 class="h-4 w-4 text-blue-600 border-gray-300 rounded"
               />
-              <label for="tax-checkbox" class="ml-2 block text-sm text-gray-900"
-                >Charge tax on this product</label
-              >
+              <label for="tax-checkbox" class="ml-2 block text-sm text-gray-900">
+                Charge tax on this product
+              </label>
             </div>
 
             <!-- Inventory -->
@@ -187,31 +194,12 @@
                     class="h-4 w-4 text-blue-600 border-gray-300 rounded"
                     required
                   />
-                  <label for="track-quantity" class="ml-2 block text-sm text-gray-900"
-                    >Track quantity</label
-                  >
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mt-6"
-                    >Category</label
-                  >
-                  <select
-                    v-model="newProduct.category"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                    required
-                  >
-                    <option value="" disabled>Select a category</option>
-                    <option
-                      v-for="category in categories"
-                      :key="category.id"
-                      :value="category.name"
-                    >
-                      {{ category.name }}
-                    </option>
-                  </select>
+                  <label for="track-quantity" class="ml-2 block text-sm text-gray-900">
+                    Track quantity
+                  </label>
                 </div>
                 <div class="mt-4">
-                  <label class="block text-sm font-medium text-gray-500"
+                  <label class="block text-sm font-medium text-gray-700"
                     >Stock Quantity</label
                   >
                   <input
@@ -274,12 +262,15 @@
     </div>
   </div>
 </template>
+
 <script>
+import axios from "axios";
 const richTextMetafields = [
   "safety_information_precaution",
   "how_to_use",
   "key_benefits",
 ];
+
 export default {
   data() {
     return {
@@ -289,6 +280,7 @@ export default {
         price: "",
         quantity: "",
         category: "",
+        collectionId: "", // Add collectionId field to hold selected collection
       },
       files: [], // To store uploaded images
       maxFiles: 5, // Max number of allowed images
@@ -299,15 +291,28 @@ export default {
         manufacturers: "",
       },
       categories: [
-        // Add your categories here
         { id: 1, name: "Skin Care" },
         { id: 2, name: "Hair Care" },
         { id: 3, name: "Baby Care" },
-        // Add more categories as needed
       ],
+      collections: [], // To store fetched collections
+      collects: [],
     };
   },
+  computed: {
+    filteredCollections() {
+      return this.collections; // Return all  collections without filtering
+    },
+  },
   methods: {
+    async fetchCollections() {
+      try {
+        const response = await axios.get("/api/collections");
+        this.collections = response.data;
+      } catch (error) {
+        console.error("Error fetching collections:", error);
+      }
+    },
     handleFileUpload(event) {
       const files = event.target.files;
       for (let i = 0; i < files.length; i++) {
@@ -335,11 +340,7 @@ export default {
           namespace: "custom",
         }));
 
-        // Ensure the selected category is part of the request body
-        const selectedCategoryId = this.categories.find(
-          (category) => category.name === this.newProduct.category
-        )?.id;
-
+        // Prepare the product object, ensuring `collectionId` is included
         const response = await fetch("/api/products", {
           method: "POST",
           headers: {
@@ -348,25 +349,26 @@ export default {
           body: JSON.stringify({
             product: {
               ...this.newProduct,
+              collectionId: this.newProduct.collectionId, // Ensure collectionId is passed here
               metafields,
-              // Include the category or collection ID
-              collection_id: selectedCategoryId, // Adjust as necessary based on your API
             },
             productImages: base64Images,
           }),
         });
 
         if (!response.ok) {
-          alert("Failed");
           throw new Error("Failed to add product");
         }
 
-        alert("Success");
-        this.$router.push("/product"); // Redirect to product list page
+        alert("Product added successfully!");
+        this.$router.push("/products"); // Redirect to the product list page
       } catch (error) {
-        console.error(error.message);
+        console.error("Error adding product:", error.message);
       }
     },
+  },
+  mounted() {
+    this.fetchCollections(); // Fetch collections when the component mounts
   },
 };
 </script>
