@@ -141,7 +141,15 @@
           <div>
             <label class="block text-sm font-medium text-gray-700 mt-6">Collection</label>
             <h2 class="block text-sm font-medium text-gray-700">Product Collections</h2>
-            <ProductCollectionBox v-model="collections" />
+            <select v-model="newProduct.collectionId">
+              <option
+                v-for="collection in collections"
+                :key="collection.id"
+                :value="collection.id"
+              >
+                {{ collection.title }}
+              </option>
+            </select>
           </div>
 
           <!-- Pricing -->
@@ -263,15 +271,33 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { defineComponent } from "vue";
 import axios from "axios";
-const richTextMetafields = [
-  "safety_information_precaution",
-  "how_to_use",
-  "key_benefits",
-];
 
-export default {
+interface Product {
+  title: string;
+  description: string;
+  price: string;
+  quantity: string;
+  category: string;
+  collectionId: string;
+  metafields: Array<object>;
+}
+
+interface CustomMetafields {
+  safety_information_precaution: string;
+  how_to_use: string;
+  key_benefits: string;
+  manufacturers: string;
+}
+
+interface ShopifyCollection {
+  id: number;
+  title: string;
+}
+
+export default defineComponent({
   data() {
     return {
       newProduct: {
@@ -280,79 +306,90 @@ export default {
         price: "",
         quantity: "",
         category: "",
-        collectionId: "", // Add collectionId field to hold selected collection
-      },
-      files: [], // To store uploaded images
-      maxFiles: 5, // Max number of allowed images
+        collectionId: "",
+      } as Product,
+      files: [] as Array<{ file: File; preview: string }>,
+      maxFiles: 5,
       customMetafields: {
         safety_information_precaution: "",
         how_to_use: "",
         key_benefits: "",
         manufacturers: "",
-      },
+      } as CustomMetafields,
       categories: [
         { id: 1, name: "Skin Care" },
         { id: 2, name: "Hair Care" },
         { id: 3, name: "Baby Care" },
       ],
-      collections: [], // To store fetched collections
+      collections: [] as ShopifyCollection[],
       collects: [],
     };
   },
   computed: {
     filteredCollections() {
-      return this.collections; // Return all  collections without filtering
+      return this.collections;
     },
   },
   methods: {
-    async fetchCollections() {
+    async fetchCollections(): Promise<void> {
       try {
         const response = await axios.get("/api/collections");
-        this.collections = response.data;
+        this.collections = response.data.map((collection: any) => ({
+          id: collection.id,
+          title: collection.title,
+        }));
       } catch (error) {
         console.error("Error fetching collections:", error);
       }
     },
-    handleFileUpload(event) {
-      const files = event.target.files;
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const preview = URL.createObjectURL(file);
-        this.files.push({ file, preview });
+    handleFileUpload(event: Event): void {
+      const files = (event.target as HTMLInputElement).files;
+      if (files) {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const preview = URL.createObjectURL(file);
+          this.files.push({ file, preview });
+        }
       }
     },
-    removeFile(index) {
+    removeFile(index: number): void {
       this.files.splice(index, 1);
     },
-    async addProduct() {
+    async addProduct(): Promise<void> {
       try {
-        // Convert uploaded images to base64
+        const collectionId = this.newProduct.collectionId;
+        if (!collectionId) {
+          throw new Error("No collection selected");
+        }
+
         const base64Images = await Promise.all(
           this.files.map((fileObj) => convertFileToBase64(fileObj.file))
         );
 
-        // Prepare metafields
-        const metafields = Object.keys(this.customMetafields).map((key) => ({
-          key,
-          value: richTextMetafields.includes(key)
-            ? convertTextToRichText(this.customMetafields[key])
-            : this.customMetafields[key],
-          namespace: "custom",
-        }));
+        const metafields = Object.keys(this.customMetafields).map((key) => {
+          const value = (this.customMetafields as any)[key as keyof CustomMetafields];
+          return {
+            key,
+            value,
+            namespace: "custom",
+          };
+        });
 
-        // Prepare the product object, ensuring `collectionId` is included
+        const product: Product = {
+          ...this.newProduct,
+          metafields,
+        };
+
+        // Call the backend endpoint for adding the product
         const response = await fetch("/api/products", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            product: {
-              ...this.newProduct,
-              collectionId: this.newProduct.collectionId, // Ensure collectionId is passed here
-              metafields,
-            },
+            product,
             productImages: base64Images,
+            collectionId, // Pass the collection ID here to handle in product.ts
           }),
         });
 
@@ -360,17 +397,37 @@ export default {
           throw new Error("Failed to add product");
         }
 
-        alert("Product added successfully!");
-        this.$router.push("/products"); // Redirect to the product list page
+        alert("Product added successfully and added to the collection!");
+        this.$router.push("/product");
       } catch (error) {
-        console.error("Error adding product:", error.message);
+        console.error("Error adding product:", error);
       }
     },
   },
   mounted() {
-    this.fetchCollections(); // Fetch collections when the component mounts
+    this.fetchCollections();
   },
-};
+});
+
+const richTextMetafields: string[] = [
+  "safety_information_precaution",
+  "how_to_use",
+  "key_benefits",
+];
+
+function convertFileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+}
+
+function convertTextToRichText(text: string): string {
+  // Implement your rich text conversion logic here
+  return text;
+}
 </script>
 
 <style scoped>

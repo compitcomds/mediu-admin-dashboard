@@ -59,14 +59,14 @@ export default defineEventHandler(async (event) => {
     }
   } else if (event.req.method === "POST") {
     try {
-      const { product, productImages } = await readBody(event);
+      const { product, productImages, collectionId } = await readBody(event);
 
-      // Fetch collections using the new function
+      // Fetch all collections
       const collections = await fetchCollections();
 
-      // Find the matching collection by title
+      // Find the selected collection based on the passed collectionId
       const selectedCollection = collections.find(
-        (collection) => collection.title === product.category
+        (collection) => collection.id === collectionId
       );
 
       const newProduct = {
@@ -88,8 +88,8 @@ export default defineEventHandler(async (event) => {
         },
       };
 
-      // Create the product
-      const response = await fetch(apiUrl, {
+      // Step 1: Create the product in Shopify
+      const productResponse = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,13 +98,15 @@ export default defineEventHandler(async (event) => {
         body: JSON.stringify(newProduct),
       });
 
-      if (!response.ok) {
-        throw new Error(`Failed to create product: ${response.statusText}`);
+      if (!productResponse.ok) {
+        throw new Error(
+          `Failed to create product: ${productResponse.statusText}`
+        );
       }
 
-      const createdProduct = await response.json();
+      const createdProduct = await productResponse.json();
 
-      // Add product to collection if a matching collection is found
+      // Step 2: Add product to collection if a matching collection is found
       if (selectedCollection) {
         const addProductToCollectionUrl = `https://${config.shopifyDomain}/admin/api/2024-07/collects.json`;
 
@@ -131,6 +133,7 @@ export default defineEventHandler(async (event) => {
 
       return createdProduct;
     } catch (error) {
+      console.error("Error adding product to collection: ", error);
       return { error: error };
     }
   }
