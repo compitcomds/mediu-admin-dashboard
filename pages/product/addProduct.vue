@@ -222,6 +222,40 @@
               </div>
             </div>
           </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mt-6">Tags</label>
+            <div
+              class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus-within:ring-blue-500 focus-within:border-blue-500 sm:text-sm flex flex-wrap space-x-2 space-y-2"
+            >
+              <!-- Display each tag as a "chip" -->
+              <span
+                v-for="(tag, index) in newProduct.tags"
+                :key="index"
+                class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full"
+              >
+                {{ tag }}
+                <button
+                  @click="removeTag(index)"
+                  type="button"
+                  class="ml-1 bg-transparent hover:bg-red-200 text-red-600 rounded-full focus:outline-none"
+                >
+                  &times;
+                </button>
+              </span>
+
+              <!-- Input field for new tags -->
+              <input
+                v-model="tagInput"
+                @keydown.enter.prevent="addTag"
+                @keydown.space.prevent="addTag"
+                @keydown.comma.prevent="addTag"
+                @blur="addTag"
+                type="text"
+                class="border-none focus:ring-0 flex-1"
+                placeholder="Type a tag and press space"
+              />
+            </div>
+          </div>
 
           <!-- Metafields -->
           <div>
@@ -283,6 +317,7 @@ interface Product {
   category: string;
   collectionId: string;
   metafields: Array<object>;
+  tags: string[]; // Tags as an array
 }
 
 interface CustomMetafields {
@@ -307,6 +342,7 @@ export default defineComponent({
         quantity: "",
         category: "",
         collectionId: "",
+        tags: [] as string[], // Tags initialized as an array of strings
       } as Product,
       files: [] as Array<{ file: File; preview: string }>,
       maxFiles: 5,
@@ -323,6 +359,7 @@ export default defineComponent({
       ],
       collections: [] as ShopifyCollection[],
       collects: [],
+      tagInput: "",
     };
   },
   computed: {
@@ -331,6 +368,16 @@ export default defineComponent({
     },
   },
   methods: {
+    addTag() {
+      const tag: string = this.tagInput.trim(); // Specify type for tag
+      if (tag && !this.newProduct.tags.includes(tag)) {
+        this.newProduct.tags.push(tag); // Add tag to array if unique
+      }
+      this.tagInput = ""; // Clear input field
+    },
+    removeTag(index: number) {
+      this.newProduct.tags.splice(index, 1); // Remove tag by index
+    },
     async fetchCollections(): Promise<void> {
       try {
         const response = await axios.get("/api/collections");
@@ -380,7 +427,7 @@ export default defineComponent({
           metafields,
         };
 
-        // Call the backend endpoint for adding the product
+        // Use newProduct.tags directly since it's already an array
         const response = await fetch("/api/products", {
           method: "POST",
           headers: {
@@ -390,6 +437,7 @@ export default defineComponent({
             product,
             productImages: base64Images,
             collectionId, // Pass the collection ID here to handle in product.ts
+            tags: this.newProduct.tags,
           }),
         });
 

@@ -73,6 +73,7 @@ export default defineEventHandler(async (event) => {
         product: {
           title: product.title,
           body_html: product.description || "",
+          tags: product.tags.join(", "),
           images: productImages.map((image: string) => ({
             attachment: image.split(",")[1],
           })),
@@ -83,6 +84,7 @@ export default defineEventHandler(async (event) => {
               inventory_management: "shopify",
               inventory_quantity: parseInt(product.quantity, 10) || 0,
               product_type: product.category || "",
+              
             },
           ],
         },
