@@ -210,7 +210,7 @@ export default {
         }
       } catch (error) {
         alert(error.message);
-        console.error("Error creating collection:", error);
+        console.error("Sucess:", error);
       }
     },
   },
