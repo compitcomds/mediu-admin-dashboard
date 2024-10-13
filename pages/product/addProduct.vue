@@ -408,7 +408,6 @@ export default defineComponent({
         if (!collectionId) {
           throw new Error("No collection selected");
         }
-
         const base64Images = await Promise.all(
           this.files.map((fileObj) => convertFileToBase64(fileObj.file))
         );

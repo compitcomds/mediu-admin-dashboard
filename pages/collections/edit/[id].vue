@@ -71,20 +71,20 @@ export default {
   data() {
     return {
       selectedCollection: {
-        id: '',
-        title: '',
-        body_html: ''
+        id: "",
+        title: "",
+        body_html: "",
       },
       loading: false, // Loading state for fetching collections
-      error: null // Error state
+      error: null, // Error state
     };
   },
 
   async mounted() {
-    const isAuthenticated = localStorage.getItem('authenticated') === 'true';
+    const isAuthenticated = localStorage.getItem("authenticated") === "true";
     if (!true) {
       // Redirect to login page if not authenticated
-      this.$router.push('/login');
+      this.$router.push("/login");
     } else {
       await this.fetchCollection();
     }
@@ -111,7 +111,17 @@ export default {
         this.loading = false;
       }
     },
-
+    async deleteProduct() {
+      const ProductId = this.$route.params.id;
+      try {
+        const response = await fetch(`/api/collections/${collectionId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      } catch {}
+    },
     // Update the selected collection with the new data
     async updateCollection() {
       try {
@@ -122,7 +132,7 @@ export default {
         const updatedCollection = {
           title: this.selectedCollection.title,
           body_html: this.selectedCollection.body_html,
-          published: true
+          published: true,
         };
 
         const response = await axios.put(
@@ -131,7 +141,6 @@ export default {
         );
 
         alert("Collection updated successfully!");
-
       } catch (error) {
         this.error = `Failed to update collection: ${error.message}`;
       }
@@ -140,7 +149,7 @@ export default {
     // Navigate back to the previous page
     goBack() {
       this.$router.go(-1);
-    }
-  }
+    },
+  },
 };
 </script>

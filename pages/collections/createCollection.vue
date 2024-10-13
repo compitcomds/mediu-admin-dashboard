@@ -205,7 +205,7 @@ export default {
           };
         } else {
           throw new Error(
-            response.statusText || "Error while creating the collection"
+            response.statusText || "Succes"
           );
         }
       } catch (error) {
