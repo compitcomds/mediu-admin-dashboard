@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // Handle HTTP Methods (GET, PUT)
+    // Handle HTTP Methods (GET, PUT, DELETE)
     switch (method) {
       case "GET": {
         // Fetch the collection
@@ -60,6 +60,24 @@ export default defineEventHandler(async (event) => {
         );
 
         return response.data.custom_collection;
+      }
+
+      case "DELETE": {
+        // Handle the delete request for the collection
+        const response = await axios.delete(
+          `https://${config.shopifyDomain}/admin/api/2024-07/custom_collections/${id}.json`,
+          {
+            headers: {
+              "X-Shopify-Access-Token": config.shopifyAccessToken,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          return { message: "Collection deleted successfully." };
+        } else {
+          throw new Error("Failed to delete the collection.");
+        }
       }
 
       // If the method is not allowed, return a 405 Method Not Allowed

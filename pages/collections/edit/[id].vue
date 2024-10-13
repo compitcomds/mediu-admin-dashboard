@@ -53,6 +53,12 @@
           <button type="submit" class="bg-black text-white px-4 py-2 rounded-md">
             Update Collection
           </button>
+          <button
+            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            @click="deleteCollection"
+          >
+            Delete Product
+          </button>
         </div>
       </form>
 
@@ -111,16 +117,36 @@ export default {
         this.loading = false;
       }
     },
-    async deleteProduct() {
-      const ProductId = this.$route.params.id;
+    async deleteCollection() {
+      const collectionId = this.$route.params.id;
+
+      // Check if collectionId is valid
+      if (!collectionId) {
+        this.error = "No collection ID provided.";
+        return;
+      }
+
       try {
-        const response = await fetch(`/api/collections/${collectionId}`, {
-          method: "DELETE",
+        const response = await axios.delete(`/api/collections/${collectionId}`, {
           headers: {
             "Content-Type": "application/json",
           },
         });
-      } catch {}
+
+        // Log the response for debugging
+        console.log("Delete Collection response:", response);
+
+        if (response.status === 200) {
+          alert("Collection deleted successfully!");
+          this.$router.push("/collections"); // Redirect to collections list
+        } else {
+          console.error("Failed to delete Collection:", response.data);
+          this.error = response.data.error || "Failed to delete Collection";
+        }
+      } catch (error) {
+        console.error("Error during delete operation:", error);
+        this.error = error.message || "An error occurred while deleting the collection.";
+      }
     },
     // Update the selected collection with the new data
     async updateCollection() {

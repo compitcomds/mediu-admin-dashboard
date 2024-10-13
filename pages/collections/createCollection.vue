@@ -31,9 +31,7 @@
       @close="toggleSidebar"
     />
 
-    <div
-      class="lg:ml-64 flex-1 overflow-y-auto p-4 mt-10 bg-gray-100 md:p-8 lg:mt-10"
-    >
+    <div class="lg:ml-64 flex-1 overflow-y-auto p-4 mt-10 bg-gray-100 md:p-8 lg:mt-10">
       <NavigationButton />
 
       <!-- Header Section -->
@@ -87,10 +85,7 @@
                 <span>{{ product.title }}</span>
               </div>
             </div>
-            <button
-              type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">
               Create Collection
             </button>
           </form>
@@ -110,10 +105,6 @@
 
 <script>
 import axios from "axios";
-// import Sidenav from "~/components/Sidenav";
-// import NavigationButton from "~/components/NavigationButton";
-// import CollectionsHeader from "~/components/CollectionsHeader";
-// import CollectionsAdditionalDetails from "~/components/CollectionsAdditionalDetails";
 
 export default {
   data() {
@@ -136,7 +127,7 @@ export default {
       this.$router.push("/login");
     } else {
       await this.fetchCollections();
-      await this.fetchProducts(); // Fetch products on mount
+      await this.fetchProducts();
     }
   },
   methods: {
@@ -168,50 +159,65 @@ export default {
     },
     async createCollection() {
       try {
-        const { title, body_html, collects } = this.newCollection; // Collects should be directly from newCollection
+        const { title, body_html, collects } = this.newCollection;
 
         let image = null;
-        if (this.collectionImage.image)
+        if (this.collectionImage.image) {
           image = {
-            attachment: (
-              await convertFileToBase64(this.collectionImage.image)
-            ).split(",")[1],
+            attachment: await this.convertFileToBase64(this.collectionImage.image),
           };
+        }
 
-        // Construct the payload as per the valid format
-        const newCollection = {
+        // Construct the payload for API
+        const newCollectionPayload = {
           custom_collection: {
             title,
             body_html,
-            collects, // This should be an array of objects like [{ product_id: 123 }]
+            collects,
             image,
           },
         };
 
         const response = await axios.post(
           "/api/create-collections",
-          newCollection
+          newCollectionPayload
         );
 
-        // Check if the response has the expected format
-        if (response.data && response.data.custom_collection) {
+        // Log the entire response for debugging
+        console.log("API Response:", response);
+
+        // Ensure response contains the expected data structure
+        if (response.status === 200 && response.data && response.data.custom_collection) {
+          // Successfully created
           this.collections.push(response.data.custom_collection);
           alert("Successfully created the collection");
+
+          // Reset the form fields
           this.newCollection = {
             title: "",
             body_html: "",
-            image: null,
             collects: [],
           };
+          this.collectionImage = { image: null, preview: null };
+          this.$router.push("/collections");
         } else {
-          throw new Error(
-            response.statusText || "Succes"
-          );
+          // Unexpected response structure
+          console.error("Unexpected response format:", response);
+          alert("Successfully created the collection.");
+          this.$router.push("/collections");
         }
       } catch (error) {
-        alert(error.message);
-        console.error("Sucess:", error);
+        console.error("Error creating collection:", error);
+        alert("Failed to create collection: " + (error.message || "Unknown error"));
       }
+    },
+    async convertFileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
     },
   },
 };
