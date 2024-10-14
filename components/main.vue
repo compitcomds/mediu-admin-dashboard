@@ -1,10 +1,10 @@
 <template>
-  <div class="lg:ml-64 flex-1 w-full items-center justify-center overflow-y-auto mt-10 bg-gradient-to-b from-gray-100 to-white p-10">
+  <div class="lg:ml-64 flex-1 w-full items-center justify-center overflow-y-auto mt-10 bg-gradient-to-b from-gray-100 to-white p-6 lg:p-10">
     <!-- Welcome Section -->
-    <div class="bg-white flex flex-col shadow-2xl rounded-xl p-12 mb-10 items-center space-y-8 w-full text-[#28574e]">
+    <div class="bg-white flex flex-col shadow-2xl rounded-xl p-12 mb-10 items-center space-y-6 w-full text-[#28574e]">
       <img src="https://ccdstest.b-cdn.net/Medi%20u/logo%202.png" alt="Mediu Logo" class="w-60 rounded-lg shadow-md">
-      <h2 class="text-6xl text-center font-extrabold tracking-wide">Hey Admin</h2>
-      <h2 class="text-6xl text-center font-extrabold tracking-wide">Welcome To Mediu</h2>
+      <h2 class="text-4xl text-center font-bold">Hey Admin</h2>
+      <h2 class="text-4xl text-center font-bold">Welcome To Mediu</h2>
       <p class="text-lg text-center text-gray-600 max-w-2xl">Here you can manage all your e-commerce activities, track sales, orders, and customers efficiently. Let's get started!</p>
     </div>
 
@@ -28,32 +28,32 @@
     </div>
 
     <!-- Recent Orders -->
-    <div class="bg-white shadow-2xl rounded-xl p-12 w-full mb-16">
+    <div class="bg-white shadow-2xl rounded-xl p-12 w-full mb-16 overflow-x-auto">
       <h3 class="text-4xl font-semibold text-gray-900 mb-10">Recent Orders</h3>
-      <table class="min-w-full bg-white rounded-lg overflow-hidden">
+      <table class="min-w-full bg-white rounded-lg">
         <thead>
           <tr class="bg-gray-300">
-            <th class="py-4 px-6 text-left text-gray-900 font-semibold uppercase tracking-wide">Order ID</th>
-            <th class="py-4 px-6 text-left text-gray-900 font-semibold uppercase tracking-wide">Customer</th>
-            <th class="py-4 px-6 text-left text-gray-900 font-semibold uppercase tracking-wide">Total</th>
-            <th class="py-4 px-6 text-left text-gray-900 font-semibold uppercase tracking-wide">Status</th>
-            <th class="py-4 px-6 text-left text-gray-900 font-semibold uppercase tracking-wide">Date</th>
+            <th class="py-4 px-6 text-left text-gray-900 font-semibold uppercase tracking-wide whitespace-nowrap">Order ID</th>
+            <th class="py-4 px-6 text-left text-gray-900 font-semibold uppercase tracking-wide whitespace-nowrap">Customer</th>
+            <th class="py-4 px-6 text-left text-gray-900 font-semibold uppercase tracking-wide whitespace-nowrap">Total</th>
+            <th class="py-4 px-6 text-left text-gray-900 font-semibold uppercase tracking-wide whitespace-nowrap">Status</th>
+            <th class="py-4 px-6 text-left text-gray-900 font-semibold uppercase tracking-wide whitespace-nowrap">Date</th>
           </tr>
         </thead>
         <tbody>
           <tr class="hover:bg-gray-100 transition">
-            <td class="py-4 px-6">#1001</td>
-            <td class="py-4 px-6">John Doe</td>
-            <td class="py-4 px-6">$150.00</td>
-            <td class="py-4 px-6 text-green-800 font-semibold">Completed</td>
-            <td class="py-4 px-6">2024-10-01</td>
+            <td class="py-4 px-6 whitespace-nowrap">#1001</td>
+            <td class="py-4 px-6 whitespace-nowrap">John Doe</td>
+            <td class="py-4 px-6 whitespace-nowrap">$150.00</td>
+            <td class="py-4 px-6 text-green-800 font-semibold whitespace-nowrap">Completed</td>
+            <td class="py-4 px-6 whitespace-nowrap">2024-10-01</td>
           </tr>
           <tr class="hover:bg-gray-100 transition">
-            <td class="py-4 px-6">#1002</td>
-            <td class="py-4 px-6">Jane Smith</td>
-            <td class="py-4 px-6">$200.00</td>
-            <td class="py-4 px-6 text-yellow-800 font-semibold">Pending</td>
-            <td class="py-4 px-6">2024-10-03</td>
+            <td class="py-4 px-6 whitespace-nowrap">#1002</td>
+            <td class="py-4 px-6 whitespace-nowrap">Jane Smith</td>
+            <td class="py-4 px-6 whitespace-nowrap">$200.00</td>
+            <td class="py-4 px-6 text-yellow-800 font-semibold whitespace-nowrap">Pending</td>
+            <td class="py-4 px-6 whitespace-nowrap">2024-10-03</td>
           </tr>
         </tbody>
       </table>

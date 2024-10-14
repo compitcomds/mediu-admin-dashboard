@@ -29,7 +29,7 @@
 
     <!-- User Icon and Name for lg and xl screens only -->
     <div class="hidden lg:flex items-center space-x-4">
-      <svg
+      <!-- <svg
         xmlns="http://www.w3.org/2000/svg"
         class="h-6 w-6 text-white"
         fill="none"
@@ -45,20 +45,20 @@
         />
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 14v7" />
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-7" />
-      </svg>
+      </svg> -->
       <div class="bg-purple-600 rounded-full px-4 py-1 text-white font-semibold">
         Dev MediU
       </div>
-    </div>
+    
     <!-- Logout Button for lg and xl screens only -->
     <div class="hidden lg:flex items-center space-x-4">
       <button
         @click="handleLogout"
-        class="text-white hover:bg-red-600 rounded-md px-4 py-2"
+        class="text-white bg-red-600 hover:bg-red-500 rounded-md px-4 py-2"
       >
         Logout
       </button>
-    </div>
+    </div></div>
 
     <!-- Sidenav for sm and md screens -->
     <transition name="slide">
