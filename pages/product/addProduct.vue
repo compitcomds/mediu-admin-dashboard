@@ -14,7 +14,10 @@
           >
             Discard
           </button>
-          <button @click="addProduct" class="bg-blue-600 text-white px-4 py-2 rounded-md">
+          <button
+            @click="addProduct"
+            class="bg-blue-600 text-white px-4 py-2 rounded-md"
+          >
             Save
           </button>
         </div>
@@ -86,7 +89,9 @@
             </div>
 
             <!-- Display Uploaded Images -->
-            <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div
+              class="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"
+            >
               <div
                 v-if="files.length > 0"
                 class="relative col-span-2 row-span-2 sm:col-span-2 sm:row-span-2 h-60 w-full"
@@ -102,7 +107,11 @@
                   Remove
                 </button>
               </div>
-              <div v-for="(file, index) in files.slice(1)" :key="index" class="relative">
+              <div
+                v-for="(file, index) in files.slice(1)"
+                :key="index"
+                class="relative"
+              >
                 <img
                   :src="file.preview"
                   class="h-24 w-24 object-cover border rounded-md"
@@ -131,7 +140,11 @@
                       d="M12 4v16m8-8H4"
                     />
                   </svg>
-                  <input type="file" class="sr-only" @change="handleFileUpload" />
+                  <input
+                    type="file"
+                    class="sr-only"
+                    @change="handleFileUpload"
+                  />
                 </label>
               </div>
             </div>
@@ -139,15 +152,21 @@
 
           <!-- Collection Selection -->
           <div class="space-y-2 mt-6">
-            <label class="block text-sm font-semibold text-gray-600">Collection</label>
-            
+            <label class="block text-sm font-semibold text-gray-600"
+              >Collection</label
+            >
+
             <!-- Collection Title -->
-            <h2 class="text-lg font-semibold text-gray-800 mb-2">Product Collections</h2>
-            
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">
+              Product Collections
+            </h2>
+
             <!-- Select Menu -->
             <div class="relative">
-              <select v-model="newProduct.collectionId" 
-                      class="block w-full px-4 py-2 pr-8 border border-gray-300 rounded-md shadow-sm bg-white text-gray-800 focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
+              <select
+                v-model="newProduct.collectionId"
+                class="block w-full px-4 py-2 pr-8 border border-gray-300 rounded-md shadow-sm bg-white text-gray-800 focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"
+              >
                 <option
                   v-for="collection in collections"
                   :key="collection.id"
@@ -157,15 +176,14 @@
                   {{ collection.title }}
                 </option>
               </select>
-              
-            
             </div>
           </div>
-          
 
           <!-- Pricing -->
           <div class="bg-white p-6 rounded-xl shadow-md">
-            <label class="block text-sm font-medium text-gray-700">Pricing</label>
+            <label class="block text-sm font-medium text-gray-700"
+              >Pricing</label
+            >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
               <div>
                 <label class="block text-sm font-medium text-gray-500"
@@ -180,7 +198,9 @@
                 />
               </div>
               <div>
-                <label class="block text-sm font-medium text-gray-500">MRP</label>
+                <label class="block text-sm font-medium text-gray-500"
+                  >MRP</label
+                >
                 <input
                   type="number"
                   class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -196,14 +216,19 @@
                 type="checkbox"
                 class="h-4 w-4 text-blue-600 border-gray-300 rounded"
               />
-              <label for="tax-checkbox" class="ml-2 block text-sm text-gray-900">
+              <label
+                for="tax-checkbox"
+                class="ml-2 block text-sm text-gray-900"
+              >
                 Charge tax on this product
               </label>
             </div>
 
             <!-- Inventory -->
-            <div class="mt-2 ">
-              <label class="block text-sm font-medium text-gray-700">Inventory</label>
+            <div class="mt-2">
+              <label class="block text-sm font-medium text-gray-700"
+                >Inventory</label
+              >
               <div class="mt-1">
                 <div class="flex items-center">
                   <input
@@ -213,7 +238,10 @@
                     class="h-4 w-4 text-blue-600 border-gray-300 rounded"
                     required
                   />
-                  <label for="track-quantity" class="ml-2 block text-sm text-gray-900">
+                  <label
+                    for="track-quantity"
+                    class="ml-2 block text-sm text-gray-900"
+                  >
                     Track quantity
                   </label>
                 </div>
@@ -234,7 +262,9 @@
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 mt-6">Tags</label>
+            <label class="block text-sm font-medium text-gray-700 mt-6"
+              >Tags</label
+            >
             <div
               class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus-within:ring-blue-500 focus-within:border-blue-500 sm:text-sm flex flex-wrap space-x-2 space-y-2"
             >
@@ -262,7 +292,7 @@
                 @keydown.comma.prevent="addTag"
                 @blur="addTag"
                 type="text"
-                class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus-within:ring-blue-500 focus-within:border-blue-500 sm:text-sm flex flex-wrap space-x-2 space-y-2"
+                class="mt-1 py-3 px-3 w-full border border-gray-300 rounded-md shadow-sm focus-within:ring-blue-500 focus-within:border-blue-500 sm:text-sm flex flex-wrap space-x-2 space-y-2"
                 placeholder="Type a tag and press space"
               />
             </div>
@@ -317,19 +347,20 @@
             >
               Discard
             </button>
-            <button @click="addProduct" class="bg-blue-600 text-white px-4 py-2 rounded-md">
+            <button
+              @click="addProduct"
+              class="bg-blue-600 text-white px-4 py-2 rounded-md"
+            >
               Save
             </button>
           </div>
         </div>
       </div>
-      
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script lang="ts" setup>
 import axios from "axios";
 
 interface Product {
@@ -340,7 +371,7 @@ interface Product {
   category: string;
   collectionId: string;
   metafields: Array<object>;
-  tags: string[]; // Tags as an array
+  tags: string[];
 }
 
 interface CustomMetafields {
@@ -355,149 +386,134 @@ interface ShopifyCollection {
   title: string;
 }
 
-export default defineComponent({
-  data() {
-    return {
-      newProduct: {
-        title: "",
-        description: "",
-        price: "",
-        quantity: "",
-        category: "",
-        collectionId: "",
-        tags: [] as string[], // Tags initialized as an array of strings
-      } as Product,
-      files: [] as Array<{ file: File; preview: string }>,
-      maxFiles: 5,
-      customMetafields: {
-        safety_information_precaution: "",
-        how_to_use: "",
-        key_benefits: "",
-        manufacturers: "",
-      } as CustomMetafields,
-      categories: [
-        { id: 1, name: "Skin Care" },
-        { id: 2, name: "Hair Care" },
-        { id: 3, name: "Baby Care" },
-      ],
-      collections: [] as ShopifyCollection[],
-      collects: [],
-      tagInput: "",
-    };
-  },
-  computed: {
-    filteredCollections() {
-      return this.collections;
-    },
-  },
-  methods: {
-    addTag() {
-      const tag: string = this.tagInput.trim(); // Specify type for tag
-      if (tag && !this.newProduct.tags.includes(tag)) {
-        this.newProduct.tags.push(tag); // Add tag to array if unique
-      }
-      this.tagInput = ""; // Clear input field
-    },
-    removeTag(index: number) {
-      this.newProduct.tags.splice(index, 1); // Remove tag by index
-    },
-    async fetchCollections(): Promise<void> {
-      try {
-        const response = await axios.get("/api/collections");
-        this.collections = response.data.map((collection: any) => ({
-          id: collection.id,
-          title: collection.title,
-        }));
-      } catch (error) {
-        console.error("Error fetching collections:", error);
-      }
-    },
-    handleFileUpload(event: Event): void {
-      const files = (event.target as HTMLInputElement).files;
-      if (files) {
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
-          const preview = URL.createObjectURL(file);
-          this.files.push({ file, preview });
-        }
-      }
-    },
-    removeFile(index: number): void {
-      this.files.splice(index, 1);
-    },
-    async addProduct(): Promise<void> {
-      try {
-        const collectionId = this.newProduct.collectionId;
-        if (!collectionId) {
-          throw new Error("No collection selected");
-        }
-        const base64Images = await Promise.all(
-          this.files.map((fileObj) => convertFileToBase64(fileObj.file))
-        );
+const router = useRouter();
 
-        const metafields = Object.keys(this.customMetafields).map((key) => {
-          const value = (this.customMetafields as any)[key as keyof CustomMetafields];
-          return {
-            key,
-            value,
-            namespace: "custom",
-          };
-        });
-
-        const product: Product = {
-          ...this.newProduct,
-          metafields,
-        };
-
-        // Use newProduct.tags directly since it's already an array
-        const response = await fetch("/api/products", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            product,
-            productImages: base64Images,
-            collectionId, // Pass the collection ID here to handle in product.ts
-            tags: this.newProduct.tags,
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to add product");
-        }
-
-        alert("Product added successfully and added to the collection!");
-        this.$router.push("/product");
-      } catch (error) {
-        console.error("Error adding product:", error);
-      }
-    },
-  },
-  mounted() {
-    this.fetchCollections();
-  },
+const newProduct = ref<Product>({
+  title: "",
+  description: "",
+  price: "",
+  quantity: "",
+  category: "",
+  collectionId: "",
+  tags: [],
 });
 
-const richTextMetafields: string[] = [
-  "safety_information_precaution",
-  "how_to_use",
-  "key_benefits",
-];
+const files = ref<{ file: File; preview: string }[]>([]);
 
-function convertFileToBase64(file: File): Promise<string> {
+const customMetafields = ref<CustomMetafields>({
+  safety_information_precaution: "",
+  how_to_use: "",
+  key_benefits: "",
+  manufacturers: "",
+});
+
+const categories = ref([
+  { id: 1, name: "Skin Care" },
+  { id: 2, name: "Hair Care" },
+  { id: 3, name: "Baby Care" },
+]);
+
+const collections = ref<ShopifyCollection[]>([]);
+const tagInput = ref("");
+
+const filteredCollections = computed(() => collections.value);
+
+const addTag = () => {
+  const tag = tagInput.value.trim();
+  if (tag && !newProduct.value.tags.includes(tag)) {
+    newProduct.value.tags.push(tag);
+  }
+  tagInput.value = "";
+};
+
+const removeTag = (index: number) => {
+  newProduct.value.tags.splice(index, 1);
+};
+
+const fetchCollections = async () => {
+  try {
+    const response = await axios.get("/api/collections");
+    collections.value = response.data.map((collection: any) => ({
+      id: collection.id,
+      title: collection.title,
+    }));
+  } catch (error) {
+    console.error("Error fetching collections:", error);
+  }
+};
+
+const handleFileUpload = (event: Event) => {
+  const filesList = (event.target as HTMLInputElement).files;
+  if (filesList) {
+    for (let i = 0; i < filesList.length; i++) {
+      const file = filesList[i];
+      const preview = URL.createObjectURL(file);
+      files.value.push({ file, preview });
+    }
+  }
+};
+
+const removeFile = (index: number) => {
+  files.value.splice(index, 1);
+};
+
+const addProduct = async () => {
+  try {
+    const collectionId = newProduct.value.collectionId;
+    if (!collectionId) {
+      throw new Error("No collection selected");
+    }
+    const base64Images = await Promise.all(
+      files.value.map((fileObj) => convertFileToBase64(fileObj.file))
+    );
+
+    const metafields = Object.keys(customMetafields.value).map((key) => ({
+      key,
+      value: (customMetafields.value as any)[key] || "N/A",
+      namespace: "custom",
+    }));
+
+    const product: Product = {
+      ...newProduct.value,
+      metafields,
+    };
+
+    const response = await fetch("/api/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        product,
+        productImages: base64Images,
+        collectionId,
+        tags: newProduct.value.tags,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to add product");
+    }
+
+    alert("Product added successfully and added to the collection!");
+    router.push("/product"); // Navigate to the product page
+  } catch (error) {
+    console.error("Error adding product:", error);
+  }
+};
+
+onMounted(() => {
+  fetchCollections();
+});
+
+const convertFileToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
-}
-
-function convertTextToRichText(text: string): string {
-  // Implement your rich text conversion logic here
-  return text;
-}
+};
 </script>
 
 <style scoped>

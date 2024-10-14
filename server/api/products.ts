@@ -84,7 +84,6 @@ export default defineEventHandler(async (event) => {
               inventory_management: "shopify",
               inventory_quantity: parseInt(product.quantity, 10) || 0,
               product_type: product.category || "",
-              
             },
           ],
         },

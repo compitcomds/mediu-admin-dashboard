@@ -5,7 +5,9 @@
 
     <div class="lg:ml-64 flex-1 overflow-y-auto p-8 mt-10 bg-gray-100">
       <NavigationButton />
-      <h1 class="text-2xl font-bold" v-if="product">Edit Product: {{ product.title }}</h1>
+      <h1 class="text-2xl font-bold" v-if="product">
+        Edit Product: {{ product.title }}
+      </h1>
       <div v-if="error" class="error">{{ error }}</div>
 
       <form v-if="product" @submit.prevent="saveProduct">
@@ -13,7 +15,9 @@
           <div class="bg-white p-6 rounded-xl shadow-md space-y-8">
             <div>
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700" for="title"
+                <label
+                  class="block text-sm font-medium text-gray-700"
+                  for="title"
                   >Product Title</label
                 >
                 <input
@@ -45,12 +49,16 @@
                 v-model:removed-images="removedImages"
                 v-model:added-images="addedImages"
               />
-              <h2 class="block text-sm font-medium text-gray-700">Product Collections</h2>
+              <h2 class="block text-sm font-medium text-gray-700">
+                Product Collections
+              </h2>
               <ProductCollectionBox v-model="collections" />
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-md">
-              <label class="block text-sm font-medium text-gray-700">Pricing</label>
+              <label class="block text-sm font-medium text-gray-700"
+                >Pricing</label
+              >
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
                 <div>
                   <label for="price">Price</label>
@@ -77,9 +85,12 @@
                 </div>
               </div>
             </div>
-            <h2 class="text-xl font-semibold text-gray-800 mb-4">Product Metafields</h2>
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">
+              Product Metafields
+            </h2>
+
             <div
-              v-for="(metafield, index) in metafields.slice(0, 3)"
+              v-for="(metafield, index) in filteredMetafields"
               :key="metafield.id"
               class="form-group mb-4"
             >
@@ -125,143 +136,158 @@
     </div>
   </div>
 </template>
+<script setup lang="ts">
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
-<script>
-export default {
-  data() {
-    return {
-      product: null,
-      metafields: [],
-      error: null,
-      collections: [],
-      collects: [],
-      removedImages: [],
-      addedImages: [],
-    };
-  },
-  async mounted() {
-    const productId = this.$route.params.id;
-    try {
-      const response = await fetch(`/api/products/${productId}`);
-      const data = await response.json();
-      console.log(data);
-      if (response.ok) {
-        this.product = data.product;
-        this.metafields = this.processMetafields(data.metafields || []);
-        this.collections = data.collections || [];
-        this.collects = data.collects || [];
-      } else {
-        this.error = data.error || "Failed to fetch product details";
-      }
-    } catch (error) {
-      this.error = error.message;
+const route = useRoute();
+const router = useRouter();
+
+const productId = ref(route.params.id);
+const product = ref(null);
+const metafields = ref([]);
+const error = ref(null);
+const collections = ref([]);
+const collects = ref([]);
+const removedImages = ref([]);
+const addedImages = ref([]);
+
+const validMetafields = [
+  "safety_information_precaution",
+  "how_to_use",
+  "key_benefits",
+  "manufacturers",
+];
+
+const filteredMetafields = computed(() =>
+  metafields.value.filter((metafield) =>
+    validMetafields.includes(metafield.key.toLowerCase())
+  )
+);
+
+const fetchProduct = async () => {
+  try {
+    const response = await fetch(`/api/products/${productId.value}`);
+    const data = await response.json();
+    if (response.ok) {
+      product.value = data.product;
+      metafields.value = processMetafields(data.metafields || []);
+      collections.value = data.collections || [];
+      collects.value = data.collects || [];
+    } else {
+      error.value = data.error || "Failed to fetch product details";
     }
-  },
-  methods: {
-    processMetafields(metafields) {
-      return metafields.map((metafield) => {
-        if (metafield.namespace.startsWith("custom")) {
-          metafield.value = this.convertCustomMetafield(metafield.value);
-        } else if (Array.isArray(metafield.value)) {
-          metafield.value = metafield.value.map(this.formatMetaobject);
-        }
-        return metafield;
-      });
-    },
-
-    convertCustomMetafield(value) {
-      try {
-        const parsedValue = JSON.parse(value);
-        if (parsedValue.type === "root" && Array.isArray(parsedValue.children)) {
-          return parsedValue.children.map((child) => child.children[0].value).join("\n");
-        }
-        return value;
-      } catch (e) {
-        return value;
-      }
-    },
-    formatLabel(metafield) {
-      return `${metafield.namespace.replace("custom:", "").replace("-", " ")}: ${
-        metafield.key
-      }`;
-    },
-    formatMetaobject(gid) {
-      const gidParts = gid.split("/");
-      return gidParts[gidParts.length - 1];
-    },
-    async saveProduct() {
-      const productId = this.$route.params.id;
-      try {
-        const updatedProduct = {
-          ...this.product,
-          metafields: this.metafields,
-        };
-
-        const response = await fetch(`/api/products/${productId}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedProduct),
-        });
-
-        await fetch("/api/collections/edit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            collections: this.collections,
-            collects: this.collects,
-            productId,
-          }),
-        });
-
-        await fetch("/api/products/edit-images", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            productId,
-            addedImages: this.addedImages,
-            removedImages: this.removedImages.map((image) => image.id),
-          }),
-        });
-
-        if (!response.ok) {
-          const data = await response.json(); // Parse the response data
-          this.error = data.error || "Failed to save product";
-        } else {
-          alert("Product updated successfully!");
-        }
-      } catch (error) {
-        this.error = error.message;
-      }
-    },
-    async deleteProduct() {
-      const productId = this.$route.params.id;
-      try {
-        const response = await fetch(`/api/products/${productId}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        const data = await response.json(); // Parse the response data
-
-        if (response.ok) {
-          alert("Product deleted successfully!");
-          console.log("Deleted product response:", data); // Log the response for debugging
-          this.$router.push("/product"); // Redirect to product list page
-        } else {
-          console.error("Failed to delete product:", data);
-          this.error = data.error || "Failed to delete product";
-        }
-      } catch (error) {
-        console.error("Error during delete operation:", error);
-        this.error = error.message;
-      }
-    },
-  },
+  } catch (err) {
+    error.value = err.message;
+  }
 };
+
+const processMetafields = (metafields) => {
+  return metafields.map((metafield) => {
+    if (metafield.namespace.startsWith("custom")) {
+      metafield.value = convertCustomMetafield(metafield.value);
+    } else if (Array.isArray(metafield.value)) {
+      metafield.value = metafield.value.map(formatMetaobject);
+    }
+    return metafield;
+  });
+};
+
+const convertCustomMetafield = (value) => {
+  try {
+    const parsedValue = JSON.parse(value);
+    if (parsedValue.type === "root" && Array.isArray(parsedValue.children)) {
+      return parsedValue.children
+        .map((child) => child.children[0].value)
+        .join("\n");
+    }
+    return value;
+  } catch {
+    return value;
+  }
+};
+
+const formatMetaobject = (gid) => {
+  const gidParts = gid.split("/");
+  return gidParts[gidParts.length - 1];
+};
+
+const formatLabel = (metafield) => {
+  return `${metafield.namespace.replace("custom:", "").replace("-", " ")}: ${
+    metafield.key
+  }`;
+};
+
+const saveProduct = async () => {
+  try {
+    const response = await fetch(`/api/products/${productId.value}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        product: product.value,
+        metafields: metafields.value,
+      }),
+    });
+
+    await fetch("/api/collections/edit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        collections: collections.value,
+        collects: collects.value,
+        productId: productId.value,
+      }),
+    });
+
+    await fetch("/api/products/edit-images", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        productId: productId.value,
+        addedImages: addedImages.value,
+        removedImages: removedImages.value.map((image) => image.id),
+      }),
+    });
+
+    if (!response.ok) {
+      const data = await response.json();
+      error.value = data.error || "Failed to save product";
+    } else {
+      alert("Product updated successfully!");
+    }
+  } catch (err) {
+    error.value = err.message;
+  }
+};
+
+const deleteProduct = async () => {
+  try {
+    const response = await fetch(`/api/products/${productId.value}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert("Product deleted successfully!");
+      router.push("/product");
+    } else {
+      error.value = data.error || "Failed to delete product";
+    }
+  } catch (err) {
+    error.value = err.message;
+  }
+};
+
+// Lifecycle hook to fetch product on mount
+onMounted(() => {
+  fetchProduct();
+});
 </script>
 
 <style scoped>

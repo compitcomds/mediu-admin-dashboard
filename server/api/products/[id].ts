@@ -1,6 +1,7 @@
 import { defineEventHandler, readBody } from "h3";
 import fetch from "node-fetch";
 import config from "~/utils/config";
+import axios from "axios";
 
 async function fetchProductCollections(productId: string): Promise<any> {
   const url = `https://${config.shopifyDomain}/admin/api/2024-07/custom_collections.json?product_id=${productId}`;
@@ -69,20 +70,19 @@ async function fetchMetafields(productId: string) {
 
 async function updateMetafield(metafield: any) {
   const metafieldUrl = `https://${config.shopifyDomain}/admin/api/2024-07/metafields/${metafield.id}.json`;
-  const response = await fetch(metafieldUrl, {
-    method: "PUT",
+
+  const response = await axios.put(metafieldUrl, metafield, {
     headers: {
       "Content-Type": "application/json",
       "X-Shopify-Access-Token": config.shopifyAccessToken,
     },
-    body: JSON.stringify({ metafield }),
   });
 
-  if (!response.ok) {
+  if (!response.data) {
     throw new Error(`Error updating metafield: ${response.statusText}`);
   }
 
-  return await response.json();
+  return response.data;
 }
 
 export default defineEventHandler(async (event) => {
@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
   const apiUrl = `https://${config.shopifyDomain}/admin/api/2024-07/products/${productId}.json`;
 
   if (event.method === "PUT") {
-    const body = await readBody(event);
+    const { product, metafields } = await readBody(event);
 
     try {
       const productResponse = await fetch(apiUrl, {
@@ -106,7 +106,7 @@ export default defineEventHandler(async (event) => {
           "Content-Type": "application/json",
           "X-Shopify-Access-Token": config.shopifyAccessToken,
         },
-        body: JSON.stringify({ product: body }),
+        body: JSON.stringify({ product }),
       });
 
       if (!productResponse.ok) {
@@ -117,8 +117,8 @@ export default defineEventHandler(async (event) => {
 
       const updatedProduct = await productResponse.json();
 
-      if (body.metafields && body.metafields.length > 0) {
-        const metafieldPromises = body.metafields.map(updateMetafield);
+      if (metafields && metafields.length > 0) {
+        const metafieldPromises = metafields.map(updateMetafield);
         await Promise.all(metafieldPromises);
       }
 
