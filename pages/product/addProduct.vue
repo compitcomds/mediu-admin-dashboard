@@ -266,7 +266,7 @@
               >Tags</label
             >
             <div
-              class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus-within:ring-blue-500 focus-within:border-blue-500 sm:text-sm flex flex-wrap space-x-2 space-y-2"
+              class="mt-1 py-3 px-3 w-full border border-gray-300 rounded-md shadow-sm focus-within:ring-blue-500 focus-within:border-blue-500 sm:text-sm flex flex-wrap space-x-2 space-y-2"
             >
               <!-- Display each tag as a "chip" -->
               <span
