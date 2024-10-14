@@ -3,19 +3,23 @@
     <!-- Sidebar -->
     <Sidenav />
 
-    <div class="lg:ml-64 flex-1 overflow-y-auto p-8 mt-10 bg-gray-100">
+    <form
+      @submit.prevent="addProduct"
+      class="lg:ml-64 flex-1 overflow-y-auto p-8 mt-10 bg-gray-100"
+    >
       <NavigationButton />
       <div class="flex justify-between items-center mb-8 border-b pb-4">
         <h1 class="text-2xl font-bold">Add New Product</h1>
         <div class="flex space-x-4">
           <button
             @click="$router.push('/product')"
+            type="button"
             class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
           >
             Discard
           </button>
           <button
-            @click="addProduct"
+            type="submit"
             class="bg-blue-600 text-white px-4 py-2 rounded-md"
           >
             Save
@@ -26,7 +30,9 @@
         <div class="bg-white p-6 rounded-xl shadow-md space-y-8">
           <!-- Title and Description -->
           <div>
-            <label class="block text-sm font-medium text-gray-700">Title</label>
+            <label class="block text-sm font-medium text-gray-700"
+              >Title<span class="text-red-500">*</span></label
+            >
             <input
               v-model="newProduct.title"
               type="text"
@@ -102,6 +108,7 @@
                 />
                 <button
                   @click="removeFile(0)"
+                  type="button"
                   class="absolute w-1/3 top-2 right-0 text-red-500 bg-white rounded-full font-semibold px-2 py-1 mx-1 text-xs"
                 >
                   Remove
@@ -118,6 +125,7 @@
                 />
                 <button
                   @click="removeFile(index + 1)"
+                  type="button"
                   class="absolute top-0 left-0 text-red-500 m-1 bg-white rounded-full px-2 text-center flex items-center justify-center py-1 text-xs"
                 >
                   x
@@ -153,7 +161,7 @@
           <!-- Collection Selection -->
           <div class="space-y-2 mt-6">
             <label class="block text-sm font-semibold text-gray-600"
-              >Collection</label
+              >Collection<span class="text-red-500">*</span></label
             >
 
             <!-- Collection Title -->
@@ -166,6 +174,7 @@
               <select
                 v-model="newProduct.collectionId"
                 class="block w-full px-4 py-2 pr-8 border border-gray-300 rounded-md shadow-sm bg-white text-gray-800 focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500"
+                required
               >
                 <option
                   v-for="collection in collections"
@@ -187,7 +196,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-1">
               <div>
                 <label class="block text-sm font-medium text-gray-500"
-                  >Discounted Price</label
+                  >Discounted Price<span class="text-red-500">*</span></label
                 >
                 <input
                   v-model="newProduct.price"
@@ -199,12 +208,13 @@
               </div>
               <div>
                 <label class="block text-sm font-medium text-gray-500"
-                  >MRP</label
+                  >MRP<span class="text-red-500">*</span></label
                 >
                 <input
                   type="number"
                   class="block w-full border p-3 border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   placeholder="0.00"
+                  required
                 />
               </div>
             </div>
@@ -343,12 +353,13 @@
           <div class="flex space-x-4 justify-end">
             <button
               @click="$router.push('/product')"
+              type="button"
               class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
             >
               Discard
             </button>
             <button
-              @click="addProduct"
+              type="submit"
               class="bg-blue-600 text-white px-4 py-2 rounded-md"
             >
               Save
@@ -356,7 +367,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
