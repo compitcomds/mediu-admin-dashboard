@@ -12,7 +12,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 w-full mb-16">
       <div class="bg-gradient-to-r from-green-200 to-white shadow-xl rounded-lg p-10 flex flex-col items-center transition transform hover:scale-105 hover:shadow-2xl">
         <h3 class="text-3xl font-semibold text-gray-900 mb-4">Total Sales</h3>
-        <p class="text-5xl font-extrabold text-green-800">$56,000</p>
+        <p class="text-5xl font-extrabold text-green-800">₹56,000</p>
         <p class="text-sm text-gray-600 mt-2">Compared to last month: <span class="text-green-600 font-semibold">+12%</span></p>
       </div>
       <div class="bg-gradient-to-r from-blue-200 to-white shadow-xl rounded-lg p-10 flex flex-col items-center transition transform hover:scale-105 hover:shadow-2xl">
@@ -44,14 +44,14 @@
           <tr class="hover:bg-gray-100 transition">
             <td class="py-4 px-6 whitespace-nowrap">#1001</td>
             <td class="py-4 px-6 whitespace-nowrap">John Doe</td>
-            <td class="py-4 px-6 whitespace-nowrap">$150.00</td>
+            <td class="py-4 px-6 whitespace-nowrap">₹150.00</td>
             <td class="py-4 px-6 text-green-800 font-semibold whitespace-nowrap">Completed</td>
             <td class="py-4 px-6 whitespace-nowrap">2024-10-01</td>
           </tr>
           <tr class="hover:bg-gray-100 transition">
             <td class="py-4 px-6 whitespace-nowrap">#1002</td>
             <td class="py-4 px-6 whitespace-nowrap">Jane Smith</td>
-            <td class="py-4 px-6 whitespace-nowrap">$200.00</td>
+            <td class="py-4 px-6 whitespace-nowrap">₹200.00</td>
             <td class="py-4 px-6 text-yellow-800 font-semibold whitespace-nowrap">Pending</td>
             <td class="py-4 px-6 whitespace-nowrap">2024-10-03</td>
           </tr>
