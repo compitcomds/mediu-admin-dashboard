@@ -1,14 +1,9 @@
 <template>
-  <div
-    class="bg-[#28574e] flex items-center justify-between px-4 py-4 fixed z-50 w-full"
-  >
+  <div class="bg-[#28574e] flex items-center justify-between px-4 py-4 fixed z-50 w-full">
     <!-- Shopify Logo -->
     <div class="flex items-center space-x-2">
       <nuxt-link to="/"
-        ><img
-          src="https://ccdstest.b-cdn.net/Medi%20u/logo%202.png"
-          alt=""
-          class="w-5/6"
+        ><img src="https://ccdstest.b-cdn.net/Medi%20u/logo%202.png" alt="" class="w-5/6"
       /></nuxt-link>
     </div>
 
@@ -42,11 +37,7 @@
         stroke="currentColor"
         stroke-width="2"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M12 14l9-5-9-5-9 5z"
-        />
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5z" />
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -55,11 +46,19 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 14v7" />
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-7" />
       </svg>
-      <div
-        class="bg-purple-600 rounded-full px-4 py-1 text-white font-semibold"
-      >
+      <div class="bg-purple-600 rounded-full px-4 py-1 text-white font-semibold">
         Dev MediU
       </div>
+    </div>
+    <!-- Logout Button for lg and xl screens only -->
+    <div class="hidden lg:flex items-center space-x-4">
+      <!-- Other icons... -->
+      <button
+        @click="handleLogout"
+        class="text-white hover:bg-red-600 rounded-md px-4 py-2"
+      >
+        Logout
+      </button>
     </div>
 
     <!-- Sidenav for sm and md screens -->
@@ -69,10 +68,7 @@
         class="fixed inset-0 bg-[#28574e] text-[#28574e] bg-opacity-50 z-50"
         @click="toggleSidenav"
       >
-        <aside
-          class="w-64 bg-gray-200 p-4 fixed inset-y-0 left-0 top-0"
-          @click.stop
-        >
+        <aside class="w-64 bg-gray-200 p-4 fixed inset-y-0 left-0 top-0" @click.stop>
           <h1 class="text-2xl font-bold mb-6">Mediu Dashboard</h1>
           <nav>
             <ul>
@@ -110,16 +106,12 @@
                 </div>
                 <ul v-if="dropdowns.orders" class="ml-4 space-y-1 mt-1">
                   <li>
-                    <a
-                      href="/orders"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="/orders" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >All Orders</a
                     >
                   </li>
                   <li>
-                    <a
-                      href="/drafts"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="/drafts" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Drafts</a
                     >
                   </li>
@@ -159,9 +151,7 @@
                 </div>
                 <ul v-if="dropdowns.products" class="ml-4 space-y-1 mt-1">
                   <li>
-                    <a
-                      href="/product"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="/product" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >All Products</a
                     >
                   </li>
@@ -173,16 +163,12 @@
                     >
                   </li>
                   <li>
-                    <a
-                      href="/inventory"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="/inventory" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Inventory</a
                     >
                   </li>
                   <li>
-                    <a
-                      href="/purchase"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="/purchase" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Purchase Orders</a
                     >
                   </li>
@@ -215,23 +201,17 @@
                 </div>
                 <ul v-if="dropdowns.customers" class="ml-4 space-y-1 mt-1">
                   <li>
-                    <a
-                      href="#"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >All Customers</a
                     >
                   </li>
                   <li>
-                    <a
-                      href="#"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Segments</a
                     >
                   </li>
                   <li>
-                    <a
-                      href="#"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Companies</a
                     >
                   </li>
@@ -265,16 +245,12 @@
                 <ul v-if="dropdowns.content" class="ml-4 space-y-1 mt-1">
                   <!-- <li><a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded">Pages</a></li> -->
                   <li>
-                    <a
-                      href="#"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Metaobjects</a
                     >
                   </li>
                   <li>
-                    <a
-                      href="#"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Files</a
                     >
                   </li>
@@ -306,16 +282,12 @@
                 </div>
                 <ul v-if="dropdowns.analytics" class="ml-4 space-y-1 mt-1">
                   <li>
-                    <a
-                      href="#"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Reports</a
                     >
                   </li>
                   <li>
-                    <a
-                      href="#"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Live view</a
                     >
                   </li>
@@ -347,16 +319,12 @@
                 </div>
                 <ul v-if="dropdowns.marketing" class="ml-4 space-y-1 mt-1">
                   <li>
-                    <a
-                      href="#"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Campaigns</a
                     >
                   </li>
                   <li>
-                    <a
-                      href="#"
-                      class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Automations</a
                     >
                   </li>
@@ -379,6 +347,8 @@
 </template>
 
 <script>
+import { logout } from "~/appwrite/login-admin";
+
 export default {
   data() {
     return {
@@ -396,6 +366,11 @@ export default {
     },
     toggleDropdown(dropdown) {
       this.dropdowns[dropdown] = !this.dropdowns[dropdown];
+    },
+    async handleLogout() {
+      await logout(); // Call the logout function
+      // Optionally, redirect to login page or perform any other action after logout
+      this.$router.push("/auth/login"); // Adjust the path according to your routing
     },
   },
 };

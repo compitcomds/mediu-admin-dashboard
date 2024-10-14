@@ -28,3 +28,14 @@ export async function deleteIfActiveSession() {
     await account.deleteSession("current");
   } catch (error) {}
 }
+
+
+
+export async function logout() {
+  try {
+    await account.deleteSession("current");
+    console.log("Logged out successfully");
+  } catch (error) {
+    console.error("Error logging out:", error);
+  }
+}
