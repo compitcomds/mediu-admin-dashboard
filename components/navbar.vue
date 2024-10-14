@@ -52,7 +52,6 @@
     </div>
     <!-- Logout Button for lg and xl screens only -->
     <div class="hidden lg:flex items-center space-x-4">
-      <!-- Other icons... -->
       <button
         @click="handleLogout"
         class="text-white hover:bg-red-600 rounded-md px-4 py-2"
@@ -175,6 +174,12 @@
                 </ul>
               </li>
               <li class="mb-2">
+                <a href="/customers"
+                  class="border border-[#28574e] rounded-md block py-2 px-4 hover:bg-gray-400"
+                  >Customers</a
+                >
+              </li>
+              <!-- <li class="mb-2">
                 <div
                   @click="toggleDropdown('customers')"
                   class="border border-[#28574e] rounded-md flex justify-between items-center cursor-pointer py-2 px-4 hover:bg-gray-400"
@@ -216,9 +221,9 @@
                     >
                   </li>
                 </ul>
-              </li>
+              </li> -->
 
-              <li class="mb-2">
+              <!-- <li class="mb-2">
                 <div
                   @click="toggleDropdown('content')"
                   class="border border-[#28574e] rounded-md flex justify-between items-center cursor-pointer py-2 px-4 hover:bg-gray-400"
@@ -243,7 +248,7 @@
                   ></span>
                 </div>
                 <ul v-if="dropdowns.content" class="ml-4 space-y-1 mt-1">
-                  <!-- <li><a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded">Pages</a></li> -->
+                  
                   <li>
                     <a href="#" class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Metaobjects</a
@@ -255,8 +260,8 @@
                     >
                   </li>
                 </ul>
-              </li>
-              <li class="mb-2">
+              </li> -->
+              <!-- <li class="mb-2">
                 <div
                   @click="toggleDropdown('analytics')"
                   class="border border-[#28574e] rounded-md flex justify-between items-center cursor-pointer py-2 px-4 hover:bg-gray-400"
@@ -292,8 +297,8 @@
                     >
                   </li>
                 </ul>
-              </li>
-              <li class="mb-2">
+              </li> -->
+              <!-- <li class="mb-2">
                 <div
                   @click="toggleDropdown('marketing')"
                   class="border border-[#28574e] rounded-md flex justify-between items-center cursor-pointer py-2 px-4 hover:bg-gray-400"
@@ -329,12 +334,18 @@
                     >
                   </li>
                 </ul>
+              </li> -->
+              <li class="mb-2">
+                <a href="/consultancy"
+                  class="border border-[#28574e] rounded-md block py-2 px-4 hover:bg-gray-400"
+                  >Consultancy</a
+                >
               </li>
               <li class="mb-2">
-                <a
-                  href="#"
+                <button
+                   @click="handleLogout"
                   class="border border-[#28574e] rounded-md block py-2 px-4 hover:bg-gray-400"
-                  >Discounts</a
+                  >Log Out</button
                 >
               </li>
               <!-- More sidenav items can be added here -->

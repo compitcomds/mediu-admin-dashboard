@@ -8,7 +8,7 @@
       <!-- Header -->
       <div class="flex justify-between items-center mb-4">
         <h1 class="text-xl md:text-2xl font-semibold">Edit Collection</h1>
-        <button @click="goBack" class="bg-gray-200 px-3 py-1.5 rounded-md">Back</button>
+        <!-- <button @click="goBack" class="bg-gray-200 px-3 py-1.5 rounded-md">Back</button> -->
       </div>
 
       <!-- Loading Message -->
@@ -49,7 +49,7 @@
         </div>
 
         <!-- Update Button -->
-        <div class="flex justify-end">
+        <div class="flex justify-end space-x-4">
           <button type="submit" class="bg-black text-white px-4 py-2 rounded-md">
             Update Collection
           </button>

@@ -2,26 +2,26 @@
   <div class="flex flex-col h-screen py-10 lg:py-0">
     <!-- Sidebar -->
     <Sidenav />
-    <div class="lg:ml-64 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 mt-4 bg-gray-100">
+    <div class="lg:ml-64 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 mt-4 lg:mt-8 bg-gray-100">
       <NavigationButton />
 
       <!-- Header Buttons -->
       <div
-        class="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0"
+        class="flex md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0"
       >
         <h1 class="text-xl md:text-2xl font-semibold">Products</h1>
         <div class="flex flex-wrap space-x-2">
           <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">Export</button>
-          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">Import</button>
-          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">More actions</button>
-          <div>
+          <!-- <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">Import</button> -->
+          <!-- <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">More actions</button> -->
+          <!-- <div>
             <button
               @click="goToAddProductPage"
               class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
             >
               Add New Product
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
 

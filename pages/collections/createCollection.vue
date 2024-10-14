@@ -69,22 +69,30 @@
                 class="mt-2 w-32 h-32 object-cover"
               />
             </div>
-            <div class="mb-4">
-              <label class="block text-gray-700">Select Products</label>
-              <div
-                v-for="product in products"
-                :key="product.id"
-                class="flex items-center mb-2"
-              >
-                <input
-                  type="checkbox"
-                  :value="{ product_id: product.id }"
-                  v-model="newCollection.collects"
-                  class="mr-2"
-                />
-                <span>{{ product.title }}</span>
+            <div class="mb-6">
+              <!-- Label -->
+              <label class="block text-sm font-semibold text-gray-800 mb-2">Select Products</label>
+            
+              <!-- Product List -->
+              <div class="space-y-2">
+                <div
+                  v-for="product in products"
+                  :key="product.id"
+                  class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition duration-150 ease-in-out"
+                >
+                  <!-- Checkbox -->
+                  <input
+                    type="checkbox"
+                    :value="{ product_id: product.id }"
+                    v-model="newCollection.collects"
+                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <!-- Product Title -->
+                  <span class="ml-3 text-gray-700">{{ product.title }}</span>
+                </div>
               </div>
             </div>
+            
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">
               Create Collection
             </button>

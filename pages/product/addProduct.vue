@@ -138,19 +138,30 @@
           </div>
 
           <!-- Collection Selection -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mt-6">Collection</label>
-            <h2 class="block text-sm font-medium text-gray-700">Product Collections</h2>
-            <select v-model="newProduct.collectionId">
-              <option
-                v-for="collection in collections"
-                :key="collection.id"
-                :value="collection.id"
-              >
-                {{ collection.title }}
-              </option>
-            </select>
+          <div class="space-y-2 mt-6">
+            <label class="block text-sm font-semibold text-gray-600">Collection</label>
+            
+            <!-- Collection Title -->
+            <h2 class="text-lg font-semibold text-gray-800 mb-2">Product Collections</h2>
+            
+            <!-- Select Menu -->
+            <div class="relative">
+              <select v-model="newProduct.collectionId" 
+                      class="block w-full px-4 py-2 pr-8 border border-gray-300 rounded-md shadow-sm bg-white text-gray-800 focus:outline-none focus:ring focus:ring-indigo-200 focus:border-indigo-500">
+                <option
+                  v-for="collection in collections"
+                  :key="collection.id"
+                  :value="collection.id"
+                  class="text-gray-600"
+                >
+                  {{ collection.title }}
+                </option>
+              </select>
+              
+            
+            </div>
           </div>
+          
 
           <!-- Pricing -->
           <div class="bg-white p-6 rounded-xl shadow-md">
@@ -191,7 +202,7 @@
             </div>
 
             <!-- Inventory -->
-            <div>
+            <div class="mt-2 ">
               <label class="block text-sm font-medium text-gray-700">Inventory</label>
               <div class="mt-1">
                 <div class="flex items-center">
@@ -251,7 +262,7 @@
                 @keydown.comma.prevent="addTag"
                 @blur="addTag"
                 type="text"
-                class="border-none focus:ring-0 flex-1"
+                class="mt-1 py-3 px-3 block w-full border border-gray-300 rounded-md shadow-sm focus-within:ring-blue-500 focus-within:border-blue-500 sm:text-sm flex flex-wrap space-x-2 space-y-2"
                 placeholder="Type a tag and press space"
               />
             </div>
@@ -299,8 +310,20 @@
               placeholder="Manufacturers"
             ></textarea>
           </div>
+          <div class="flex space-x-4 justify-end">
+            <button
+              @click="$router.push('/product')"
+              class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md"
+            >
+              Discard
+            </button>
+            <button @click="addProduct" class="bg-blue-600 text-white px-4 py-2 rounded-md">
+              Save
+            </button>
+          </div>
         </div>
       </div>
+      
     </div>
   </div>
 </template>
