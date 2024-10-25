@@ -23,15 +23,14 @@
         </div>
         <div class="bg-slate-200 h-fit flex gap-5 items-top w-full p-10">
           <div class="bg-white border w-1/2 rounded-md p-2">
-            <div class="bg-green-800 p-2 text-white font-bold w-fit rounded-md">
-              {{ order.fulfillment_status }}
-              <p
-                v-text="
-                  order.fulfillment_status === null
-                    ? 'Unfulfilled'
-                    : 'Fulfilled'
-                "
-              ></p>
+            <div
+              class="p-2 text-white font-bold w-fit rounded-md capitalize"
+              :class="{
+                'bg-[#28574e]': !!order.fulfillment_status,
+                'bg-red-500': !order.fulfillment_status,
+              }"
+            >
+              {{ order.fulfillment_status || "Unfulfilled" }}
             </div>
 
             <div class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white">
@@ -165,10 +164,18 @@
             </div>
             <button
               @click="openDimensionDialog"
-              class="bg-black text-white text-xl sticky mt-12 font-semibold rounded-md p-1 w-full"
+              :disabled="isSubmitting"
+              v-if="!order.fulfillment_status"
+              class="bg-black text-white text-xl sticky mt-12 font-semibold rounded-md p-1 w-full disabled:animate-pulse disabled:cursor-not-allowed"
             >
-              Confirm
+              {{ isSubmitting ? "Confirming the order..." : "Confirm" }}
             </button>
+            <p
+              v-else
+              class="bg-[#28574e] text-center text-white text-xl sticky mt-12 font-semibold rounded-md p-1 w-full"
+            >
+              Confirmed
+            </p>
           </div>
         </div>
         <!-- {{ order }} -->
@@ -188,11 +195,12 @@
 import axios from "axios";
 import createShiprocketOrder from "~/shiprocket/order/create";
 
+const route = useRoute();
 const order = ref<any>(null);
 const error = ref<Array<any>>([]);
 const loading = ref(true);
 const prescriptionImage = ref(null);
-const route = useRoute();
+const isSubmitting = ref(false);
 const isDialogOpen = ref(false);
 const dimensions = ref({ length: 0, breadth: 0, height: 0, weight: 0 });
 
@@ -234,17 +242,24 @@ onMounted(async () => {
 });
 
 const confirmOrder = async () => {
-  const orderId = route.params.orderId;
-  const response = await axios.post(`/api/orders/${orderId}/fulfill`, {
-    headers: { "Content-Type": "application/json" },
-  });
-  await createShiprocketOrder(order.value, dimensions.value);
-  const responseBody = await response.data;
-  if (responseBody?.error) {
-    alert(responseBody.error);
-  } else {
-    alert("Fulfilled the product");
-    order.value.fulfillment_status = responseBody.status;
+  isSubmitting.value = true;
+  try {
+    const orderId = route.params.orderId;
+    const response = await axios.post(`/api/orders/${orderId}/fulfill`, {
+      headers: { "Content-Type": "application/json" },
+    });
+    await createShiprocketOrder(order.value, dimensions.value);
+    const responseBody = await response.data;
+    if (responseBody?.error) {
+      alert(responseBody.error);
+    } else {
+      alert("Fulfilled the product");
+      order.value.fulfillment_status = responseBody.status;
+    }
+  } catch (error: any) {
+    alert(error.message);
+  } finally {
+    isSubmitting.value = false;
   }
 };
 </script>
