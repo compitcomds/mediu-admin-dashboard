@@ -164,14 +164,11 @@
               </div>
             </div>
             <button
-              @click="confirmOrder"
+              @click="openDimensionDialog"
               class="bg-black text-white text-xl sticky mt-12 font-semibold rounded-md p-1 w-full"
             >
               Confirm
             </button>
-            <nuxt-link :to="`/orders/${$route.params.orderId}/fulfill`"
-              >click</nuxt-link
-            >
           </div>
         </div>
         <!-- {{ order }} -->
@@ -179,55 +176,76 @@
       <div v-else>loading the data</div>
     </div>
   </div>
+
+  <ProductDimensionBox
+    :isOpen="isDialogOpen"
+    @submit="handleDimensionSubmit"
+    @close="closeDimensionDialog"
+  />
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      order: null,
-      error: [],
-      loading: true,
-      prescriptionImage: null,
-    };
-  },
-  async mounted() {
-    const orderId = this.$route.params.orderId;
+<script setup lang="ts">
+import axios from "axios";
+import createShiprocketOrder from "~/shiprocket/order/create";
 
-    try {
-      const response = await fetch(`/api/orders/${orderId}`);
-      const data = await response.json();
+const order = ref<any>(null);
+const error = ref<Array<any>>([]);
+const loading = ref(true);
+const prescriptionImage = ref(null);
+const route = useRoute();
+const isDialogOpen = ref(false);
+const dimensions = ref({ length: 0, breadth: 0, height: 0, weight: 0 });
 
-      if (response.ok) {
-        this.order = data.order;
-        this.prescriptionImage =
-          data.order?.metafields?.find(
-            (field) => field.key === "prescriptionUrl"
-          ).value || null;
-      } else {
-        this.error.push(data.error || "Error fetching order details");
-      }
-    } catch (err) {
-      this.error.push("Error fetching the order.");
-    } finally {
-      this.loading = false;
+const openDimensionDialog = () => {
+  isDialogOpen.value = true;
+};
+
+const closeDimensionDialog = () => {
+  isDialogOpen.value = false;
+};
+
+const handleDimensionSubmit = (data: any) => {
+  dimensions.value = data;
+  closeDimensionDialog();
+  confirmOrder();
+};
+
+onMounted(async () => {
+  const orderId = route.params.orderId;
+
+  try {
+    const response = await fetch(`/api/orders/${orderId}`);
+    const data = await response.json();
+
+    if (response.ok) {
+      order.value = data.order;
+      prescriptionImage.value =
+        data.order?.metafields?.find(
+          (field: any) => field.key === "prescriptionUrl"
+        )?.value || null;
+    } else {
+      error.value.push(data.error || "Error fetching order details");
     }
-  },
-  methods: {
-    async confirmOrder() {
-      const orderId = this.$route.params.orderId;
-      const response = await fetch(`/api/orders/${orderId}/fulfill`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-      const responseBody = await response.json();
-      if (responseBody?.error) alert(responseBody.error);
-      else {
-        alert("Fulfilled the product");
-        this.order.fulfillment_status = responseBody.status;
-      }
-    },
-  },
+  } catch (err) {
+    error.value.push("Error fetching the order.");
+  } finally {
+    loading.value = false;
+  }
+});
+
+const confirmOrder = async () => {
+  const orderId = route.params.orderId;
+  const response = await axios.post(`/api/orders/${orderId}/fulfill`, {
+    headers: { "Content-Type": "application/json" },
+  });
+  await createShiprocketOrder(order.value, dimensions.value);
+  const responseBody = await response.data;
+  if (responseBody?.error) {
+    alert(responseBody.error);
+  } else {
+    alert("Fulfilled the product");
+    order.value.fulfillment_status = responseBody.status;
+  }
 };
 </script>
 
