@@ -16,7 +16,7 @@
             class="product-image"
           />
           <button type="button" @click="removeImage(image)" class="remove-btn">
-            X
+            <X />
           </button>
         </div>
       </template>
@@ -50,7 +50,8 @@
 </template>
 
 <script setup>
-// Props
+import { X } from "lucide-vue-next";
+
 const props = defineProps({
   images: {
     type: Array,

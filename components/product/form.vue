@@ -189,7 +189,7 @@
     <div class="flex items-center justify-center gap-5">
       <button
         type="submit"
-        :disabled="isSubmitting"
+        :disabled="isSubmitting || isDeleting"
         class="w-full py-2 px-4 bg-[#28574e] text-white font-semibold hover:bg-[#1f4d42] disabled:cursor-not-allowed disabled:opacity-70"
       >
         <span v-if="isSubmitting" class="flex items-center justify-center gap-1"
@@ -200,7 +200,7 @@
       <button
         v-if="!!props.productId"
         type="button"
-        :disabled="isSubmitting"
+        :disabled="isDeleting || isSubmitting"
         class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full disabled:cursor-not-allowed disabled:opacity-70"
         @click="deleteProduct"
       >
