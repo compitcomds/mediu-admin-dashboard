@@ -37,7 +37,7 @@ try {
   product = {
     title: data.product.title,
     description: data.product.body_html,
-    tags: data.product.tags.split(","),
+    tags: data.product.tags !== "" ? data.product.tags.split(",") : [],
     sku: data.product.variants[0].sku,
     price: data.product.variants[0].price,
     compareAtPrice: data.product.variants[0].compare_at_price,
