@@ -16,6 +16,7 @@
     "bwip-js": "^4.5.1",
     "chart.js": "^4.4.4",
     "jsbarcode": "^3.11.6",
+    "lucide-vue-next": "^0.453.0",
     "nuxt": "^3.13.0",
     "uuid": "^10.0.0",
     "vue": "latest",

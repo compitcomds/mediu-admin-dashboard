@@ -1,16 +1,34 @@
 <template>
-  <div class="select-container">
-    <!-- Label for the select box -->
-    <label for="collection-select" class="select-label">Manage Collections:</label>
-
-    <!-- Select box to toggle collections -->
+  <div class="bg-gray-100 rounded-lg">
+    <label
+      for="collection-select"
+      class="block sr-only text-lg font-semibold text-gray-800 mb-3"
+    >
+      Manage Collections:
+    </label>
+    <div class="my-2">
+      <ul class="flex items-center flex-wrap gap-3">
+        <li
+          v-for="collection in selectedCollectionsModel"
+          :key="collection.id"
+          class="flex justify-between items-center bg-gray-200 py-1 px-4 gap-2 rounded-xl"
+        >
+          {{ collection.title }}
+          <button class="text-black" @click="removeCollection(collection.id)">
+            <span class="sr-only">Remove collection</span>
+            <X />
+          </button>
+        </li>
+      </ul>
+    </div>
     <select
       id="collection-select"
       v-model="selectedCollection"
-      class="select-box"
+      class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:outline-none focus:border-blue-500"
       @change="toggleCollection(selectedCollection)"
+      placeholder="Select a collection"
     >
-      <option value="" disabled>Select a collection</option>
+      <option value="" disabled selected>Select a collection</option>
       <option
         v-for="collection in collections"
         :key="collection.id"
@@ -19,36 +37,19 @@
         {{ collection.title }}
       </option>
     </select>
-
-    <!-- Display the currently selected collections -->
-    <div class="selected-collections">
-      <h4>Selected Collections</h4>
-      <ul>
-        <li v-for="collection in selectedCollectionsModel" :key="collection.id" class="collection-item">
-          {{ collection.title }}
-          <button class="remove-btn" @click="removeCollection(collection.id)">
-            ✖
-          </button>
-        </li>
-      </ul>
-    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-// Import necessary functions from Vue
-import { ref, onMounted } from "vue";
+import { X } from "lucide-vue-next";
 
-// Define the interface for collection data
 interface ShopifyCollection {
   id: number;
   title: string;
 }
 
-// Fetch collections from an API and store in a reactive ref
 const collections = ref<ShopifyCollection[]>([]);
 
-// Define a model with defineModel (two-way binding for selected collections)
 const selectedCollectionsModel = defineModel<ShopifyCollection[]>(
   "modelValue",
   {
@@ -56,10 +57,8 @@ const selectedCollectionsModel = defineModel<ShopifyCollection[]>(
     default: () => [],
   }
 );
-// Reactive state for the select box value (for toggling collections)
 const selectedCollection = ref<number | null>(null);
 
-// Fetch collections from API on component mount
 const fetchCollections = async () => {
   try {
     const response = await fetch("/api/collections");
@@ -108,76 +107,4 @@ const removeCollection = (collectionId: number) => {
 };
 </script>
 
-<style scoped>
-.select-container {
-  
-  margin: 30px auto;
-  padding: 20px;
-  background-color: #f7fafc;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.select-label {
-  display: block;
-  font-size: 16px;
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 12px;
-}
-
-.select-box {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  background-color: #fff;
-  font-size: 16px;
-  color: #2d3748;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.select-box:focus {
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px #fff;
-}
-
-.selected-collections {
-  margin-top: 30px;
-}
-
-.selected-collections h4 {
-  font-size: 18px;
-  font-weight: 600;
-  color: #2d3748;
-  margin-bottom: 15px;
-  text-align: center;
-}
-
-.collection-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #edf2f7;
-  padding: 10px 15px;
-  border-radius: 8px;
-  margin-bottom: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-}
-
-.remove-btn {
-  background-color: #e53e3e;
-  color: white;
-  padding: 6px 12px;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.remove-btn:hover {
-  background-color: #c53030;
-}
-</style>
+<style scoped></style>

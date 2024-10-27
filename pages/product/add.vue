@@ -1,0 +1,26 @@
+<template>
+  <AttachSidebar>
+    <h1 class="text-3xl font-bold mb-4">Add New Product</h1>
+    <ProductForm :on-submit="addProduct" />
+  </AttachSidebar>
+</template>
+
+<script setup lang="ts">
+import axios from "axios";
+
+const router = useRouter();
+
+const addProduct = async (values: any) => {
+  console.log(values.images);
+  const { data } = await axios.post("/api/product/add", values);
+  if (data.product.id) {
+    alert("Successfully created the product. Redirecting you to product...");
+    router.push(`/product/edit/${data.product.id}`);
+    return;
+  }
+  throw new Error(
+    data.error ||
+      "Unable to create the product at the time. Please try again later."
+  );
+};
+</script>

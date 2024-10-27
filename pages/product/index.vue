@@ -2,7 +2,9 @@
   <div class="flex flex-col h-screen py-10 lg:py-10">
     <!-- Sidebar -->
     <Sidenav />
-    <div class="lg:ml-64 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 mt-4 bg-gray-100">
+    <div
+      class="lg:ml-64 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 mt-4 bg-gray-100"
+    >
       <NavigationButton />
 
       <!-- Header Buttons -->
@@ -11,16 +13,22 @@
       >
         <h1 class="text-xl md:text-2xl font-semibold">Products</h1>
         <div class="flex flex-wrap space-x-2">
-          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">Export</button>
-          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">Import</button>
-          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">More actions</button>
+          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">
+            Export
+          </button>
+          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">
+            Import
+          </button>
+          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">
+            More actions
+          </button>
           <div>
-            <button
-              @click="goToAddProductPage"
-              class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
+            <nuxt-link
+              class="block bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
+              to="/product/add"
             >
               Add New Product
-            </button>
+            </nuxt-link>
           </div>
         </div>
       </div>
@@ -43,7 +51,10 @@
                 class="w-16 h-16 mr-4 rounded"
               />
               <div>
-                <p class="text-lg font-semibold" @click="redirectToEditPage(product.id)">
+                <p
+                  class="text-lg font-semibold"
+                  @click="redirectToEditPage(product.id)"
+                >
                   {{ product.title }}
                 </p>
                 <p class="text-sm text-gray-500">{{ product.status }}</p>
@@ -52,7 +63,8 @@
           </div>
           <div class="text-sm text-gray-700 space-y-1">
             <p>
-              <strong>Inventory:</strong> {{ product.variants[0].inventory_quantity }}
+              <strong>Inventory:</strong>
+              {{ product.variants[0].inventory_quantity }}
             </p>
 
             <p><strong>Type:</strong> {{ product.product_type }}</p>
@@ -62,7 +74,9 @@
       </div>
 
       <!-- Responsive Table for Large Screens -->
-      <div class="hidden lg:block overflow-x-auto bg-white shadow-md rounded-lg">
+      <div
+        class="hidden lg:block overflow-x-auto bg-white shadow-md rounded-lg"
+      >
         <table class="min-w-full table-auto divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
@@ -168,9 +182,6 @@ export default {
     }
   },
   methods: {
-    goToAddProductPage() {
-      this.$router.push("/product/addProduct");
-    },
     redirectToEditPage(productId) {
       this.$router.push(`/product/edit/${productId}`);
     },

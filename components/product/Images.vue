@@ -1,11 +1,20 @@
 <template>
   <div class="image-gallery">
-    <h2 class="block text-sm font-medium text-gray-700">Product Images</h2>
+    <h2 class="block text-sm sr-only font-medium text-gray-700">
+      Product Images
+    </h2>
     <div class="image-list-container">
       <!-- Display images passed via props, hiding those in removedImages -->
       <template v-for="(image, index) in images" :key="image.id">
-        <div v-if="!removedImages.includes(image)" :class="['image-item', index === 0 ? 'first-image' : '']">
-          <img :src="image.src" :alt="image.alt || 'Product Image'" class="product-image" />
+        <div
+          v-if="!removedImages.includes(image)"
+          :class="['image-item', index === 0 ? 'first-image' : '']"
+        >
+          <img
+            :src="image.src"
+            :alt="image.alt || 'Product Image'"
+            class="product-image"
+          />
           <button type="button" @click="removeImage(image)" class="remove-btn">
             X
           </button>
@@ -13,9 +22,24 @@
       </template>
 
       <!-- Display newly added images -->
-      <div v-for="(image, index) in addedImages" :key="image.name" :class="['image-item', images.length === 0 && index === 0 ? 'first-image' : '']">
-        <img :src="image.base64" :alt="image.name || 'New Image'" class="product-image" />
-        <button type="button" @click="removeAddedImage(index)" class="remove-btn">
+      <div
+        v-for="(image, index) in addedImages"
+        :key="image.name"
+        :class="[
+          'image-item',
+          images.length === 0 && index === 0 ? 'first-image' : '',
+        ]"
+      >
+        <img
+          :src="image.base64"
+          :alt="image.name || 'New Image'"
+          class="product-image"
+        />
+        <button
+          type="button"
+          @click="removeAddedImage(index)"
+          class="remove-btn"
+        >
           X
         </button>
       </div>
