@@ -48,7 +48,6 @@ export default {
         const response = await getBatchDetails(batchIds.value[index]);
 
         if (response.batch) {
-          // Check if the batch ProductId matches the expected ProductId
           if (response.batch.ProductId === props.productId) {
             confirmStatus.value[index] = 'success';
             errorMessage.value = '';
