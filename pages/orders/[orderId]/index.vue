@@ -35,6 +35,38 @@
             </div>
 
             <div class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white">
+              <h1 class="text-xl font-bold mb-2">Items ordered</h1>
+              <template v-for="(item, index) in order.line_items">
+                <div
+                  class="border-b border-gray-200 pb-4 mb-4 last:mb-0 last:border-0"
+                >
+                  <h4 class="text-lg font-semibold text-gray-800">
+                    {{ item.title }}
+                  </h4>
+                  <p class="text-gray-600">Vendor: {{ item.vendor }}</p>
+                  <p class="text-gray-600">Quantity: {{ item.quantity }}</p>
+                  <p class="text-gray-800 font-bold">
+                    Price: ₹{{ item.price }}
+                  </p>
+                  <p class="text-gray-500 text-sm">
+                    SKU: {{ item.sku || "N/A" }}
+                  </p>
+                  <div class="mt-2">
+                    <h5 class="text-md font-semibold text-gray-700">
+                      Tax Details
+                    </h5>
+                    <p class="text-gray-600">
+                      Total Tax: ₹{{ item.tax_lines[0]?.price || "0.00" }}
+                    </p>
+                    <p class="text-gray-500 text-sm">
+                      Tax Rate: {{ item.tax_lines[0]?.rate || "0" }}%
+                    </p>
+                  </div>
+                </div>
+              </template>
+            </div>
+
+            <div class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white">
               <h3 class="text-lg font-semibold mb-2 text-gray-800">
                 Shipping Address
               </h3>
@@ -64,37 +96,6 @@
               <p class="mb-1">
                 <strong>Phone:</strong> {{ order.billing_address.phone }}
               </p>
-            </div>
-
-            <div class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white">
-              <template v-for="(item, index) in order.line_items">
-                <div
-                  class="border-b border-gray-200 pb-4 mb-4 last:mb-0 last:border-0"
-                >
-                  <h4 class="text-lg font-semibold text-gray-800">
-                    {{ item.title }}
-                  </h4>
-                  <p class="text-gray-600">Vendor: {{ item.vendor }}</p>
-                  <p class="text-gray-600">Quantity: {{ item.quantity }}</p>
-                  <p class="text-gray-800 font-bold">
-                    Price: ₹{{ item.price }}
-                  </p>
-                  <p class="text-gray-500 text-sm">
-                    SKU: {{ item.sku || "N/A" }}
-                  </p>
-                  <div class="mt-2">
-                    <h5 class="text-md font-semibold text-gray-700">
-                      Tax Details
-                    </h5>
-                    <p class="text-gray-600">
-                      Total Tax: ₹{{ item.tax_lines[0]?.price || "0.00" }}
-                    </p>
-                    <p class="text-gray-500 text-sm">
-                      Tax Rate: {{ item.tax_lines[0]?.rate || "0" }}%
-                    </p>
-                  </div>
-                </div>
-              </template>
             </div>
 
             <div
