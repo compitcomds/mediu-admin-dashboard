@@ -1,12 +1,12 @@
 import { database } from "./config";
 import { Query } from "appwrite";
 
-export async function getBatchDetails(batchId: any) {
+export async function getBatchDetails(batchNumber: any) {
   try {
     const data = await database.listDocuments(
       config.Appwrite_Database_Id,
       config.Appwrite_Inventory_Batches_Id,
-      [Query.equal("batchId", batchId)]
+      [Query.equal("BatchNumber", batchNumber)]
     );
 
     if (data.documents.length > 0) {
@@ -21,13 +21,15 @@ export async function getBatchDetails(batchId: any) {
           Query.greaterThanEqual("Quantity", 1),
         ]
       );
+
       if (preData.documents.length > 0)
         throw new Error("Previous Batch Available, Please Select from that");
+
       await database.updateDocument(
         config.Appwrite_Database_Id,
         config.Appwrite_Inventory_Batches_Id,
         batch.$id,
-        { Quantity: batch.Quantity-1}
+        { Quantity: batch.Quantity - 1 }
       );
 
       return {

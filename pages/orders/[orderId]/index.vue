@@ -3,7 +3,12 @@
     <Sidenav />
     <div class="lg:ml-64 flex-1 overflow-y-auto p-8 mt-10 bg-gray-100">
       <NavigationButton />
-      <FetchBatch/>
+      <FetchBatch
+        v-if="order && order.line_items && order.line_items.length"
+        :initialQuantity="order.line_items[0].quantity"
+        :productId="order.line_items[0].product_id"
+      />
+
       <div class="" v-if="order">
         <div class="flex justify-between items-center mb-4">
           <h1 class="text-2xl font-semibold">Orders: All locations</h1>
@@ -37,24 +42,16 @@
             <div class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white">
               <h1 class="text-xl font-bold mb-2">Items ordered</h1>
               <template v-for="(item, index) in order.line_items">
-                <div
-                  class="border-b border-gray-200 pb-4 mb-4 last:mb-0 last:border-0"
-                >
+                <div class="border-b border-gray-200 pb-4 mb-4 last:mb-0 last:border-0">
                   <h4 class="text-lg font-semibold text-gray-800">
                     {{ item.title }}
                   </h4>
                   <p class="text-gray-600">Vendor: {{ item.vendor }}</p>
                   <p class="text-gray-600">Quantity: {{ item.quantity }}</p>
-                  <p class="text-gray-800 font-bold">
-                    Price: ₹{{ item.price }}
-                  </p>
-                  <p class="text-gray-500 text-sm">
-                    SKU: {{ item.sku || "N/A" }}
-                  </p>
+                  <p class="text-gray-800 font-bold">Price: ₹{{ item.price }}</p>
+                  <p class="text-gray-500 text-sm">SKU: {{ item.sku || "N/A" }}</p>
                   <div class="mt-2">
-                    <h5 class="text-md font-semibold text-gray-700">
-                      Tax Details
-                    </h5>
+                    <h5 class="text-md font-semibold text-gray-700">Tax Details</h5>
                     <p class="text-gray-600">
                       Total Tax: ₹{{ item.tax_lines[0]?.price || "0.00" }}
                     </p>
@@ -67,12 +64,8 @@
             </div>
 
             <div class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white">
-              <h3 class="text-lg font-semibold mb-2 text-gray-800">
-                Shipping Address
-              </h3>
-              <p class="mb-1">
-                <strong>Name:</strong> {{ order.billing_address.name }}
-              </p>
+              <h3 class="text-lg font-semibold mb-2 text-gray-800">Shipping Address</h3>
+              <p class="mb-1"><strong>Name:</strong> {{ order.billing_address.name }}</p>
               <p class="mb-1">
                 <strong>Address:</strong> {{ order.billing_address.address1
                 }}{{
@@ -81,9 +74,7 @@
                     : ""
                 }}
               </p>
-              <p class="mb-1">
-                <strong>City:</strong> {{ order.billing_address.city }}
-              </p>
+              <p class="mb-1"><strong>City:</strong> {{ order.billing_address.city }}</p>
               <p class="mb-1">
                 <strong>State:</strong> {{ order.billing_address.province }}
               </p>
@@ -102,18 +93,14 @@
               v-if="prescriptionImage"
               class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white"
             >
-              <h3 class="text-xl font-semibold mb-4 text-gray-800">
-                Prescription Image
-              </h3>
+              <h3 class="text-xl font-semibold mb-4 text-gray-800">Prescription Image</h3>
               <img :src="prescriptionImage" alt="Prescription Image" />
             </div>
           </div>
           <div class="bg-white border w-1/4 rounded-md p-2">
             <div class="mt-3 rounded-lg bg-white space-y-11">
               <div class="border-2 w-full border-gray-300 p-2 rounded">
-                <h3 class="text-xl font-semibold mb-4 text-gray-800">
-                  Customer Details
-                </h3>
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">Customer Details</h3>
                 <div class="mb-4">
                   <p class="text-lg font-medium text-gray-800">
                     Name: {{ order.customer.first_name }}
@@ -127,12 +114,8 @@
                       >{{ order.customer.email }}</a
                     >
                   </p>
-                  <p class="text-gray-600">
-                    Phone: {{ order.customer.phone || "N/A" }}
-                  </p>
-                  <p class="text-gray-600">
-                    Account Status: {{ order.customer.state }}
-                  </p>
+                  <p class="text-gray-600">Phone: {{ order.customer.phone || "N/A" }}</p>
+                  <p class="text-gray-600">Account Status: {{ order.customer.state }}</p>
                   <p class="text-gray-600">
                     Verified Email:
                     {{ order.customer.verified_email ? "Yes" : "No" }}
@@ -141,9 +124,7 @@
               </div>
 
               <div class="border-2 w-full border-gray-300 p-2 rounded">
-                <h4 class="text-lg font-semibold text-gray-700 mb-2">
-                  Default Address
-                </h4>
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">Default Address</h4>
                 <div class="text-gray-600">
                   <p>{{ order.customer.default_address.name }}</p>
                   <p>
@@ -191,7 +172,6 @@
     @submit="handleDimensionSubmit"
     @close="closeDimensionDialog"
   />
-
 </template>
 
 <script setup lang="ts">
@@ -231,9 +211,8 @@ onMounted(async () => {
     if (response.ok) {
       order.value = data.order;
       prescriptionImage.value =
-        data.order?.metafields?.find(
-          (field: any) => field.key === "prescriptionUrl"
-        )?.value || null;
+        data.order?.metafields?.find((field: any) => field.key === "prescriptionUrl")
+          ?.value || null;
     } else {
       error.value.push(data.error || "Error fetching order details");
     }

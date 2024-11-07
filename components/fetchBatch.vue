@@ -1,55 +1,78 @@
 <template>
   <div>
-    <label for="quantity">Enter Quantity:</label>
-    <input type="number" v-model.number="quantity" @input="updateInputs" min="1" />
+    <label for="quantity">Quantity:</label>
+    <input type="number" v-model.number="quantity" :readonly="true" min="1" />
 
-    <div v-for="n in quantity" :key="n" class="input-group">
-      <label :for="'batchId' + n">Batch ID {{ n }}:</label>
+    <div v-for="(batchId, index) in batchIds" :key="index" class="input-group">
+      <label :for="'batchId' + index">Batch ID {{ index + 1 }}:</label>
       <input
         type="text"
-        v-model="batchIds[n - 1]"
-        :id="'batchId' + n"
+        v-model="batchIds[index]"
+        :id="'batchId' + index"
         placeholder="Enter Batch ID"
       />
-      <button @click="confirmBatchId(n - 1)">Confirm</button>
+      <button @click="confirmBatchId(index)">Confirm</button>
+      <span v-if="confirmStatus[index] === 'success'" class="text-green-500">
+        ✔️
+      </span>
+      <span v-if="confirmStatus[index] === 'error'" class="text-red-500">
+        ❌ {{ errorMessage }}
+      </span>
     </div>
   </div>
 </template>
 
 <script>
+import { ref } from 'vue';
+import { getBatchDetails } from '~/appwrite/batchDetails';
+
 export default {
-  data() {
-    return {
-      quantity: 0, // Quantity of input fields
-      batchIds: [], // Array to hold batch IDs
-    };
+  props: {
+    initialQuantity: {
+      type: Number,
+      required: true,
+    },
+    productId: {
+      type: String,
+      required: true,
+    },
   },
-  methods: {
-    updateInputs() {
-      // Adjust the batchIds array length based on the quantity
-      if (this.quantity > this.batchIds.length) {
-        this.batchIds = [
-          ...this.batchIds,
-          ...Array(this.quantity - this.batchIds.length).fill(""),
-        ];
-      } else {
-        this.batchIds = this.batchIds.slice(0, this.quantity);
+  setup(props) {
+    const quantity = ref(props.initialQuantity);
+    const batchIds = ref(Array(props.initialQuantity).fill(''));
+    const confirmStatus = ref(Array(props.initialQuantity).fill(null));
+    const errorMessage = ref('');
+
+    async function confirmBatchId(index) {
+      try {
+        const response = await getBatchDetails(batchIds.value[index]);
+
+        if (response.batch) {
+          // Check if the batch ProductId matches the expected ProductId
+          if (response.batch.ProductId === props.productId) {
+            confirmStatus.value[index] = 'success';
+            errorMessage.value = '';
+          } else {
+            confirmStatus.value[index] = 'error';
+            errorMessage.value = 'Wrong batch for this product.';
+          }
+        } else {
+          confirmStatus.value[index] = 'error';
+          errorMessage.value = response.message;
+        }
+      } catch (error) {
+        confirmStatus.value[index] = 'error';
+        errorMessage.value = error.message || 'Error confirming batch ID.';
       }
-    },
-    confirmBatchId(index) {
-      // Handle confirm action for each individual batch ID
-      console.log(`Confirmed Batch ID ${index + 1}:`, this.batchIds[index]);
-    },
+    }
+
+    return {
+      quantity,
+      batchIds,
+      confirmStatus,
+      errorMessage,
+      confirmBatchId,
+    };
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.input-group {
-  margin-top: 8px;
-}
-
-button {
-  margin-left: 8px;
-}
-</style>
