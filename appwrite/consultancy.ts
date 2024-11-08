@@ -1,7 +1,7 @@
 import { database, account } from "./config";
 import { ID, Query } from "appwrite";
 
-// This function is fetch all Consultancy Data
+
 export async function allgetConsultancy() {
   const data = await database.listDocuments(
     config.Appwrite_Database_Id,
@@ -13,7 +13,6 @@ export async function allgetConsultancy() {
 }
 
 
-// This function is Fetch single consultancy by user Id
 export async function getconsultancy(userId: any) {
   const data = await database.listDocuments(
     config.Appwrite_Database_Id,
