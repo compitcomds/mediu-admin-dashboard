@@ -17,9 +17,9 @@
         v-model="tags"
         v-on:update:model-value="emitUpdatedTags"
         multiple
+        v-model:search-term="searchTerm"
       >
-        <CommandInput placeholder="Search tag..." />
-        <CommandEmpty>No tag found.</CommandEmpty>
+        <CommandInput placeholder="Search tag..." @keyup.enter="createNewTag" />
         <CommandList>
           <CommandGroup>
             <CommandItem
@@ -40,6 +40,12 @@
             </CommandItem>
           </CommandGroup>
         </CommandList>
+        <Button
+          v-if="!!searchTerm"
+          @click="createNewTag"
+          class="w-[95%] mx-auto my-2 bg-gray-100 hover:bg-gray-300 shadow-none text-black"
+          >Create New Tag: {{ searchTerm }}</Button
+        >
       </Command>
     </PopoverContent>
   </Popover>
@@ -76,7 +82,7 @@ const open = ref(false);
 const emit = defineEmits(["update:modelValue"]);
 
 const tags = ref(props.modelValue.map((value) => value.toLowerCase()));
-const inputValue = ref("");
+const searchTerm = ref("");
 
 watch(
   () => props.modelValue,
@@ -89,25 +95,23 @@ const emitUpdatedTags = () => {
   emit("update:modelValue", tags.value);
 };
 
-const addTag = () => {
-  const trimmedValue = inputValue.value.trim();
-  if (trimmedValue && !tags.value.includes(trimmedValue)) {
-    tags.value.push(trimmedValue);
-    emit("update:modelValue", tags.value);
-    inputValue.value = "";
+const createNewTag = () => {
+  if (searchTerm.value.length === 0) return;
+  if (
+    allProductTags.value.find(
+      (tag) => tag.value === searchTerm.value.toLowerCase()
+    )
+  ) {
+    alert("Tag already exists.");
+    return;
   }
-};
-
-const removeTag = (index) => {
-  tags.value.splice(index, 1);
-  emit("update:modelValue", tags.value);
-};
-
-const removeLastTag = (event) => {
-  if (event.key === "Backspace" && inputValue.value === "") {
-    tags.value.pop();
-    emit("update:modelValue", tags.value);
-  }
+  allProductTags.value.push({
+    label: searchTerm.value.toUpperCase(),
+    value: searchTerm.value.toLowerCase(),
+  });
+  tags.value.push(searchTerm.value.toLowerCase());
+  emitUpdatedTags();
+  searchTerm.value = "";
 };
 
 onMounted(async () => {
