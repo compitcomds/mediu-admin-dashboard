@@ -1,52 +1,68 @@
 <template>
-  <select
-    id="tags-select"
-    v-model="tags"
-    class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:outline-none focus:border-blue-500"
-    @change="toggleCollection(selectedCollection)"
-    placeholder="Select a collection"
-  >
-    <option value="" disabled selected>Select a tag</option>
-    <option
-      v-for="collection in collections"
-      :key="collection.id"
-      :value="collection.id"
-    >
-      {{ collection.title }}
-    </option>
-  </select>
-  <div class="flex flex-wrap items-center rounded">
-    <input
-      v-model="inputValue"
-      @keydown.enter.prevent="addTag"
-      @keydown.delete="removeLastTag"
-      type="text"
-      placeholder="Add a tag and press Enter"
-      class="border-none outline-none flex-grow p-2 focus:ring-0"
-    />
-    <div class="flex flex-wrap space-x-2 mt-1">
-      <span
-        v-for="(tag, index) in tags"
-        :key="index"
-        class="flex items-center bg-[#28574e] text-white rounded px-2 py-1"
+  <Popover v-model:open="open">
+    <PopoverTrigger as-child>
+      <Button
+        variant="outline"
+        role="combobox"
+        :aria-expanded="open"
+        class="w-full uppercase justify-between"
       >
-        {{ tag }}
-        <button
-          @click="removeTag(index)"
-          class="ml-2 text-white hover:text-red-500"
-          title="Remove Tag"
-          type="button"
-        >
-          <X />
-        </button>
-      </span>
-    </div>
-  </div>
+        {{ tags.length > 0 ? tags.join(", ") : "Select tag..." }}
+
+        <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent align="start" class="lg:w-[500px] max-w-[82vw] p-0">
+      <Command
+        v-model="tags"
+        v-on:update:model-value="emitUpdatedTags"
+        multiple
+      >
+        <CommandInput placeholder="Search tag..." />
+        <CommandEmpty>No tag found.</CommandEmpty>
+        <CommandList>
+          <CommandGroup>
+            <CommandItem
+              v-for="tag in allProductTags"
+              :key="tag.value"
+              :value="tag.value"
+              @select="open = false"
+            >
+              <Check
+                :class="
+                  cn(
+                    'mr-2 h-4 w-4',
+                    tags.includes(tag.value) ? 'opacity-100' : 'opacity-0'
+                  )
+                "
+              />
+              {{ tag.label }}
+            </CommandItem>
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    </PopoverContent>
+  </Popover>
 </template>
 
 <script setup>
 import axios from "axios";
-import { X } from "lucide-vue-next";
+import { X, Check, ChevronsUpDown } from "lucide-vue-next";
+import Button from "~/components/ui/button/Button.vue";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "~/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+import { cn } from "~/lib/utils";
 
 const props = defineProps({
   modelValue: {
@@ -56,10 +72,10 @@ const props = defineProps({
 });
 
 const allProductTags = ref([]);
-
+const open = ref(false);
 const emit = defineEmits(["update:modelValue"]);
 
-const tags = ref([...props.modelValue]);
+const tags = ref(props.modelValue.map((value) => value.toLowerCase()));
 const inputValue = ref("");
 
 watch(
@@ -68,6 +84,10 @@ watch(
     tags.value = [...newVal];
   }
 );
+
+const emitUpdatedTags = () => {
+  emit("update:modelValue", tags.value);
+};
 
 const addTag = () => {
   const trimmedValue = inputValue.value.trim();
@@ -92,7 +112,10 @@ const removeLastTag = (event) => {
 
 onMounted(async () => {
   const { data } = await axios.get("/api/product/tags");
-  allProductTags.value = data.edges.map((edge) => edge.node);
+  allProductTags.value = data.edges.map((edge) => ({
+    value: edge.node.toLowerCase(),
+    label: edge.node.toUpperCase(),
+  }));
 });
 </script>
 
