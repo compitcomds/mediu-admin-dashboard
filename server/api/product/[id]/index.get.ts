@@ -3,10 +3,11 @@ import config from "~/utils/config";
 
 import { DEFINED_METAFIELDS } from "../add/index.post";
 
-const SHOPIFY_API = `https://${config.shopifyDomain}/admin/api/2024-10/products`;
+const SHOPIFY_BASE_API = `https://${config.shopifyDomain}/admin/api/2024-10`;
+const SHOPIFY_API = `${SHOPIFY_BASE_API}/products`;
 const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
-const SHOPIFY_CUSTOM_COLLECTION_API = `https://${config.shopifyDomain}/admin/api/2024-10/custom_collections.json`;
-const SHOPIFY_COLLECTS_API = `https://${config.shopifyDomain}/admin/api/2024-10/collects.json`;
+const SHOPIFY_CUSTOM_COLLECTION_API = `${SHOPIFY_BASE_API}/custom_collections.json`;
+const SHOPIFY_COLLECTS_API = `${SHOPIFY_BASE_API}/collects.json`;
 
 async function fetchProductCollections(productId: string): Promise<any> {
   try {
@@ -64,6 +65,15 @@ async function fetchMetafields(productId: string) {
   return metafields;
 }
 
+async function fetchHSNCode(inventoryItemId: string) {
+  const apiUrl = `${SHOPIFY_BASE_API}/inventory_items/${inventoryItemId}.json`;
+  const { data } = await axios.get(apiUrl, {
+    headers: { "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN },
+  });
+
+  return data.inventory_item.harmonized_system_code;
+}
+
 export default defineEventHandler(async (event) => {
   const productId = event.context.params?.id;
   if (!productId) throw new Error("Product id not provided.");
@@ -73,6 +83,9 @@ export default defineEventHandler(async (event) => {
   const metafields = await fetchMetafields(productId);
   const collections = await fetchProductCollections(productId);
   const collects = await fetchProductCollects(productId);
+  const hsnCode = await fetchHSNCode(
+    data.product.variants[0].inventory_item_id
+  );
 
-  return { ...data, metafields, collections, collects };
+  return { ...data, metafields, collections, collects, hsnCode };
 });

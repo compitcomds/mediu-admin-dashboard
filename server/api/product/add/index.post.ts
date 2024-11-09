@@ -4,6 +4,7 @@ import config from "~/utils/config";
 const SHOPIFY_API = `https://${config.shopifyDomain}/admin/api/2024-10/products.json`;
 const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
 const SHOPIFY_COLLECTION_ADD_PRODUCT = `https://${config.shopifyDomain}/admin/api/2024-10/collects.json`;
+const PRODUCTION_API = process.env.VITE_PRODUCTION_API;
 
 export const DEFINED_METAFIELDS: Record<
   string,
@@ -57,7 +58,6 @@ export async function addProductToCollection(
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  console.log({ ...body, images: [] });
 
   const metafields: any[] = [];
 
@@ -88,7 +88,8 @@ export default defineEventHandler(async (event) => {
     ],
   };
 
-  console.log(SHOPIFY_ACCESS_TOKEN);
+  const errors: any[] = [];
+
   try {
     const { data } = await axios.post(
       SHOPIFY_API,
@@ -101,14 +102,26 @@ export default defineEventHandler(async (event) => {
       }
     );
 
+    const inventoryItemId = data.product.variants[0].inventory_item_id;
+    const { data: hsnUpdateResponse } = await axios.put(
+      `${PRODUCTION_API}/api/product/update-hsn`,
+      {
+        hsnCode: body.hsnCode,
+        inventoryItemId,
+      }
+    );
+
+    if (hsnUpdateResponse.error) errors.push(hsnUpdateResponse.error);
+
     const createdProductId = data.product.id;
 
     for (const collection of body.collections) {
       await addProductToCollection(createdProductId, collection.id);
     }
 
-    return data;
+    return { ...data, errors };
   } catch (error: any) {
+    console.log(error.message);
     console.log(error.response.data.errors.type);
     return { error: error.message };
   }

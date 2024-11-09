@@ -61,6 +61,20 @@
         required
       />
     </div>
+
+    <div>
+      <label for="gstApplied" class="block text-sm font-medium text-gray-700"
+        >HSN Code <span class="text-red-500">*</span></label
+      >
+      <input
+        type="text"
+        id="hsnCode"
+        v-model="form.hsnCode"
+        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+        placeholder="0"
+        required
+      />
+    </div>
     <div>
       <label for="price" class="block text-sm font-medium text-gray-700"
         >Price <span class="text-red-500">*</span></label
@@ -176,7 +190,7 @@
 
     <div>
       <label for="manufacturer" class="block text-sm font-medium text-gray-700"
-        >Manufacturer</label
+        >Brands</label
       >
       <input
         type="text"
@@ -260,6 +274,7 @@ const form = ref({
   howToUse: props.defaultValues.howToUse || "",
   keyBenefits: props.defaultValues.keyBenefits || "",
   manufacturer: props.defaultValues.manufacturer || "",
+  hsnCode: props.defaultValues.hsnCode || "",
 });
 
 const deleteProduct = async () => {

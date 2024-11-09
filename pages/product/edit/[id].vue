@@ -45,6 +45,7 @@ try {
     images: data.product.images,
     ...data.metafields,
     collections: data.collections,
+    hsnCode: data.hsnCode,
   };
 
   console.log(data);
@@ -83,9 +84,15 @@ const updateProduct = async (values: any) => {
   delete values["addedImages"];
   delete values["removedImages"];
 
-  await axios.put(`/api/product/${productId}`, values, {
+  const { data } = await axios.put(`/api/product/${productId}`, values, {
     headers: { "Content-Type": "application/json" },
   });
+
+  if (data.errors) {
+    data.errors.forEach((e: string) => {
+      alert(e);
+    });
+  }
 
   alert("Successfully updated the product.");
 };

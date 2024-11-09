@@ -2,6 +2,7 @@ import axios from "axios";
 import config from "~/utils/config";
 import { DEFINED_METAFIELDS } from "../add/index.post";
 
+const PRODUCTION_API = process.env.VITE_PRODUCTION_API;
 const SHOPIFY_API = `https://${config.shopifyDomain}/admin/api/2024-10/products`;
 const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
 
@@ -10,7 +11,7 @@ export default defineEventHandler(async (event) => {
   if (!productId) throw new Error("Product id not provided.");
 
   const body = await readBody(event);
-  console.log(body);
+  const errors: string[] = [];
 
   try {
     const metafields: any[] = [];
@@ -48,7 +49,17 @@ export default defineEventHandler(async (event) => {
       }
     );
 
-    return data;
+    const { data: hsnUpdateResponse } = await axios.put(
+      `${PRODUCTION_API}/api/product/update-hsn`,
+      {
+        hsnCode: body.hsnCode,
+        inventoryItemId: data.product.variants[0].inventory_item_id,
+      }
+    );
+
+    if (hsnUpdateResponse.error) errors.push(hsnUpdateResponse.error);
+
+    return { ...data, errors };
   } catch (error: any) {
     return { error: error.message };
   }
