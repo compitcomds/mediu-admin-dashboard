@@ -1,4 +1,20 @@
 <template>
+  <select
+    id="tags-select"
+    v-model="tags"
+    class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800 focus:outline-none focus:border-blue-500"
+    @change="toggleCollection(selectedCollection)"
+    placeholder="Select a collection"
+  >
+    <option value="" disabled selected>Select a tag</option>
+    <option
+      v-for="collection in collections"
+      :key="collection.id"
+      :value="collection.id"
+    >
+      {{ collection.title }}
+    </option>
+  </select>
   <div class="flex flex-wrap items-center rounded">
     <input
       v-model="inputValue"
@@ -29,6 +45,7 @@
 </template>
 
 <script setup>
+import axios from "axios";
 import { X } from "lucide-vue-next";
 
 const props = defineProps({
@@ -37,6 +54,8 @@ const props = defineProps({
     default: () => [],
   },
 });
+
+const allProductTags = ref([]);
 
 const emit = defineEmits(["update:modelValue"]);
 
@@ -70,6 +89,11 @@ const removeLastTag = (event) => {
     emit("update:modelValue", tags.value);
   }
 };
+
+onMounted(async () => {
+  const { data } = await axios.get("/api/product/tags");
+  allProductTags.value = data.edges.map((edge) => edge.node);
+});
 </script>
 
 <style scoped>
