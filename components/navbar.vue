@@ -1,9 +1,11 @@
 <template>
-  <div class="bg-[#28574e] flex items-center justify-between px-4 py-4 fixed z-50 w-full">
+  <div
+    class="bg-[#28574e] flex items-center justify-between px-4 py-4 fixed z-50 w-full"
+  >
     <!-- Shopify Logo -->
-    <div class="flex items-center space-x-2">
+    <div class="flex items-center space-x-2 max-w-16">
       <nuxt-link to="/"
-        ><img src="https://ccdstest.b-cdn.net/Medi%20u/logo%202.png" alt="" class="w-5/6"
+        ><img src="/mediu-logo.png" alt="Mediu Logo" class="w-5/6"
       /></nuxt-link>
     </div>
 
@@ -46,19 +48,22 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 14v7" />
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-7" />
       </svg> -->
-      <div class="bg-purple-600 rounded-full px-4 py-1 text-white font-semibold">
+      <div
+        class="bg-purple-600 rounded-full px-4 py-1 text-white font-semibold"
+      >
         Dev MediU
       </div>
-    
-    <!-- Logout Button for lg and xl screens only -->
-    <div class="hidden lg:flex items-center space-x-4">
-      <button
-        @click="handleLogout"
-        class="text-white bg-red-600 hover:bg-red-500 rounded-md px-4 py-2"
-      >
-        Logout
-      </button>
-    </div></div>
+
+      <!-- Logout Button for lg and xl screens only -->
+      <div class="hidden lg:flex items-center space-x-4">
+        <button
+          @click="handleLogout"
+          class="text-white bg-red-600 hover:bg-red-500 rounded-md px-4 py-2"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
 
     <!-- Sidenav for sm and md screens -->
     <transition name="slide">
@@ -67,7 +72,10 @@
         class="fixed inset-0 bg-[#28574e] text-[#28574e] bg-opacity-50 z-50"
         @click="toggleSidenav"
       >
-        <aside class="w-64 bg-gray-200 p-4 fixed inset-y-0 left-0 top-0" @click.stop>
+        <aside
+          class="w-64 bg-gray-200 p-4 fixed inset-y-0 left-0 top-0"
+          @click.stop
+        >
           <h1 class="text-2xl font-bold mb-6">Mediu Dashboard</h1>
           <nav>
             <ul>
@@ -105,12 +113,16 @@
                 </div>
                 <ul v-if="dropdowns.orders" class="ml-4 space-y-1 mt-1">
                   <li>
-                    <a href="/orders" class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a
+                      href="/orders"
+                      class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >All Orders</a
                     >
                   </li>
                   <li>
-                    <a href="/drafts" class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a
+                      href="/drafts"
+                      class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Drafts</a
                     >
                   </li>
@@ -150,7 +162,9 @@
                 </div>
                 <ul v-if="dropdowns.products" class="ml-4 space-y-1 mt-1">
                   <li>
-                    <a href="/product" class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a
+                      href="/product"
+                      class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >All Products</a
                     >
                   </li>
@@ -162,19 +176,24 @@
                     >
                   </li>
                   <li>
-                    <a href="/inventory" class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a
+                      href="/inventory"
+                      class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Inventory</a
                     >
                   </li>
                   <li>
-                    <a href="/purchase" class="block py-1 px-2 hover:bg-gray-400 rounded"
+                    <a
+                      href="/purchase"
+                      class="block py-1 px-2 hover:bg-gray-400 rounded"
                       >Purchase Orders</a
                     >
                   </li>
                 </ul>
               </li>
               <li class="mb-2">
-                <a href="/customers"
+                <a
+                  href="/customers"
                   class="border border-[#28574e] rounded-md block py-2 px-4 hover:bg-gray-400"
                   >Customers</a
                 >
@@ -336,17 +355,19 @@
                 </ul>
               </li> -->
               <li class="mb-2">
-                <a href="/consultancy"
+                <a
+                  href="/consultancy"
                   class="border border-[#28574e] rounded-md block py-2 px-4 hover:bg-gray-400"
                   >Consultancy</a
                 >
               </li>
               <li class="mb-2">
                 <button
-                   @click="handleLogout"
+                  @click="handleLogout"
                   class="border border-[#28574e] rounded-md block py-2 px-4 hover:bg-gray-400"
-                  >Log Out</button
                 >
+                  Log Out
+                </button>
               </li>
               <!-- More sidenav items can be added here -->
             </ul>
