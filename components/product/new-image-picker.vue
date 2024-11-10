@@ -5,7 +5,7 @@
     >
     <input
       type="file"
-      multipleu
+      multiple 
       accept="image/*"
       @change="handleFileChange"
       class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
