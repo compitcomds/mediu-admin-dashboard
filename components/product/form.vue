@@ -151,6 +151,13 @@
     </div>
 
     <div>
+      <label for="concerns" class="block text-sm font-medium text-gray-700 mb-2"
+        >Concerns</label
+      >
+      <ProductConcernInput v-model:model-value="form.tags" />
+    </div>
+
+    <div>
       <label
         for="safetyInformationAndPrecaution"
         class="block text-sm font-medium text-gray-700"

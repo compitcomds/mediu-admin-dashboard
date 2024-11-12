@@ -53,11 +53,10 @@
 
 <script setup>
 import axios from "axios";
-import { X, Check, ChevronsUpDown } from "lucide-vue-next";
+import { Check, ChevronsUpDown } from "lucide-vue-next";
 import Button from "~/components/ui/button/Button.vue";
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
