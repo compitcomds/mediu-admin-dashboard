@@ -35,6 +35,11 @@ export const DEFINED_METAFIELDS: Record<
     type: "number_decimal",
     namespace: "custom",
   },
+  requiresPrescription: {
+    key: "requiresPrescription",
+    namespace: "custom",
+    type: "boolean",
+  },
 };
 
 export async function addProductToCollection(

@@ -159,6 +159,18 @@
 
     <div>
       <label
+        for="is-prescription-required"
+        class="block text-sm font-medium text-gray-700 mb-2"
+        >Prescription Required</label
+      >
+      <Switch
+        :checked="form.requiresPrescription"
+        @update:checked="toggleRequiresPrescription"
+      />
+    </div>
+
+    <div>
+      <label
         for="safetyInformationAndPrecaution"
         class="block text-sm font-medium text-gray-700"
         >Safety Information and Precautions</label
@@ -236,6 +248,8 @@
 
 <script setup>
 import axios from "axios";
+import { Switch } from "@/components/ui/switch";
+
 const props = defineProps({
   onSubmit: {
     type: Function,
@@ -282,7 +296,12 @@ const form = ref({
   keyBenefits: props.defaultValues.keyBenefits || "",
   manufacturer: props.defaultValues.manufacturer || "",
   hsnCode: props.defaultValues.hsnCode || "",
+  requiresPrescription: props.defaultValues.requiresPrescription || false,
 });
+
+const toggleRequiresPrescription = () => {
+  form.value.requiresPrescription = !form.value.requiresPrescription;
+};
 
 const deleteProduct = async () => {
   isDeleting.value = true;
