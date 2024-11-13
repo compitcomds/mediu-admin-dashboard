@@ -5,6 +5,7 @@
       @change="onFileChange"
       accept="image/*"
       class="image-picker"
+      multiple
     />
   </div>
 </template>
@@ -14,7 +15,12 @@ const emit = defineEmits(["imageAdded"]);
 
 // Method to handle file selection and emit the new image
 const onFileChange = (event) => {
-  const file = event.target.files[0];
+  for (const file of event.target.files) {
+    emitNewImageToParent(file);
+  }
+};
+
+const emitNewImageToParent = (file) => {
   if (file) {
     const reader = new FileReader();
     reader.onload = () => {
