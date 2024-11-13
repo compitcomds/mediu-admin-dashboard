@@ -87,6 +87,7 @@
         required
       />
     </div>
+
     <div>
       <label for="price" class="block text-sm font-medium text-gray-700"
         >Price <span class="text-red-500">*</span></label
@@ -142,6 +143,10 @@
         required
       />
     </div>
+
+    <!-- <div>
+      <ProductOptionInput />
+    </div> -->
 
     <!-- <div>
       <label for="allowBackOrder" class="flex items-center">
