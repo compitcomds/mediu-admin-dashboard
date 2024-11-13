@@ -40,6 +40,11 @@ export const DEFINED_METAFIELDS: Record<
     namespace: "custom",
     type: "boolean",
   },
+  productSubtitle: {
+    key: "productSubtitle",
+    namespace: "custom",
+    type: "single_line_text_field",
+  },
 };
 
 export async function addProductToCollection(

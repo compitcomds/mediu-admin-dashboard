@@ -14,6 +14,18 @@
     </div>
 
     <div>
+      <label for="subtitle" class="block text-sm font-medium text-gray-700"
+        >Subtitle</label
+      >
+      <input
+        type="text"
+        id="subtitle"
+        v-model="form.productSubtitle"
+        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+      />
+    </div>
+
+    <div>
       <label for="description" class="block text-sm font-medium text-gray-700"
         >Description <span class="text-red-500">*</span></label
       >
@@ -297,6 +309,7 @@ const form = ref({
   manufacturer: props.defaultValues.manufacturer || "",
   hsnCode: props.defaultValues.hsnCode || "",
   requiresPrescription: props.defaultValues.requiresPrescription || false,
+  productSubtitle: props.defaultValues.productSubtitle || "",
 });
 
 const toggleRequiresPrescription = () => {
