@@ -144,9 +144,13 @@
       />
     </div>
 
-    <!-- <div>
-      <ProductOptionInput />
-    </div> -->
+    <div>
+      <ProductOptionInput v-model:model-value="options" />
+    </div>
+
+    <div>
+      <ProductVariantsInput :options="options" />
+    </div>
 
     <!-- <div>
       <label for="allowBackOrder" class="flex items-center">
@@ -263,7 +267,7 @@
   </form>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import axios from "axios";
 import { Switch } from "@/components/ui/switch";
 
@@ -287,6 +291,13 @@ const isSubmitting = ref(false);
 const isDeleting = ref(false);
 const removedImages = ref([]);
 const addedImages = ref([]);
+
+const options = ref<Array<{ name: string; values: string[] }>>([
+  {
+    name: "Pack Size",
+    values: [""],
+  },
+]);
 
 const form = ref({
   title: props.defaultValues.title || "",
@@ -332,7 +343,7 @@ const deleteProduct = async () => {
 
     alert("Product deleted successfully! Redirecting to products page...");
     router.push("/product");
-  } catch (err) {
+  } catch (err: any) {
     alert(
       err.message ||
         "Unable to delete the product at the time. Please try again later."
@@ -376,7 +387,7 @@ const handleSubmit = async () => {
     }
 
     await props.onSubmit(parsedData);
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     alert(error.message);
   } finally {
