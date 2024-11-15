@@ -144,13 +144,16 @@
       />
     </div>
 
-    <div>
-      <ProductOptionInput v-model:model-value="options" />
+    <!-- <div>
+      <ProductOptionInput
+        :productId="productId"
+        v-model:model-value="options"
+      />
     </div>
 
     <div>
-      <ProductVariantsInput :options="options" />
-    </div>
+      <ProductVariantsInput :options="options" v-model:model-value="variants" />
+    </div> -->
 
     <!-- <div>
       <label for="allowBackOrder" class="flex items-center">
@@ -176,6 +179,15 @@
         >Concerns</label
       >
       <ProductConcernInput v-model:model-value="form.tags" />
+    </div>
+
+    <div>
+      <label
+        for="ingredients"
+        class="block text-sm font-medium text-gray-700 mb-2"
+        >Ingredients</label
+      >
+      <ProductIngredientsInput v-model:model-value="form.tags" />
     </div>
 
     <div>
@@ -274,14 +286,15 @@ import { Switch } from "@/components/ui/switch";
 const props = defineProps({
   onSubmit: {
     type: Function,
-    required: true,
+    default: () => {},
   },
   defaultValues: {
     type: Object,
-    default: () => ({}),
+    default: {},
   },
   productId: {
     type: String,
+    default: null,
   },
 });
 
@@ -299,33 +312,35 @@ const options = ref<Array<{ name: string; values: string[] }>>([
   },
 ]);
 
+const variants = ref<Array<{ [key: string]: string }>>([]);
+
 const form = ref({
-  title: props.defaultValues.title || "",
-  description: props.defaultValues.description || "",
+  title: props.defaultValues?.title || "",
+  description: props.defaultValues?.description || "",
   images: props.defaultValues?.images || [],
   sku: props.defaultValues?.sku || "",
-  collections: props.defaultValues.collections || [],
+  collections: props.defaultValues?.collections || [],
   price:
-    props.defaultValues.price !== undefined ? props.defaultValues.price : "0",
-  compareAtPrice: props.defaultValues.compareAtPrice || "",
+    props.defaultValues?.price !== undefined ? props.defaultValues.price : "0",
+  compareAtPrice: props.defaultValues?.compareAtPrice || "",
   gstApplied:
-    props.defaultValues.gstApplied !== undefined
+    props.defaultValues?.gstApplied !== undefined
       ? props.defaultValues.gstApplied
       : "",
   quantity:
-    props.defaultValues.quantity !== undefined
+    props.defaultValues?.quantity !== undefined
       ? props.defaultValues.quantity
       : 0,
-  allowBackOrder: props.defaultValues.allowBackOrder || false,
-  tags: props.defaultValues.tags || [],
+  allowBackOrder: props.defaultValues?.allowBackOrder || false,
+  tags: props.defaultValues?.tags || [],
   safetyInformationAndPrecaution:
-    props.defaultValues.safetyInformationAndPrecaution || "",
-  howToUse: props.defaultValues.howToUse || "",
-  keyBenefits: props.defaultValues.keyBenefits || "",
-  manufacturer: props.defaultValues.manufacturer || "",
-  hsnCode: props.defaultValues.hsnCode || "",
-  requiresPrescription: props.defaultValues.requiresPrescription || false,
-  productSubtitle: props.defaultValues.productSubtitle || "",
+    props.defaultValues?.safetyInformationAndPrecaution || "",
+  howToUse: props.defaultValues?.howToUse || "",
+  keyBenefits: props.defaultValues?.keyBenefits || "",
+  manufacturer: props.defaultValues?.manufacturer || "",
+  hsnCode: props.defaultValues?.hsnCode || "",
+  requiresPrescription: props.defaultValues?.requiresPrescription || false,
+  productSubtitle: props.defaultValues?.productSubtitle || "",
 });
 
 const toggleRequiresPrescription = () => {

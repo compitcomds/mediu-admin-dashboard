@@ -1,8 +1,4 @@
 <template>
-  {{ options }}
-  <br /><br />
-  {{ variants }}
-
   <div>
     <label
       for="product-variants"
@@ -10,7 +6,7 @@
       >Variants
     </label>
   </div>
-  <Table>
+  <!-- <Table>
     <TableHeader>
       <TableRow>
         <TableHead>#</TableHead>
@@ -20,10 +16,18 @@
           :key="option.name"
           >{{ option.name }}</TableHead
         >
-        <TableHead class="uppercase">Price</TableHead>
-        <TableHead class="uppercase">Compare at price</TableHead>
-        <TableHead class="uppercase">Quantity</TableHead>
-        <TableHead class="uppercase">SKU</TableHead>
+        <TableHead class="uppercase"
+          >Price <span class="text-red-500">*</span>
+        </TableHead>
+        <TableHead class="uppercase"
+          >Compare at price (MRP) <span class="text-red-500">*</span></TableHead
+        >
+        <TableHead class="uppercase"
+          >Quantity <span class="text-red-500">*</span></TableHead
+        >
+        <TableHead class="uppercase"
+          >SKU <span class="text-red-500">*</span></TableHead
+        >
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -70,7 +74,7 @@
         </TableCell>
       </TableRow>
     </TableBody>
-  </Table>
+  </Table> -->
 </template>
 
 <script setup lang="ts">
@@ -85,15 +89,43 @@ import {
 
 const { options } = defineProps<{
   options: Array<{ name: string; values: string[] }>;
+  modelValue: Array<{ [key: string]: string }>;
+  defaultPrice?: string | number;
 }>();
+const emit = defineEmits(["update:modelValue"]);
 
-const variants = ref(generateCombinations(options));
+const variants = ref<Array<{ [key: string]: string }>>([]);
+
+watch(
+  () => variants.value,
+  (newVariants) => {
+    emit("update:modelValue", newVariants);
+  },
+  { deep: true, immediate: true }
+);
 
 watch(
   () => options,
   () => {
     const newVariants = generateCombinations(options);
-    variants.value = newVariants;
+    let i;
+    for (i = 0; i < newVariants.length; i++) {
+      if (i >= variants.value.length) {
+        variants.value.push(newVariants[i]);
+        continue;
+      }
+      variants.value[i] = {
+        ...newVariants[i],
+        price: variants.value[i].price,
+        compare_at_price: variants.value[i].compare_at_price,
+        inventory_quantity: variants.value[i].inventory_quantity,
+        sku: variants.value[i].sku,
+      };
+    }
+
+    if (newVariants.length < variants.value.length) {
+      variants.value.splice(newVariants.length);
+    }
   },
   { deep: true, immediate: true }
 );
@@ -102,10 +134,7 @@ function generateCombinations(
   options: Array<{ name: string; values: string[] }>
 ) {
   const result: Array<{ [key: string]: any }> = [];
-  function combine(
-    index: number,
-    currentCombination: { [key: string]: string }
-  ) {
+  function combine(index: number, currentCombination: { [key: string]: any }) {
     if (index === options.length) {
       result.push({
         ...currentCombination,
@@ -114,6 +143,7 @@ function generateCombinations(
         inventory_quantity: 0,
         sku: "",
       });
+
       return;
     }
     const currentOption = options[index];
@@ -125,55 +155,5 @@ function generateCombinations(
   }
   combine(0, {});
   return result;
-}
-
-function updateVariants(
-  newOptions: Array<{ name: string; values: string[] }>,
-  existingVariants: Array<any>
-) {
-  const newVariants = generateCombinations(newOptions);
-  const updatedVariants: Array<any> = [];
-
-  // Create a Map of existing variants keyed by their combination
-  const existingMap = new Map(
-    existingVariants.map((variant) => {
-      const key = Object.keys(variant)
-        .filter((k) => k.startsWith("option"))
-        .sort()
-        .join("-");
-      return [key, variant];
-    })
-  );
-
-  // Iterate over the new variants and either update or add them
-  for (const newVariant of newVariants) {
-    const key = Object.keys(newVariant)
-      .filter((k) => k.startsWith("option"))
-      .sort()
-      .join("-");
-    if (existingMap.has(key)) {
-      // If this combination already exists, keep the previous values
-      const existingVariant = existingMap.get(key);
-      updatedVariants.push({
-        ...newVariant,
-        price: existingVariant?.price || 0,
-        compare_at_price: existingVariant?.compare_at_price || 0,
-        inventory_quantity: existingVariant?.inventory_quantity || 0,
-        sku: existingVariant?.sku || "",
-      });
-      existingMap.delete(key); // Remove the combination from the map, as it has been processed
-    } else {
-      // Otherwise, it's a new combination
-      updatedVariants.push(newVariant);
-    }
-  }
-
-  // Any remaining combinations in existingMap should be removed
-  for (const [key, existingVariant] of existingMap) {
-    // These variants no longer exist, so you could remove them or do something else if needed
-    // For now, we'll just leave them out
-  }
-
-  return updatedVariants;
 }
 </script>

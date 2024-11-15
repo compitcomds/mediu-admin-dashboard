@@ -73,11 +73,42 @@
 </template>
 
 <script setup lang="ts">
+import axios from "axios";
 import { PlusCircle, Trash } from "lucide-vue-next";
 
 const props = defineProps<{
   modelValue: undefined | Array<{ name: string; values: string[] }>;
+  productId?: string;
 }>();
+
+let prefetchedOptions: {
+  variantsCount: number;
+  variants: {
+    harmonizedSystemCode: string;
+    price: string;
+    compareAtPrice: string;
+    sku: string;
+    inventoryItem: {
+      harmonizedSystemCode: string;
+    };
+  }[];
+  options: Array<{
+    id: string;
+    name: string;
+    position: number;
+    optionValues: Array<{
+      id: string;
+      name: string;
+    }>;
+  }>;
+} | null = null;
+
+try {
+  const { data } = await axios.get(
+    `/api/product/${props.productId}/options-and-variants`
+  );
+  prefetchedOptions = data;
+} catch (error) {}
 
 const emit = defineEmits(["update:modelValue"]);
 

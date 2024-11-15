@@ -11,6 +11,8 @@
     </div>
 
     <div v-else>
+      <h1 class="text-3xl font-bold mb-4">Edit Product #{{ productId }}</h1>
+
       <ProductForm
         :default-values="product"
         :product-id="Array.isArray(productId) ? productId[0] : productId"
