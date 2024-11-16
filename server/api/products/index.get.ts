@@ -68,7 +68,7 @@ export default defineEventHandler(async (event) => {
           ? getAllProductsBeforeQuery
           : getAllProductsAfterQuery,
         variables: {
-          query: query.query || null,
+          query: !!query.query ? `title:*${query.query}*` : null,
           after: query.after || null,
           before: query.before || null,
         },

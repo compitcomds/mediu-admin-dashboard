@@ -215,13 +215,17 @@ const pageInfo = ref<{
 const fetchProducts = async ({
   after,
   before,
+  query,
 }: {
   after?: string;
   before?: string;
+  query?: string;
 }) => {
   try {
     const { data } = await axios.get(
-      `/api/products?after=${after || ""}&before=${before || ""}`
+      `/api/products?after=${after || ""}&before=${before || ""}&query=${
+        query || ""
+      }`
     );
     console.log(data);
     products.value = data.products;
@@ -237,6 +241,7 @@ watch(
     fetchProducts({
       after: newQuery.after?.toString(),
       before: newQuery.before?.toString(),
+      query: newQuery.query?.toString(),
     });
   },
   {
