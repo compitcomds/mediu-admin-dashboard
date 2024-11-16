@@ -48,6 +48,7 @@ try {
     ...data.metafields,
     collections: data.collections,
     hsnCode: data.hsnCode,
+    status: data.product.status,
   };
 
   console.log(data);

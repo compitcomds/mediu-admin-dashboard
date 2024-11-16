@@ -5,10 +5,9 @@
         variant="outline"
         role="combobox"
         :aria-expanded="open"
-        class="w-full uppercase justify-between"
+        class="w-full uppercase justify-between text-ellipsis max-w-full overflow-x-clip relative"
       >
-        {{ tags.length > 0 ? tags.join(", ") : "Select tag..." }}
-
+        {{ tags.length > 0 ? tags.join(", ").slice(0, 44) : "Select tag..." }}
         <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
     </PopoverTrigger>

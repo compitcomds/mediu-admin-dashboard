@@ -194,10 +194,10 @@ const performSearch = useDebounceFn(async () => {
     query: { query: searchQuery.value || undefined },
   });
 }, 1000);
-const clearSearch = () => {
+
+const clearSearch = async () => {
   searchQuery.value = "";
   searchVisible.value = false;
-  emit("search", "");
 };
 
 const openModal = () => {

@@ -9,7 +9,7 @@
       >
         {{
           concernedTags.length > 0
-            ? concernedTags.join(", ")
+            ? concernedTags.join(", ").slice(0, 43)
             : "Select concerns"
         }}
         <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />

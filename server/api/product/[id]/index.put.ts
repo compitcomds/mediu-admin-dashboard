@@ -27,6 +27,7 @@ export default defineEventHandler(async (event) => {
       body_html: body.description,
       tags: body.tags.join(","),
       metafields,
+      status: body.status,
       variants: [
         {
           taxable: false,

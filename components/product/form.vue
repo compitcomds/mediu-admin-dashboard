@@ -1,150 +1,147 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-4">
-    <div>
-      <label for="title" class="block text-sm font-medium text-gray-700"
-        >Title <span class="text-red-500">*</span></label
-      >
-      <input
-        type="text"
-        id="title"
-        v-model="form.title"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-        required
-      />
-    </div>
+  <form
+    @submit.prevent="handleSubmit"
+    class="flex flex-col lg:flex-row gap-5 flex-wrap"
+  >
+    <div class="space-y-4 flex-1">
+      <div>
+        <label for="title" class="block text-sm font-medium text-gray-700"
+          >Title <span class="text-red-500">*</span></label
+        >
+        <input
+          type="text"
+          id="title"
+          v-model="form.title"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          required
+        />
+      </div>
 
-    <div>
-      <label for="subtitle" class="block text-sm font-medium text-gray-700"
-        >Subtitle</label
-      >
-      <input
-        type="text"
-        id="subtitle"
-        v-model="form.productSubtitle"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-      />
-    </div>
+      <div>
+        <label for="subtitle" class="block text-sm font-medium text-gray-700"
+          >Subtitle</label
+        >
+        <input
+          type="text"
+          id="subtitle"
+          v-model="form.productSubtitle"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+        />
+      </div>
 
-    <div>
-      <label for="description" class="block text-sm font-medium text-gray-700"
-        >Description <span class="text-red-500">*</span></label
-      >
-      <textarea
-        id="description"
-        v-model="form.description"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-        rows="3"
-        required
-      ></textarea>
-    </div>
+      <div>
+        <label for="description" class="block text-sm font-medium text-gray-700"
+          >Description <span class="text-red-500">*</span></label
+        >
+        <textarea
+          id="description"
+          v-model="form.description"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          rows="6"
+          required
+        ></textarea>
+      </div>
 
-    <div>
-      <label for="images" class="block text-sm font-medium text-gray-700 mb-4"
-        >Images <span class="text-red-500">*</span></label
-      >
-      <ProductNewImagePicker
-        v-if="!productId"
-        v-model:model-value="form.images"
-      />
-      <ProductImages
-        v-else
-        :images="form.images"
-        v-model:removed-images="removedImages"
-        v-model:added-images="addedImages"
-      />
-    </div>
+      <div>
+        <label for="images" class="block text-sm font-medium text-gray-700 mb-4"
+          >Images <span class="text-red-500">*</span></label
+        >
+        <ProductNewImagePicker
+          v-if="!productId"
+          v-model:model-value="form.images"
+        />
+        <ProductImages
+          v-else
+          :images="form.images"
+          v-model:removed-images="removedImages"
+          v-model:added-images="addedImages"
+        />
+      </div>
 
-    <div>
-      <label for="collections" class="block text-sm font-medium text-gray-700"
-        >Collections <span class="text-red-500">*</span></label
-      >
-      <ProductCollectionBox v-model:model-value="form.collections" />
-    </div>
+      <div>
+        <label for="title" class="block text-sm font-medium text-gray-700"
+          >SKU <span class="text-red-500">*</span></label
+        >
+        <input
+          type="text"
+          id="sku"
+          v-model="form.sku"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          required
+        />
+      </div>
 
-    <div>
-      <label for="title" class="block text-sm font-medium text-gray-700"
-        >SKU <span class="text-red-500">*</span></label
-      >
-      <input
-        type="text"
-        id="sku"
-        v-model="form.sku"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-        required
-      />
-    </div>
+      <div>
+        <label for="gstApplied" class="block text-sm font-medium text-gray-700"
+          >HSN Code <span class="text-red-500">*</span></label
+        >
+        <input
+          type="text"
+          id="hsnCode"
+          v-model="form.hsnCode"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          placeholder="0"
+          required
+        />
+      </div>
 
-    <div>
-      <label for="gstApplied" class="block text-sm font-medium text-gray-700"
-        >HSN Code <span class="text-red-500">*</span></label
-      >
-      <input
-        type="text"
-        id="hsnCode"
-        v-model="form.hsnCode"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-        placeholder="0"
-        required
-      />
-    </div>
+      <div>
+        <label for="price" class="block text-sm font-medium text-gray-700"
+          >Price <span class="text-red-500">*</span></label
+        >
+        <input
+          type="text"
+          id="price"
+          v-model="form.price"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          placeholder="0"
+          required
+        />
+      </div>
 
-    <div>
-      <label for="price" class="block text-sm font-medium text-gray-700"
-        >Price <span class="text-red-500">*</span></label
-      >
-      <input
-        type="text"
-        id="price"
-        v-model="form.price"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-        placeholder="0"
-        required
-      />
-    </div>
+      <div>
+        <label
+          for="compareAtPrice"
+          class="block text-sm font-medium text-gray-700"
+          >Compare At Price</label
+        >
+        <input
+          type="text"
+          id="compareAtPrice"
+          v-model="form.compareAtPrice"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          placeholder="0"
+        />
+      </div>
 
-    <div>
-      <label
-        for="compareAtPrice"
-        class="block text-sm font-medium text-gray-700"
-        >Compare At Price</label
-      >
-      <input
-        type="text"
-        id="compareAtPrice"
-        v-model="form.compareAtPrice"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-        placeholder="0"
-      />
-    </div>
+      <div>
+        <label for="gstApplied" class="block text-sm font-medium text-gray-700"
+          >GST Applied <span class="text-red-500">*</span></label
+        >
+        <input
+          type="text"
+          id="gstApplied"
+          v-model="form.gstApplied"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          placeholder="0"
+          required
+        />
+      </div>
 
-    <div>
-      <label for="gstApplied" class="block text-sm font-medium text-gray-700"
-        >GST Applied <span class="text-red-500">*</span></label
-      >
-      <input
-        type="text"
-        id="gstApplied"
-        v-model="form.gstApplied"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-        placeholder="0"
-        required
-      />
-    </div>
+      <div>
+        <label for="quantity" class="block text-sm font-medium text-gray-700"
+          >Quantity <span class="text-red-500">*</span></label
+        >
+        <input
+          type="number"
+          id="quantity"
+          v-model.number="form.quantity"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          required
+        />
+      </div>
 
-    <div>
-      <label for="quantity" class="block text-sm font-medium text-gray-700"
-        >Quantity <span class="text-red-500">*</span></label
-      >
-      <input
-        type="number"
-        id="quantity"
-        v-model.number="form.quantity"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-        required
-      />
-    </div>
-
-    <!-- <div>
+      <!-- <div>
       <ProductOptionInput
         :productId="productId"
         v-model:model-value="options"
@@ -155,7 +152,7 @@
       <ProductVariantsInput :options="options" v-model:model-value="variants" />
     </div> -->
 
-    <!-- <div>
+      <!-- <div>
       <label for="allowBackOrder" class="flex items-center">
         <input
           type="checkbox"
@@ -167,114 +164,145 @@
       </label>
     </div> -->
 
-    <div>
-      <label for="tags" class="block text-sm font-medium text-gray-700 mb-2"
-        >Tags</label
-      >
-      <ProductTagInput v-model:model-value="form.tags" />
-    </div>
+      <div>
+        <label
+          for="safetyInformationAndPrecaution"
+          class="block text-sm font-medium text-gray-700"
+          >Safety Information and Precautions</label
+        >
+        <textarea
+          id="safetyInformationAndPrecaution"
+          v-model="form.safetyInformationAndPrecaution"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          rows="3"
+        ></textarea>
+      </div>
 
-    <div>
-      <label for="concerns" class="block text-sm font-medium text-gray-700 mb-2"
-        >Concerns</label
-      >
-      <ProductConcernInput v-model:model-value="form.tags" />
-    </div>
+      <div>
+        <label for="howToUse" class="block text-sm font-medium text-gray-700"
+          >How to Use</label
+        >
+        <textarea
+          id="howToUse"
+          v-model="form.howToUse"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          rows="3"
+        ></textarea>
+      </div>
 
-    <div>
-      <label
-        for="ingredients"
-        class="block text-sm font-medium text-gray-700 mb-2"
-        >Ingredients</label
-      >
-      <ProductIngredientsInput v-model:model-value="form.tags" />
-    </div>
+      <div>
+        <label for="keyBenefits" class="block text-sm font-medium text-gray-700"
+          >Key Benefits</label
+        >
+        <textarea
+          id="keyBenefits"
+          v-model="form.keyBenefits"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          rows="3"
+        ></textarea>
+      </div>
 
-    <div>
-      <label
-        for="is-prescription-required"
-        class="block text-sm font-medium text-gray-700 mb-2"
-        >Prescription Required</label
-      >
-      <Switch
-        :checked="form.requiresPrescription"
-        @update:checked="toggleRequiresPrescription"
-      />
+      <div>
+        <label
+          for="manufacturer"
+          class="block text-sm font-medium text-gray-700"
+          >Brands</label
+        >
+        <input
+          type="text"
+          id="manufacturer"
+          v-model="form.manufacturer"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+        />
+      </div>
     </div>
+    <div class="lg:w-1/3 space-y-4 rounded-xl max-h-fit">
+      <div>
+        <label for="collections" class="block text-sm font-medium text-gray-700"
+          >Collections <span class="text-red-500">*</span></label
+        >
+        <ProductCollectionBox v-model:model-value="form.collections" />
+      </div>
+      <div>
+        <label for="tags" class="block text-sm font-medium text-gray-700 mb-2"
+          >Tags</label
+        >
+        <ProductTagInput v-model:model-value="form.tags" />
+      </div>
 
-    <div>
-      <label
-        for="safetyInformationAndPrecaution"
-        class="block text-sm font-medium text-gray-700"
-        >Safety Information and Precautions</label
-      >
-      <textarea
-        id="safetyInformationAndPrecaution"
-        v-model="form.safetyInformationAndPrecaution"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-        rows="3"
-      ></textarea>
-    </div>
+      <div>
+        <label
+          for="concerns"
+          class="block text-sm font-medium text-gray-700 mb-2"
+          >Concerns</label
+        >
+        <ProductConcernInput v-model:model-value="form.tags" />
+      </div>
 
-    <div>
-      <label for="howToUse" class="block text-sm font-medium text-gray-700"
-        >How to Use</label
-      >
-      <textarea
-        id="howToUse"
-        v-model="form.howToUse"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-        rows="3"
-      ></textarea>
-    </div>
+      <div>
+        <label
+          for="ingredients"
+          class="block text-sm font-medium text-gray-700 mb-2"
+          >Ingredients</label
+        >
+        <ProductIngredientsInput v-model:model-value="form.tags" />
+      </div>
 
-    <div>
-      <label for="keyBenefits" class="block text-sm font-medium text-gray-700"
-        >Key Benefits</label
-      >
-      <textarea
-        id="keyBenefits"
-        v-model="form.keyBenefits"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-        rows="3"
-      ></textarea>
-    </div>
+      <div>
+        <label
+          for="is-prescription-required"
+          class="block text-sm font-medium text-gray-700 mb-2"
+          >Prescription Required</label
+        >
+        <Switch
+          :checked="form.requiresPrescription"
+          @update:checked="toggleRequiresPrescription"
+        />
+      </div>
 
-    <div>
-      <label for="manufacturer" class="block text-sm font-medium text-gray-700"
-        >Brands</label
-      >
-      <input
-        type="text"
-        id="manufacturer"
-        v-model="form.manufacturer"
-        class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-      />
-    </div>
+      <div>
+        <p class="block text-sm font-medium text-gray-700 mb-2">
+          Product Status
+        </p>
+        <Select v-model:model-value="form.status">
+          <SelectTrigger class="bg-white font-medium py-1">
+            <SelectValue placeholder="Select product status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="draft">Draft</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
 
-    <div class="flex items-center justify-center gap-5">
-      <button
-        type="submit"
-        :disabled="isSubmitting || isDeleting"
-        class="w-full py-2 px-4 bg-[#28574e] text-white font-semibold hover:bg-[#1f4d42] disabled:cursor-not-allowed disabled:opacity-70"
-      >
-        <span v-if="isSubmitting" class="flex items-center justify-center gap-1"
-          >Submitting <Loader
-        /></span>
-        <span v-else>Submit</span>
-      </button>
-      <button
-        v-if="!!props.productId"
-        type="button"
-        :disabled="isDeleting || isSubmitting"
-        class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full disabled:cursor-not-allowed disabled:opacity-70"
-        @click="deleteProduct"
-      >
-        <span v-if="isDeleting" class="flex items-center justify-center gap-1"
-          >Deleting... <Loader
-        /></span>
-        <span v-else>Delete Product</span>
-      </button>
+      <div class="flex flex-col gap-4">
+        <button
+          type="submit"
+          :disabled="isSubmitting || isDeleting"
+          class="w-full py-2 px-4 bg-[#28574e] text-white font-semibold hover:bg-[#1f4d42] disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          <span
+            v-if="isSubmitting"
+            class="flex items-center justify-center gap-1"
+            >Submitting <Loader
+          /></span>
+          <span v-else>Submit</span>
+        </button>
+        <button
+          v-if="!!props.productId"
+          type="button"
+          :disabled="isDeleting || isSubmitting"
+          class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full disabled:cursor-not-allowed disabled:opacity-70"
+          @click="deleteProduct"
+        >
+          <span v-if="isDeleting" class="flex items-center justify-center gap-1"
+            >Deleting... <Loader
+          /></span>
+          <span v-else>Delete Product</span>
+        </button>
+      </div>
     </div>
   </form>
 </template>
@@ -282,6 +310,14 @@
 <script setup lang="ts">
 import axios from "axios";
 import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const props = defineProps({
   onSubmit: {
@@ -341,6 +377,7 @@ const form = ref({
   hsnCode: props.defaultValues?.hsnCode || "",
   requiresPrescription: props.defaultValues?.requiresPrescription || false,
   productSubtitle: props.defaultValues?.productSubtitle || "",
+  status: props.defaultValues?.status || "active",
 });
 
 const toggleRequiresPrescription = () => {

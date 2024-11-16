@@ -9,7 +9,7 @@
       >
         {{
           ingredientTags.length > 0
-            ? ingredientTags.join(", ")
+            ? ingredientTags.join(", ").slice(0, 43)
             : "Select ingredients"
         }}
         <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />

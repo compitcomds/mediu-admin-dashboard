@@ -86,6 +86,7 @@ export default defineEventHandler(async (event) => {
     images: body.images.map((image: any) => ({
       attachment: image.base64Image,
     })),
+    status: body.status,
     variants: [
       {
         taxable: false,
