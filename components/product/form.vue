@@ -141,16 +141,20 @@
         />
       </div>
 
-      <!-- <div>
-      <ProductOptionInput
-        :productId="productId"
-        v-model:model-value="options"
-      />
-    </div>
+      <div>
+        <ProductOptionInput
+          :productId="productId"
+          v-model:model-value="options"
+        />
+      </div>
 
-    <div>
-      <ProductVariantsInput :options="options" v-model:model-value="variants" />
-    </div> -->
+      <div>
+        <ProductVariantsInput
+          :options="options"
+          v-model:model-value="variants"
+          :default-variants="variants"
+        />
+      </div>
 
       <!-- <div>
       <label for="allowBackOrder" class="flex items-center">
@@ -341,14 +345,18 @@ const isDeleting = ref(false);
 const removedImages = ref([]);
 const addedImages = ref([]);
 
-const options = ref<Array<{ name: string; values: string[] }>>([
-  {
-    name: "Pack Size",
-    values: [""],
-  },
-]);
+const options = ref<Array<{ name: string; values: { name: string }[] }>>(
+  props.defaultValues.options || [
+    {
+      name: "Pack Size",
+      values: [{ name: "" }],
+    },
+  ]
+);
 
-const variants = ref<Array<{ [key: string]: string }>>([]);
+const variants = ref<Array<{ [key: string]: string }>>(
+  props.defaultValues.variants || []
+);
 
 const form = ref({
   title: props.defaultValues?.title || "",
@@ -426,6 +434,8 @@ const handleSubmit = async () => {
       images,
       addedImages: addedImages.value,
       removedImages: removedImages.value,
+      options: options.value,
+      variants: variants.value,
     };
 
     if (

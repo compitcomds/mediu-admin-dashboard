@@ -1,12 +1,6 @@
 <template>
-  <div>
-    <label
-      for="product-variants"
-      class="block text-sm font-medium text-gray-700"
-      >Variants
-    </label>
-  </div>
-  <!-- <Table>
+  <h3 class="block mb-3 text-sm font-medium text-gray-700">Variants</h3>
+  <Table>
     <TableHeader>
       <TableRow>
         <TableHead>#</TableHead>
@@ -22,9 +16,9 @@
         <TableHead class="uppercase"
           >Compare at price (MRP) <span class="text-red-500">*</span></TableHead
         >
-        <TableHead class="uppercase"
+        <!-- <TableHead class="uppercase"
           >Quantity <span class="text-red-500">*</span></TableHead
-        >
+        > -->
         <TableHead class="uppercase"
           >SKU <span class="text-red-500">*</span></TableHead
         >
@@ -33,9 +27,9 @@
     <TableBody>
       <TableRow v-for="(variant, index) in variants">
         <TableCell>{{ index + 1 }}</TableCell>
-        <TableCell v-for="(_, index) in options">{{
-          variant[`option${index + 1}`]
-        }}</TableCell>
+        <TableCell v-for="(option, i) in options"
+          >{{ variant.optionValues[i].name }}
+        </TableCell>
         <TableCell>
           <input
             type="number"
@@ -48,13 +42,13 @@
         <TableCell>
           <input
             type="number"
-            v-model="variant.compare_at_price"
+            v-model="variant.compareAtPrice"
             class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
             placeholder="0"
             required
           />
         </TableCell>
-        <TableCell>
+        <!-- <TableCell>
           <input
             type="number"
             v-model="variant.inventory_quantity"
@@ -62,7 +56,7 @@
             placeholder="0"
             required
           />
-        </TableCell>
+        </TableCell> -->
         <TableCell>
           <input
             type="text"
@@ -74,7 +68,7 @@
         </TableCell>
       </TableRow>
     </TableBody>
-  </Table> -->
+  </Table>
 </template>
 
 <script setup lang="ts">
@@ -87,14 +81,25 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const { options } = defineProps<{
-  options: Array<{ name: string; values: string[] }>;
+const { options, defaultVariants } = defineProps<{
+  options: Array<{ name: string; values: { name: string }[] }>;
   modelValue: Array<{ [key: string]: string }>;
   defaultPrice?: string | number;
+  defaultVariants: any[];
 }>();
 const emit = defineEmits(["update:modelValue"]);
 
-const variants = ref<Array<{ [key: string]: string }>>([]);
+const variants = ref<
+  Array<{
+    price: string;
+    compareAtPrice: string;
+    sku: string;
+    optionValues: Array<{
+      name: string;
+      optionName: string;
+    }>;
+  }>
+>(defaultVariants || []);
 
 watch(
   () => variants.value,
@@ -117,8 +122,7 @@ watch(
       variants.value[i] = {
         ...newVariants[i],
         price: variants.value[i].price,
-        compare_at_price: variants.value[i].compare_at_price,
-        inventory_quantity: variants.value[i].inventory_quantity,
+        compareAtPrice: variants.value[i].compareAtPrice,
         sku: variants.value[i].sku,
       };
     }
@@ -131,29 +135,44 @@ watch(
 );
 
 function generateCombinations(
-  options: Array<{ name: string; values: string[] }>
+  options: Array<{ name: string; values: { name: string }[] }>
 ) {
-  const result: Array<{ [key: string]: any }> = [];
-  function combine(index: number, currentCombination: { [key: string]: any }) {
-    if (index === options.length) {
-      result.push({
-        ...currentCombination,
-        price: 0,
-        compare_at_price: 0,
-        inventory_quantity: 0,
-        sku: "",
-      });
+  const result: Array<{
+    price: string;
+    compareAtPrice: string;
+    sku: string;
+    optionValues: Array<{ name: string; optionName: string }>;
+  }> = [];
 
+  function combine(
+    index: number,
+    currentCombination: Array<{ name: string; optionName: string }>
+  ) {
+    if (index === options.length) {
+      // Push the combination with price, compareAtPrice, and sku as strings
+      result.push({
+        price: "",
+        compareAtPrice: "",
+        sku: "",
+        optionValues: currentCombination,
+      });
       return;
     }
+
     const currentOption = options[index];
-    const optionKey = `option${index + 1}`;
     for (const value of currentOption.values) {
-      const newCombination = { ...currentCombination, [optionKey]: value };
+      // Create a new combination object with the current option's value
+      const newCombination = [
+        ...currentCombination,
+        { name: value.name, optionName: currentOption.name },
+      ];
       combine(index + 1, newCombination);
     }
   }
-  combine(0, {});
+
+  // Start the recursive combination process
+  combine(0, []);
+
   return result;
 }
 </script>

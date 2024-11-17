@@ -36,6 +36,7 @@ let product: any = null;
 try {
   const { data } = await axios.get(`/api/product/${productId}`);
   fetchedProduct = data;
+  console.log(data.product.variants);
   product = {
     title: data.product.title,
     description: data.product.body_html,
@@ -49,6 +50,19 @@ try {
     collections: data.collections,
     hsnCode: data.hsnCode,
     status: data.product.status,
+    options: data.product.options.map((option: any) => ({
+      name: option.name,
+      values: option.values.map((value: any) => ({ name: value })),
+    })),
+    variants: data.product.variants.map((variant: any) => ({
+      price: variant.price,
+      compareAtPrice: variant.compare_at_price,
+      sku: variant.sku,
+      optionValues: data.product.options.map((option: any, index: number) => ({
+        name: variant[`option${index + 1}`],
+        optionName: option.name,
+      })),
+    })),
   };
 
   console.log(data);
@@ -56,7 +70,7 @@ try {
   alert(error.message);
 }
 
-const updateProduct = async (values: any) => {
+const updateProduct = async (values: any, options: any, variants: any) => {
   await axios.post(
     "/api/collections/edit",
     {

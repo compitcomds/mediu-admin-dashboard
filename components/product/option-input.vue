@@ -35,7 +35,7 @@
             <div class="relative">
               <input
                 type="text"
-                v-model.trim="option.values[i - 1]"
+                v-model.trim="option.values[i - 1].name"
                 :id="`option-${index}-value-${i - 1}`"
                 v-on:keydown.enter.prevent="
                   optionValueEnterKeyPressed(index, i - 1)
@@ -73,51 +73,21 @@
 </template>
 
 <script setup lang="ts">
-import axios from "axios";
 import { PlusCircle, Trash } from "lucide-vue-next";
 
 const props = defineProps<{
-  modelValue: undefined | Array<{ name: string; values: string[] }>;
+  modelValue: undefined | Array<{ name: string; values: { name: string }[] }>;
   productId?: string;
 }>();
 
-let prefetchedOptions: {
-  variantsCount: number;
-  variants: {
-    harmonizedSystemCode: string;
-    price: string;
-    compareAtPrice: string;
-    sku: string;
-    inventoryItem: {
-      harmonizedSystemCode: string;
-    };
-  }[];
-  options: Array<{
-    id: string;
-    name: string;
-    position: number;
-    optionValues: Array<{
-      id: string;
-      name: string;
-    }>;
-  }>;
-} | null = null;
-
-try {
-  const { data } = await axios.get(
-    `/api/product/${props.productId}/options-and-variants`
-  );
-  prefetchedOptions = data;
-} catch (error) {}
-
 const emit = defineEmits(["update:modelValue"]);
 
-const options = ref<Array<{ name: string; values: string[] }>>(
+const options = ref<Array<{ name: string; values: { name: string }[] }>>(
   props.modelValue || []
 );
 
 const addNewOption = () => {
-  options.value.push({ name: "", values: [""] });
+  options.value.push({ name: "", values: [{ name: "" }] });
   nextTick(() => {
     document.getElementById(`option-name-${options.value.length - 1}`)?.focus();
   });
@@ -129,7 +99,7 @@ const deleteOption = (index: number) => {
 };
 
 const addNewOptionValue = (index: number) => {
-  options.value[index].values.push("");
+  options.value[index].values.push({ name: "" });
   nextTick(() => {
     document
       .getElementById(
