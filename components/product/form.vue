@@ -294,6 +294,14 @@
           /></span>
           <span v-else>Submit</span>
         </button>
+        <nuxt-link
+          v-if="props.defaultValues.status === 'active' && !!props.handle"
+          :to="`https://mediu.in/shop/product/${props.handle}`"
+          target="_blank"
+          class="w-full py-2 px-4 border border-[#28574e] flex items-center justify-center hover:text-white font-semibold hover:bg-[#1f4d42] disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          View Live
+        </nuxt-link>
         <button
           v-if="!!props.productId"
           type="button"
@@ -336,6 +344,10 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  handle: {
+    type: String,
+    default: null,
+  },
 });
 
 const router = useRouter();
@@ -345,14 +357,21 @@ const isDeleting = ref(false);
 const removedImages = ref([]);
 const addedImages = ref([]);
 
-const options = ref<Array<{ name: string; values: { name: string }[] }>>(
-  props.defaultValues.options || [
-    {
-      name: "Pack Size",
-      values: [{ name: "" }],
-    },
-  ]
-);
+const options = ref<Array<{ name: string; values: { name: string }[] }>>([
+  {
+    name: "Pack Size",
+    values: [{ name: "" }],
+  },
+]);
+
+if (
+  !(
+    props.defaultValues.options.length === 1 &&
+    props.defaultValues.options[0].name.includes("Title")
+  )
+) {
+  options.value = props.defaultValues.options;
+}
 
 const variants = ref<Array<{ [key: string]: string }>>(
   props.defaultValues.variants || []

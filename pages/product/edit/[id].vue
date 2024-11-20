@@ -17,6 +17,7 @@
         :default-values="product"
         :product-id="Array.isArray(productId) ? productId[0] : productId"
         :onSubmit="updateProduct"
+        :handle="fetchedProduct?.product.handle"
       />
     </div>
   </AttachSidebar>
@@ -36,7 +37,7 @@ let product: any = null;
 try {
   const { data } = await axios.get(`/api/product/${productId}`);
   fetchedProduct = data;
-  console.log(data.product.variants);
+  console.log(data);
   product = {
     title: data.product.title,
     description: data.product.body_html,
