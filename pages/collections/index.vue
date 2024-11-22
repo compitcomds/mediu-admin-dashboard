@@ -11,53 +11,8 @@
       >
     </div>
 
-    <!-- Responsive Collection Cards for Small and Medium Screens -->
-    <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:hidden">
-      <div
-        v-for="(collection, index) in filteredCollections"
-        :key="collection.id"
-        class="bg-white p-4 rounded-lg shadow-md space-y-2"
-      >
-        <div class="flex items-center justify-between">
-          <div class="flex items-center">
-            <img
-              :src="collection.image?.src || '/default-image.jpg'"
-              alt="Collection Image"
-              class="w-16 h-16 mr-4 rounded"
-            />
-            <div>
-              <p
-                class="text-lg font-semibold"
-                @click="redirectToEditPage(collection.id)"
-              >
-                {{ collection.title }}
-              </p>
-              <p class="text-sm text-gray-500">{{ collection.body_html }}</p>
-            </div>
-          </div>
-          <input type="checkbox" />
-        </div>
-        <div class="flex justify-end space-x-2">
-          <button
-            @click="selectCollection(collection)"
-            class="bg-gray-200 text-sm px-3 py-1 rounded-md"
-          >
-            Edit
-          </button>
-          <button
-            @click="deleteCollection(collection.id)"
-            class="bg-red-500 text-white text-sm px-3 py-1 rounded-md"
-          >
-            Delete
-          </button>
-        </div>
-      </div>
-    </div>
-
     <!-- Responsive Table for Large Screens -->
-    <div
-      class="hidden lg:block overflow-x-auto bg-white shadow-md rounded-lg w-full h-full"
-    >
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg w-full h-full">
       <table class="min-w-full table-auto divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
@@ -90,7 +45,7 @@
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           <tr
-            v-for="(collection, index) in filteredCollections"
+            v-for="collection in collections"
             :key="collection.id"
             class="hover:bg-gray-100"
           >
@@ -98,7 +53,7 @@
               <input type="checkbox" />
             </td>
             <td class="px-4 py-4 break-words whitespace-normal">
-              <nuxt-link :to="`/collections/edit/${collection.id}`">
+              <nuxt-link :to="`/collections/edit/${collection.handle}`">
                 <img
                   :src="
                     collection.image?.src ||
@@ -110,7 +65,7 @@
               </nuxt-link>
             </td>
             <td class="px-4 py-4 break-words whitespace-normal">
-              <nuxt-link :to="`/collections/edit/${collection.id}`">{{
+              <nuxt-link :to="`/collections/edit/${collection.handle}`">{{
                 collection.title
               }}</nuxt-link>
             </td>
@@ -119,7 +74,7 @@
             </td>
             <td>
               <nuxt-link
-                :to="`/collections/edit/${collection.id}`"
+                :to="`/collections/edit/${collection.handle}`"
                 class="bg-black text-white rounded-lg px-4 py-2"
                 >Edit</nuxt-link
               >
@@ -127,111 +82,34 @@
           </tr>
         </tbody>
       </table>
-      <!-- {{ collections[0] }} -->
     </div>
   </AttachSidebar>
 </template>
 
-<script>
+<script setup lang="ts">
 import axios from "axios";
 
-export default {
-  components: {},
-  data() {
-    return {
-      collections: [],
-      activeTab: "All",
-      selectedCollection: null,
-    };
-  },
-  async mounted() {
-    await this.fetchCollections();
-  },
-  computed: {
-    filteredCollections() {
-      return this.collections; // Return all collections without filtering
-    },
-  },
-  methods: {
-    setTab(tab) {
-      this.activeTab = tab;
-    },
-    redirectToEditPage(collectionId) {
-      this.$router.push(`/collections/edit/${collectionId}`);
-    },
-    async fetchCollections() {
-      try {
-        const response = await axios.get("/api/collections");
-        this.collections = response.data;
-      } catch (error) {
-        console.error("Error fetching collections:", error);
-      }
-    },
-    async deleteCollection(id) {
-      try {
-        await axios.delete(`/api/collections/${id}`);
-        this.collections = this.collections.filter(
-          (collection) => collection.id !== id
-        );
-      } catch (error) {
-        console.error("Error deleting collection:", error);
-      }
-    },
-    selectCollection(collection) {
-      this.selectedCollection = { ...collection };
-      this.$router.push(`/collections/edit/${collection.id}`); // Redirect to edit page
-    },
-    cancelEdit() {
-      this.selectedCollection = null;
-    },
-    async createCollection() {
-      try {
-        const newCollection = {
-          title: "New Collection",
-          body_html: "Description of the new collection",
-        };
+const collections = ref<
+  {
+    id: number;
+    title: string;
+    body_html: string;
+    image: any;
+    handle: string;
+  }[]
+>([]);
 
-        const response = await axios.post(
-          "/api/create-collections",
-          newCollection
-        );
+onMounted(async () => {
+  await fetchCollections();
+});
 
-        if (response.data && response.data.id) {
-          this.collections.push(response.data);
-          console.log("Collection created:", response.data);
-        } else {
-          console.error("Unexpected response format:", response);
-        }
-      } catch (error) {
-        console.error("Error creating collection:", error);
-      }
-    },
-    async updateCollection() {
-      try {
-        const updatedCollection = {
-          title: this.selectedCollection.title,
-          body_html: this.selectedCollection.body_html,
-        };
-
-        const response = await axios.put(
-          `/api/collections/${this.selectedCollection.id}`,
-          updatedCollection
-        );
-
-        const index = this.collections.findIndex(
-          (col) => col.id === this.selectedCollection.id
-        );
-        if (index !== -1) {
-          this.collections.splice(index, 1, response.data);
-        }
-
-        console.log("Collection updated:", response.data);
-        this.selectedCollection = null;
-      } catch (error) {
-        console.error("Error updating collection:", error);
-      }
-    },
-  },
+const fetchCollections = async () => {
+  try {
+    const response = await axios.get("/api/collections");
+    collections.value = response.data;
+  } catch (error) {
+    console.error("Error fetching collections:", error);
+  }
 };
 </script>
 

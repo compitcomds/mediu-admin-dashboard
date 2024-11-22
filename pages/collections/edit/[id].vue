@@ -1,194 +1,189 @@
 <template>
-  <div class="flex flex-col h-screen py-10 lg:py-5">
-    <!-- Sidebar -->
-    <Sidenav />
-    <div
-      class="lg:ml-64 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 mt-4 bg-gray-100"
-    >
-      <NavigationButton />
+  <AttachSidebar>
+    <h2 class="text-xl lg:text-3xl font-bold mb-4">Edit Collection</h2>
 
-      <!-- Header -->
-      <div class="flex justify-between items-center mb-4">
-        <h1 class="text-xl md:text-2xl font-semibold">Edit Collection</h1>
-        <!-- <button @click="goBack" class="bg-gray-200 px-3 py-1.5 rounded-md">Back</button> -->
-      </div>
-
-      <!-- Loading Message -->
-      <div v-if="loading" class="text-center">
-        <p>Loading collection...</p>
-      </div>
-
-      <!-- Error Message -->
-      <div v-if="error" class="text-center text-red-500">
-        <p>{{ error }}</p>
-      </div>
-
-      <!-- Collection Edit Form -->
-      <form
-        v-if="selectedCollection && selectedCollection.id"
-        @submit.prevent="updateCollection"
-        class="space-y-6 bg-white p-6 rounded-lg shadow-md"
+    <div v-if="error" class="text-center">
+      <p class="text-red-500 mb-2">{{ error }}</p>
+      <nuxt-link
+        :to="'/collections'"
+        class="underline hover:no-underline text-[#28574e]"
+        >Go To All Collections</nuxt-link
       >
-        <!-- Title -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2"
-            >Title</label
-          >
-          <input
-            v-model="selectedCollection.title"
-            type="text"
-            class="w-full p-2 border border-gray-300 rounded"
-            required
+    </div>
+
+    <div v-else>
+      <form
+        v-if="collection"
+        @submit.prevent="updateCollection"
+        class="flex flex-col lg:flex-row gap-5"
+      >
+        <div class="flex-1">
+          <div class="mb-4">
+            <label class="block text-gray-700">Title</label>
+            <input
+              type="text"
+              v-model="collection.title"
+              class="w-full p-2 border rounded"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700">Description</label>
+            <textarea
+              v-model="collection.descriptionHtml"
+              class="w-full p-2 border rounded"
+              required
+              rows="10"
+            ></textarea>
+          </div>
+        </div>
+        <div class="lg:w-full lg:max-w-xs">
+          <CollectionImagePicker
+            @update:image="handleImageUpdate"
+            :default-preview="fetchedCollection?.image.url"
           />
-        </div>
-
-        <!-- Description -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2"
-            >Description</label
-          >
-          <textarea
-            v-model="selectedCollection.body_html"
-            class="w-full p-2 border border-gray-300 rounded"
-            required
-          ></textarea>
-        </div>
-
-        <!-- Update Button -->
-        <div class="flex justify-end space-x-4">
+          <div class="mb-4">
+            <label class="block text-gray-700">Collection is a brand?</label>
+            <Switch
+              :checked="collection.metafields.isBrandCollection"
+              @update:checked="toggleBrandCollection"
+            />
+          </div>
           <button
             type="submit"
-            class="bg-black text-white px-4 py-2 rounded-md"
+            :disabled="isSubmitting"
+            class="bg-[#28574e] mb-4 block w-full disabled:cursor-not-allowed disabled:opacity-70 text-white px-4 py-2 rounded-md"
           >
-            Update Collection
+            <span
+              v-if="isSubmitting"
+              class="flex items-center justify-center gap-5"
+              >Updating <Loader
+            /></span>
+            <span v-else>Update Collection</span>
           </button>
           <button
-            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            type="button"
+            :disabled="isDeleting"
             @click="deleteCollection"
+            class="bg-red-500 block w-full disabled:cursor-not-allowed disabled:opacity-70 text-white px-4 py-2 rounded-md"
           >
-            Delete Collection
+            <span
+              v-if="isDeleting"
+              class="flex items-center justify-center gap-5"
+              >Deleting <Loader
+            /></span>
+            <span v-else>Delete Collection</span>
           </button>
         </div>
       </form>
 
-      <!-- No Collection Selected Message -->
       <div v-else class="text-center text-gray-500">
         <p>No collection selected. Please select a collection to edit.</p>
       </div>
     </div>
-  </div>
+  </AttachSidebar>
 </template>
 
-<script>
+<script setup lang="ts">
 import axios from "axios";
 
-export default {
-  data() {
-    return {
-      selectedCollection: {
-        id: "",
-        title: "",
-        body_html: "",
-      },
-      loading: false, // Loading state for fetching collections
-      error: null, // Error state
-    };
-  },
+const route = useRoute();
+const router = useRouter();
+const handle = route.params.id;
+const isSubmitting = ref(false);
+const isDeleting = ref(false);
+const error = ref<string | null>(null); // Error state
 
-  async mounted() {
-    const isAuthenticated = localStorage.getItem("authenticated") === "true";
-    if (!true) {
-      // Redirect to login page if not authenticated
-      this.$router.push("/login");
-    } else {
-      await this.fetchCollection();
-    }
-  },
+const collectionImage = ref<File | null>(null);
+const fetchedCollection = ref<{
+  title: string;
+  image: any;
+  isBrandCollection: boolean;
+  productsCount: number;
+  descriptionHtml: string;
+  id: string;
+} | null>(null);
 
-  methods: {
-    // Fetch the collection by ID from the URL
-    async fetchCollection() {
-      this.loading = true;
-      this.error = null;
+const collection = ref<{
+  title: string;
+  image: any;
+  isBrandCollection: boolean;
+  productsCount: number;
+  descriptionHtml: string;
+  id: string;
+  metafields: Record<string, any>;
+} | null>(null);
 
-      try {
-        const collectionId = this.$route.params.id;
-        const response = await axios.get(`/api/collections/${collectionId}`); // Use API endpoint correctly
-
-        if (response.data) {
-          this.selectedCollection = { ...response.data };
-        } else {
-          throw new Error("Collection not found");
-        }
-      } catch (error) {
-        this.error = `Failed to fetch collection: ${error.message}`;
-      } finally {
-        this.loading = false;
-      }
-    },
-    async deleteCollection() {
-      const collectionId = this.$route.params.id;
-
-      // Check if collectionId is valid
-      if (!collectionId) {
-        this.error = "No collection ID provided.";
-        return;
-      }
-
-      try {
-        const response = await axios.delete(
-          `/api/collections/${collectionId}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        // Log the response for debugging
-        console.log("Delete Collection response:", response);
-
-        if (response.status === 200) {
-          alert("Collection deleted successfully!");
-          this.$router.push("/collections"); // Redirect to collections list
-        } else {
-          console.error("Failed to delete Collection:", response.data);
-          this.error = response.data.error || "Failed to delete Collection";
-        }
-      } catch (error) {
-        console.error("Error during delete operation:", error);
-        this.error =
-          error.message || "An error occurred while deleting the collection.";
-      }
-    },
-    // Update the selected collection with the new data
-    async updateCollection() {
-      try {
-        if (!this.selectedCollection.id) {
-          throw new Error("No collection ID found");
-        }
-
-        const updatedCollection = {
-          title: this.selectedCollection.title,
-          body_html: this.selectedCollection.body_html,
-          published: true,
-        };
-
-        const response = await axios.put(
-          `/api/collections/${this.selectedCollection.id}`,
-          updatedCollection
-        );
-
-        alert("Collection updated successfully!");
-      } catch (error) {
-        this.error = `Failed to update collection: ${error.message}`;
-      }
-    },
-
-    // Navigate back to the previous page
-    goBack() {
-      this.$router.go(-1);
-    },
-  },
+const handleImageUpdate = (image: File) => {
+  collectionImage.value = image;
 };
+
+const fetchCollection = async () => {
+  error.value = null;
+  try {
+    const { data } = await axios.get(`/api/collections/${handle}`);
+    collection.value = { ...data };
+    fetchedCollection.value = { ...data };
+    console.log(data);
+  } catch (err: any) {
+    console.log(err);
+    error.value = `Failed to fetch collection: ${err.message}`;
+  }
+};
+
+const deleteCollection = async () => {
+  isDeleting.value = true;
+  try {
+    if (!collection.value?.id) throw new Error("Invalid collection.");
+    await axios.delete(`/api/collections/${collection.value.id}`);
+    alert("Collection deleted successfully!");
+    router.push("/collections");
+  } catch (err: any) {
+    alert(err.message);
+  } finally {
+    isDeleting.value = false;
+  }
+};
+
+const updateCollection = async () => {
+  if (!collection.value || !collection.value?.id) {
+    alert("Invalid collection");
+    return;
+  }
+
+  isSubmitting.value = true;
+  let image = null;
+  if (collectionImage.value) {
+    image = {
+      attachment: (await fileToBase64(collectionImage.value)).base64Image,
+    };
+  }
+
+  const updatedCollection = {
+    title: collection.value.title,
+    body_html: collection.value.descriptionHtml,
+    metafields: collection.value.metafields,
+    image,
+  };
+
+  try {
+    await axios.put(
+      `/api/collections/${collection.value.id}`,
+      updatedCollection
+    );
+    alert("Collection updated successfully!");
+  } catch (err: any) {
+    alert(`Failed to update collection: ${err.message}`);
+  } finally {
+    isSubmitting.value = false;
+  }
+};
+
+const toggleBrandCollection = () => {
+  if (!collection.value) return;
+  collection.value.metafields.isBrandCollection =
+    !collection.value.metafields.isBrandCollection;
+};
+
+await fetchCollection();
 </script>

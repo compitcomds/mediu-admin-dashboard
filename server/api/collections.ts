@@ -2,22 +2,10 @@ import { defineEventHandler } from "h3";
 import axios from "axios";
 import config from "~/utils/config";
 
-// Define the structure of a Shopify Collection
-// interface ShopifyCollection {
-//   id: number;
-//   title: string;
-//   handle: string;
-//   body_html: string;
-//   published_at: string;
-//   total_products:String
-//   updated_at: string;
-//   // Add other properties as needed
-// }
-
 export default defineEventHandler(async (event) => {
   try {
     const response = await axios.get<{
-      custom_collections:[];
+      custom_collections: [];
     }>(
       `https://${config.shopifyDomain}/admin/api/2024-07/custom_collections.json`,
       {

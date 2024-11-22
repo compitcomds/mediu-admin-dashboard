@@ -49,21 +49,26 @@
           </div>
         </div>
       </div>
-      <div>
+      <div class="lg:w-full lg:max-w-xs">
+        <CollectionImagePicker @update:image="handleImageUpdate" />
         <div class="mb-4">
-          <label class="block text-gray-700">Image</label>
-          <input type="file" @change="onImageSelected" accept="image/*" />
-          <img
-            v-if="collectionImage.image && collectionImage.preview"
-            :src="collectionImage.preview"
-            class="mt-2 w-32 h-32 object-cover"
+          <label class="block text-gray-700">Collection is a brand?</label>
+          <Switch
+            :checked="newCollection.metafields.isBrandCollection"
+            @update:checked="toggleBrandCollection"
           />
         </div>
         <button
           type="submit"
-          class="bg-[#28574e] block w-full text-white px-4 py-2 rounded-md"
+          :disabled="isSubmitting"
+          class="bg-[#28574e] block w-full disabled:cursor-not-allowed disabled:opacity-70 text-white px-4 py-2 rounded-md"
         >
-          Create Collection
+          <span
+            v-if="isSubmitting"
+            class="flex items-center justify-center gap-5"
+            >Submitting <Loader
+          /></span>
+          <span v-else>Create Collection</span>
         </button>
       </div>
     </form>
@@ -72,66 +77,58 @@
 
 <script setup lang="ts">
 import axios from "axios";
+import Switch from "~/components/ui/switch/Switch.vue";
 
 const products = ref<any[]>([]);
 const newCollection = ref({
   title: "",
   body_html: "",
   collects: [],
+  metafields: {
+    isBrandCollection: false,
+  },
 });
-const collectionImage = ref<{ image: any; preview: string | null }>({
-  image: null,
-  preview: null,
-});
+const collectionImage = ref<File | null>(null);
+const isSubmitting = ref(false);
 
 const router = useRouter();
+
+onMounted(async () => {
+  await fetchProducts();
+});
+
+const toggleBrandCollection = () => {
+  newCollection.value.metafields.isBrandCollection =
+    !newCollection.value.metafields.isBrandCollection;
+};
+
+const handleImageUpdate = (image: File) => {
+  collectionImage.value = image;
+};
 
 async function fetchProducts() {
   try {
     const response = await axios.get("/api/products");
     products.value = response.data.products; // Assuming API returns a products array
-    console.log(response.data);
   } catch (error) {
     console.error("Error fetching products:", error);
   }
 }
 
-function onImageSelected(event: any) {
-  const file = event.target.files[0];
-  if (file) {
-    collectionImage.value.image = file;
-    collectionImage.value.preview = URL.createObjectURL(file);
-  }
-}
-
-// Create collection
 async function createCollection() {
+  isSubmitting.value = true;
   try {
-    const { title, body_html, collects } = newCollection.value;
-
     let image = null;
-    if (collectionImage.value.image) {
+    if (collectionImage.value) {
       image = {
-        attachment: (await fileToBase64(collectionImage.value.image))
-          .base64Image,
+        attachment: (await fileToBase64(collectionImage.value)).base64Image,
       };
     }
 
-    const newCollectionPayload = {
-      custom_collection: {
-        title,
-        body_html,
-        collects,
-        image,
-      },
-    };
-
-    const response = await axios.post(
-      "/api/create-collections",
-      newCollectionPayload
-    );
-
-    console.log("API Response:", response);
+    const response = await axios.post("/api/create-collections", {
+      ...newCollection.value,
+      image,
+    });
 
     if (
       response.status === 200 &&
@@ -140,24 +137,24 @@ async function createCollection() {
     ) {
       alert("Successfully created the collection");
 
-      // Reset the form fields
-      newCollection.value = { title: "", body_html: "", collects: [] };
-      collectionImage.value = { image: null, preview: null };
+      newCollection.value = {
+        title: "",
+        body_html: "",
+        collects: [],
+        metafields: { isBrandCollection: false },
+      };
+      collectionImage.value = null;
       router.push("/collections");
     } else {
-      console.error("Unexpected response format:", response);
       alert("Successfully created the collection.");
       router.push("/collections");
     }
   } catch (error: any) {
-    console.error("Error creating collection:", error);
     alert("Failed to create collection: " + (error.message || "Unknown error"));
+  } finally {
+    isSubmitting.value = false;
   }
 }
-// Authentication check on mount
-onMounted(async () => {
-  await fetchProducts();
-});
 </script>
 
 <style lang="scss" scoped>

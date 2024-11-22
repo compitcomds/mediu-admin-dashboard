@@ -2,20 +2,44 @@ import { defineEventHandler, readBody } from "h3"; // Import readBody instead of
 import axios from "axios";
 import config from "~/utils/config";
 
+export const COLLECTION_METAFIELDS_DEFINED: Record<
+  string,
+  { key: string; type: string; namespace: "custom" }
+> = {
+  isBrandCollection: {
+    key: "isBrandCollection",
+    type: "boolean",
+    namespace: "custom",
+  },
+};
+
 export default defineEventHandler(async (event) => {
   try {
-    const body = await readBody(event); // Use readBody to get the request body
-    console.log("Received body:", body); // Log the body
-    const newCollection = { ...body };
+    const body = await readBody(event);
+    const metafields = [];
+    for (const key of Object.keys(COLLECTION_METAFIELDS_DEFINED)) {
+      const value = body.metafields[key];
+      if (value) {
+        metafields.push({
+          ...COLLECTION_METAFIELDS_DEFINED[key],
+          value,
+        });
+      }
+    }
+    const custom_collection = { ...body, metafields };
 
     const apiUrl = `https://${config.shopifyDomain}/admin/api/2024-07/custom_collections.json`;
 
-    const response = await axios.post(apiUrl, newCollection, {
-      headers: {
-        "X-Shopify-Access-Token": config.shopifyAccessToken,
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axios.post(
+      apiUrl,
+      { custom_collection },
+      {
+        headers: {
+          "X-Shopify-Access-Token": config.shopifyAccessToken,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return response.data.custom_collection;
   } catch (error: any) {
