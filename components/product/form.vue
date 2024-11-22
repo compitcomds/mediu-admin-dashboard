@@ -150,6 +150,7 @@
 
       <div>
         <ProductVariantsInput
+          v-if="!!props.productId"
           :options="options"
           v-model:model-value="variants"
           :default-variants="variants"
@@ -365,6 +366,7 @@ const options = ref<Array<{ name: string; values: { name: string }[] }>>([
 ]);
 
 if (
+  props.defaultValues?.options &&
   !(
     props.defaultValues.options.length === 1 &&
     props.defaultValues.options[0].name.includes("Title")

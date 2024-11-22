@@ -6,11 +6,7 @@
     >
       <h1 class="text-xl md:text-2xl font-semibold">Products</h1>
       <div class="flex flex-wrap space-x-2">
-        <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">Export</button>
-        <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">Import</button>
-        <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">
-          More actions
-        </button>
+        <ProductSearch />
         <div>
           <nuxt-link
             class="block bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
@@ -21,8 +17,6 @@
         </div>
       </div>
     </div>
-
-    <FilterBar />
 
     <!-- Responsive Product Cards for Small and Medium Screens -->
     <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:hidden">

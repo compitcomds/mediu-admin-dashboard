@@ -2,7 +2,9 @@
   <div class="flex flex-col h-screen py-10 lg:py-5">
     <!-- Sidebar -->
     <Sidenav />
-    <div class="lg:ml-64 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 mt-4 bg-gray-100">
+    <div
+      class="lg:ml-64 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 mt-4 bg-gray-100"
+    >
       <NavigationButton />
 
       <!-- Header -->
@@ -29,7 +31,9 @@
       >
         <!-- Title -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Title</label
+          >
           <input
             v-model="selectedCollection.title"
             type="text"
@@ -40,7 +44,9 @@
 
         <!-- Description -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Description</label
+          >
           <textarea
             v-model="selectedCollection.body_html"
             class="w-full p-2 border border-gray-300 rounded"
@@ -50,14 +56,17 @@
 
         <!-- Update Button -->
         <div class="flex justify-end space-x-4">
-          <button type="submit" class="bg-black text-white px-4 py-2 rounded-md">
+          <button
+            type="submit"
+            class="bg-black text-white px-4 py-2 rounded-md"
+          >
             Update Collection
           </button>
           <button
             class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
             @click="deleteCollection"
           >
-            Delete Product
+            Delete Collection
           </button>
         </div>
       </form>
@@ -127,11 +136,14 @@ export default {
       }
 
       try {
-        const response = await axios.delete(`/api/collections/${collectionId}`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await axios.delete(
+          `/api/collections/${collectionId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         // Log the response for debugging
         console.log("Delete Collection response:", response);
@@ -145,7 +157,8 @@ export default {
         }
       } catch (error) {
         console.error("Error during delete operation:", error);
-        this.error = error.message || "An error occurred while deleting the collection.";
+        this.error =
+          error.message || "An error occurred while deleting the collection.";
       }
     },
     // Update the selected collection with the new data

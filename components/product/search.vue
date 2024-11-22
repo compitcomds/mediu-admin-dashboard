@@ -1,0 +1,70 @@
+<template>
+  <div class="flex space-x-2 lg:space-x-4 items-center">
+    <div
+      v-if="searchVisible || searchQuery"
+      class="flex items-center bg-gray-100 rounded-lg px-4 py-1"
+    >
+      <div class="relative">
+        <input
+          v-model="searchQuery"
+          id="product-search"
+          type="text"
+          placeholder="Searching all products"
+          class="bg-white px-4 border focus:outline text-sm py-2 w-48 lg:w-64"
+          @input="performSearch"
+        />
+        <Search
+          class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
+        />
+      </div>
+      <button @click="clearSearch" class="ml-2 text-gray-500 hover:text-black">
+        Cancel
+      </button>
+    </div>
+    <button
+      v-else
+      @click="toggleSearch"
+      class="text-gray-500 hover:text-black focus:outline-none bg-slate-200 p-2 rounded-lg"
+    >
+      <Search />
+    </button>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { Search } from "lucide-vue-next";
+const route = useRoute();
+const searchVisible = ref(false);
+const searchQuery = ref(route.query.query || "");
+
+const toggleSearch = () => {
+  searchVisible.value = !searchVisible.value;
+  if (!searchVisible.value) {
+    searchQuery.value = "";
+  }
+
+  nextTick(() => {
+    if (searchVisible.value) {
+      document.getElementById("product-search")?.focus();
+    }
+  });
+};
+
+const performSearch = useDebounceFn(async () => {
+  await navigateTo({
+    path: "/product",
+    query: { query: searchQuery.value || undefined },
+  });
+}, 1000);
+
+const clearSearch = async () => {
+  searchQuery.value = "";
+  searchVisible.value = false;
+};
+</script>
+
+<style scoped>
+.tab {
+  transition: all 0.3s ease-in-out;
+}
+</style>

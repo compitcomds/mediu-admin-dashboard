@@ -2,7 +2,9 @@
   <div class="flex flex-col h-screen py-10 lg:py-0">
     <!-- Sidebar -->
     <Sidenav />
-    <div class="lg:ml-64 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 mt-4 bg-gray-100">
+    <div
+      class="lg:ml-64 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 mt-4 bg-gray-100"
+    >
       <NavigationButton />
 
       <!-- Header Buttons -->
@@ -17,9 +19,15 @@
             >Add</NuxtLink
           >
 
-          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">Export</button>
-          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">Import</button>
-          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">More actions</button>
+          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">
+            Export
+          </button>
+          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">
+            Import
+          </button>
+          <button class="bg-gray-200 px-2 md:px-3 py-1 rounded-md">
+            More actions
+          </button>
           <div>
             <button
               @click="goToAddProductPage"
@@ -31,10 +39,10 @@
         </div>
       </div>
 
-      <FilterBar @changeTab="setTab" />
-
       <!-- Responsive Table for Large Screens -->
-      <div class="hidden lg:block overflow-x-auto bg-white shadow-md rounded-lg">
+      <div
+        class="hidden lg:block overflow-x-auto bg-white shadow-md rounded-lg"
+      >
         <table class="min-w-full table-auto divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
@@ -71,7 +79,11 @@
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="batch in batches" :key="batch.$id" class="hover:bg-gray-100">
+            <tr
+              v-for="batch in batches"
+              :key="batch.$id"
+              class="hover:bg-gray-100"
+            >
               <td>
                 <svg :id="'barcode-' + batch.BatchNumber" class="barcode"></svg>
               </td>
@@ -129,7 +141,9 @@ export default {
     },
     generateBarcodes() {
       this.batches.forEach((batch) => {
-        const barcodeElement = document.getElementById(`barcode-${batch.BatchNumber}`);
+        const barcodeElement = document.getElementById(
+          `barcode-${batch.BatchNumber}`
+        );
         if (barcodeElement) {
           JsBarcode(barcodeElement, batch.BatchNumber, {
             format: "CODE39",

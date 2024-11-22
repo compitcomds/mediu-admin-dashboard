@@ -1,5 +1,5 @@
 import { defineEventHandler, readBody } from "h3"; // Import readBody instead of useBody
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import config from "~/utils/config";
 
 export default defineEventHandler(async (event) => {

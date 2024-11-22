@@ -1,114 +1,104 @@
 <template>
-  <div class="flex flex-col h-screen py-10 lg:py-5">
-    <!-- Sidebar -->
-    <Sidenav />
-    <div class="lg:ml-64 flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 mt-4 bg-gray-100">
-      <NavigationButton />
-
-      <!-- Header Buttons -->
-      <div
-        class="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0"
+  <AttachSidebar>
+    <div
+      class="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0"
+    >
+      <h1 class="text-xl md:text-2xl font-semibold">Collections</h1>
+      <nuxt-link
+        class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
+        to="collections/create"
+        >Create New Collection</nuxt-link
       >
-        <h1 class="text-xl md:text-2xl font-semibold">Collections</h1>
-        <!-- <nuxt-link
-          to="/collections/createCollection"
-          class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
-        >
-          Create Collection
-        </nuxt-link> -->
-        <!-- <button class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4" @click="createCollection">Create New
-          Collection</button> -->
-        <nuxt-link
-          class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
-          to="collections/createCollection"
-          >Create New Collection</nuxt-link
-        >
-      </div>
-      <!-- 
-      <FilterBarCollections @changeTab="setTab" /> -->
+    </div>
 
-      <!-- Responsive Collection Cards for Small and Medium Screens -->
-      <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:hidden">
-        <div
-          v-for="(collection, index) in filteredCollections"
-          :key="collection.id"
-          class="bg-white p-4 rounded-lg shadow-md space-y-2"
-        >
-          <div class="flex items-center justify-between">
-            <div class="flex items-center">
-              <img
-                :src="collection.image?.src || '/default-image.jpg'"
-                alt="Collection Image"
-                class="w-16 h-16 mr-4 rounded"
-              />
-              <div>
-                <p
-                  class="text-lg font-semibold"
-                  @click="redirectToEditPage(collection.id)"
-                >
-                  {{ collection.title }}
-                </p>
-                <p class="text-sm text-gray-500">{{ collection.body_html }}</p>
-              </div>
+    <!-- Responsive Collection Cards for Small and Medium Screens -->
+    <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:hidden">
+      <div
+        v-for="(collection, index) in filteredCollections"
+        :key="collection.id"
+        class="bg-white p-4 rounded-lg shadow-md space-y-2"
+      >
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <img
+              :src="collection.image?.src || '/default-image.jpg'"
+              alt="Collection Image"
+              class="w-16 h-16 mr-4 rounded"
+            />
+            <div>
+              <p
+                class="text-lg font-semibold"
+                @click="redirectToEditPage(collection.id)"
+              >
+                {{ collection.title }}
+              </p>
+              <p class="text-sm text-gray-500">{{ collection.body_html }}</p>
             </div>
-            <input type="checkbox" />
           </div>
-          <div class="flex justify-end space-x-2">
-            <button
-              @click="selectCollection(collection)"
-              class="bg-gray-200 text-sm px-3 py-1 rounded-md"
-            >
-              Edit
-            </button>
-            <button
-              @click="deleteCollection(collection.id)"
-              class="bg-red-500 text-white text-sm px-3 py-1 rounded-md"
-            >
-              Delete
-            </button>
-          </div>
+          <input type="checkbox" />
+        </div>
+        <div class="flex justify-end space-x-2">
+          <button
+            @click="selectCollection(collection)"
+            class="bg-gray-200 text-sm px-3 py-1 rounded-md"
+          >
+            Edit
+          </button>
+          <button
+            @click="deleteCollection(collection.id)"
+            class="bg-red-500 text-white text-sm px-3 py-1 rounded-md"
+          >
+            Delete
+          </button>
         </div>
       </div>
+    </div>
 
-      <!-- Responsive Table for Large Screens -->
-      <div
-        class="hidden lg:block overflow-x-auto bg-white shadow-md rounded-lg w-full h-full"
-      >
-        <table class="min-w-full table-auto divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                <input type="checkbox" />
-              </th>
-              <th
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Image
-              </th>
-              <th
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Title
-              </th>
-              <th
-                class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Description
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr
-              v-for="(collection, index) in filteredCollections"
-              :key="collection.id"
-              class="hover:bg-gray-100"
+    <!-- Responsive Table for Large Screens -->
+    <div
+      class="hidden lg:block overflow-x-auto bg-white shadow-md rounded-lg w-full h-full"
+    >
+      <table class="min-w-full table-auto divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th
+              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
             >
-              <td class="px-4 py-4 whitespace-nowrap">
-                <input type="checkbox" />
-              </td>
-              <td class="px-4 py-4 break-words whitespace-normal">
+              <input type="checkbox" />
+            </th>
+            <th
+              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Image
+            </th>
+            <th
+              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Title
+            </th>
+            <th
+              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              Description
+            </th>
+            <th
+              class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+            >
+              *
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr
+            v-for="(collection, index) in filteredCollections"
+            :key="collection.id"
+            class="hover:bg-gray-100"
+          >
+            <td class="px-4 py-4 whitespace-nowrap">
+              <input type="checkbox" />
+            </td>
+            <td class="px-4 py-4 break-words whitespace-normal">
+              <nuxt-link :to="`/collections/edit/${collection.id}`">
                 <img
                   :src="
                     collection.image?.src ||
@@ -117,22 +107,29 @@
                   alt="Collection Image"
                   class="w-16 h-16 mr-4 rounded"
                 />
-              </td>
-              <td class="px-4 py-4 break-words whitespace-normal">
-                <p class="hover:underline" @click="redirectToEditPage(collection.id)">
-                  {{ collection.title }}
-                </p>
-              </td>
-              <td class="px-4 py-4 break-words whitespace-normal">
-                {{ collection.body_html }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <!-- {{ collections[0] }} -->
-      </div>
+              </nuxt-link>
+            </td>
+            <td class="px-4 py-4 break-words whitespace-normal">
+              <nuxt-link :to="`/collections/edit/${collection.id}`">{{
+                collection.title
+              }}</nuxt-link>
+            </td>
+            <td class="px-4 py-4 break-words whitespace-normal">
+              {{ collection.body_html }}
+            </td>
+            <td>
+              <nuxt-link
+                :to="`/collections/edit/${collection.id}`"
+                class="bg-black text-white rounded-lg px-4 py-2"
+                >Edit</nuxt-link
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- {{ collections[0] }} -->
     </div>
-  </div>
+  </AttachSidebar>
 </template>
 
 <script>
@@ -148,13 +145,7 @@ export default {
     };
   },
   async mounted() {
-    const isAuthenticated = localStorage.getItem("authenticated") === "true";
-    if (!true) {
-      // Redirect to login page if not authenticated
-      this.$router.push("/login");
-    } else {
-      await this.fetchCollections();
-    }
+    await this.fetchCollections();
   },
   computed: {
     filteredCollections() {
@@ -179,7 +170,9 @@ export default {
     async deleteCollection(id) {
       try {
         await axios.delete(`/api/collections/${id}`);
-        this.collections = this.collections.filter((collection) => collection.id !== id);
+        this.collections = this.collections.filter(
+          (collection) => collection.id !== id
+        );
       } catch (error) {
         console.error("Error deleting collection:", error);
       }
@@ -198,7 +191,10 @@ export default {
           body_html: "Description of the new collection",
         };
 
-        const response = await axios.post("/api/create-collections", newCollection);
+        const response = await axios.post(
+          "/api/create-collections",
+          newCollection
+        );
 
         if (response.data && response.data.id) {
           this.collections.push(response.data);
