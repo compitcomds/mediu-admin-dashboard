@@ -3,18 +3,14 @@
     <h1>Analytics Dashboard</h1>
     <div v-if="loading">Loading...</div>
     <div v-if="error" class="error">Error: {{ error.message }}</div>
-    {{chartData}}
+    {{ chartData }}
   </div>
 </template>
 
 <script>
 import { ref, onMounted } from "vue";
-import BarChart from "@/components/BarChart.vue"; // Import your chart component
 
 export default {
-  components: {
-    BarChart,
-  },
   setup() {
     const chartData = ref([]);
     const loading = ref(true);

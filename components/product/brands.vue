@@ -8,14 +8,14 @@
           variant="outline"
           role="combobox"
           :aria-expanded="open"
-          class="w-[200px] justify-between"
+          class="w-full justify-between"
         >
           {{ value || "Select Brand" }}
 
           <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent class="w-[200px] p-0">
+      <PopoverContent align="start" class="w-[200px] p-0">
         <Command v-model="value">
           <CommandInput placeholder="Search brand..." />
           <CommandEmpty>No brand found.</CommandEmpty>

@@ -25,11 +25,6 @@ export const DEFINED_METAFIELDS: Record<
     type: "multi_line_text_field",
     namespace: "custom",
   },
-  manufacturer: {
-    key: "manufacturers",
-    type: "single_line_text_field",
-    namespace: "custom",
-  },
   gstApplied: {
     key: "gst_applied",
     type: "number_decimal",

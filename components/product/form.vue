@@ -206,32 +206,18 @@
           rows="3"
         ></textarea>
       </div>
-
-      <div>
-        <label
-          for="manufacturer"
-          class="block text-sm font-medium text-gray-700"
-          >Brands</label
-        >
-        <input
-          type="text"
-          id="manufacturer"
-          v-model="form.manufacturer"
-          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-        />
-      </div>
     </div>
     <div class="lg:w-1/3 space-y-4 rounded-xl max-h-fit">
       <div>
         <ProductCollectionBox
           :fetched-collections="fetchedCollections.collections"
-          v-model:model-value="collections"
+          v-model:model-value="form.collections"
         />
       </div>
       <div>
         <ProductBrands
           :fetched-collections="fetchedCollections.collections"
-          v-model:model-value="collections"
+          v-model:model-value="form.collections"
         />
       </div>
       <div>
@@ -291,7 +277,7 @@
       <div class="flex flex-col gap-4">
         <button
           type="submit"
-          :disabled="isSubmitting || isDeleting"
+          :disabled="isSubmitting"
           class="w-full py-2 px-4 bg-[#28574e] text-white font-semibold hover:bg-[#1f4d42] disabled:cursor-not-allowed disabled:opacity-70"
         >
           <span
@@ -309,18 +295,10 @@
         >
           View Live
         </nuxt-link>
-        <button
+        <ProductDeleteButton
           v-if="!!props.productId"
-          type="button"
-          :disabled="isDeleting || isSubmitting"
-          class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full disabled:cursor-not-allowed disabled:opacity-70"
-          @click="deleteProduct"
-        >
-          <span v-if="isDeleting" class="flex items-center justify-center gap-1"
-            >Deleting... <Loader
-          /></span>
-          <span v-else>Delete Product</span>
-        </button>
+          :product-id="props.productId"
+        />
       </div>
     </div>
   </form>
@@ -357,15 +335,12 @@ const props = defineProps({
   },
 });
 
-const router = useRouter();
-
 const isSubmitting = ref(false);
 const isDeleting = ref(false);
 const removedImages = ref([]);
 const addedImages = ref([]);
 
 const { data: fetchedCollections } = await axios.get("/api/collections/all");
-const collections = ref(props.defaultValues?.collections || []);
 
 const options = ref<Array<{ name: string; values: { name: string }[] }>>([
   {
@@ -411,7 +386,6 @@ const form = ref({
     props.defaultValues?.safetyInformationAndPrecaution || "",
   howToUse: props.defaultValues?.howToUse || "",
   keyBenefits: props.defaultValues?.keyBenefits || "",
-  manufacturer: props.defaultValues?.manufacturer || "",
   hsnCode: props.defaultValues?.hsnCode || "",
   requiresPrescription: props.defaultValues?.requiresPrescription || false,
   productSubtitle: props.defaultValues?.productSubtitle || "",
@@ -420,27 +394,6 @@ const form = ref({
 
 const toggleRequiresPrescription = () => {
   form.value.requiresPrescription = !form.value.requiresPrescription;
-};
-
-const deleteProduct = async () => {
-  isDeleting.value = true;
-  try {
-    await axios.delete(`/api/product/${props.productId}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    alert("Product deleted successfully! Redirecting to products page...");
-    router.push("/product");
-  } catch (err: any) {
-    alert(
-      err.message ||
-        "Unable to delete the product at the time. Please try again later."
-    );
-  } finally {
-    isDeleting.value = false;
-  }
 };
 
 const handleSubmit = async () => {
@@ -466,7 +419,7 @@ const handleSubmit = async () => {
       variants: variants.value,
       collections: fetchedCollections.collections
         .filter((collection: any) =>
-          collections.value.includes(collection.handle)
+          form.value.collections.includes(collection.handle)
         )
         .map((collection: any) => collection.id),
     };
