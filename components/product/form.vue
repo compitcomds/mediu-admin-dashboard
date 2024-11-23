@@ -143,6 +143,7 @@
 
       <div>
         <ProductOptionInput
+          v-if="!!props.productId"
           :productId="productId"
           v-model:model-value="options"
         />
