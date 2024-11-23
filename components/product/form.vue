@@ -223,10 +223,16 @@
     </div>
     <div class="lg:w-1/3 space-y-4 rounded-xl max-h-fit">
       <div>
-        <label for="collections" class="block text-sm font-medium text-gray-700"
-          >Collections <span class="text-red-500">*</span></label
-        >
-        <ProductCollectionBox v-model:model-value="form.collections" />
+        <ProductCollectionBox
+          :fetched-collections="fetchedCollections.collections"
+          v-model:model-value="collections"
+        />
+      </div>
+      <div>
+        <ProductBrands
+          :fetched-collections="fetchedCollections.collections"
+          v-model:model-value="collections"
+        />
       </div>
       <div>
         <label for="tags" class="block text-sm font-medium text-gray-700 mb-2"
@@ -358,6 +364,9 @@ const isDeleting = ref(false);
 const removedImages = ref([]);
 const addedImages = ref([]);
 
+const { data: fetchedCollections } = await axios.get("/api/collections/all");
+const collections = ref(props.defaultValues?.collections || []);
+
 const options = ref<Array<{ name: string; values: { name: string }[] }>>([
   {
     name: "Pack Size",
@@ -437,10 +446,8 @@ const deleteProduct = async () => {
 const handleSubmit = async () => {
   isSubmitting.value = true;
   try {
-    // Parse decimal values
     const images = [];
 
-    // for new product only
     if (!props.productId) {
       for (const image of form.value.images) {
         images.push(await fileToBase64(image));
@@ -457,6 +464,11 @@ const handleSubmit = async () => {
       removedImages: removedImages.value,
       options: options.value,
       variants: variants.value,
+      collections: fetchedCollections.collections
+        .filter((collection: any) =>
+          collections.value.includes(collection.handle)
+        )
+        .map((collection: any) => collection.id),
     };
 
     if (
@@ -479,6 +491,4 @@ const handleSubmit = async () => {
 };
 </script>
 
-<style scoped>
-/* Add any custom styles here if necessary */
-</style>
+<style scoped></style>

@@ -48,7 +48,7 @@ try {
     quantity: data.product.variants[0].inventory_quantity,
     images: data.product.images,
     ...data.metafields,
-    collections: data.collections,
+    collections: data.collections.map((collection: any) => collection.handle),
     hsnCode: data.hsnCode,
     status: data.product.status,
     options: data.product.options.map((option: any) => ({
@@ -71,19 +71,7 @@ try {
   alert(error.message);
 }
 
-const updateProduct = async (values: any, options: any, variants: any) => {
-  await axios.post(
-    "/api/collections/edit",
-    {
-      collections: values.collections,
-      collects: fetchedProduct.collects,
-      productId,
-    },
-    {
-      headers: { "Content-Type": "application/json" },
-    }
-  );
-
+const updateProduct = async (values: any) => {
   await axios.post(
     "/api/products/edit-images",
     {
@@ -97,7 +85,6 @@ const updateProduct = async (values: any, options: any, variants: any) => {
   );
 
   // remove already used information. (just maybe optimisation happens...)
-  delete values["collections"];
   delete values["collects"];
   delete values["addedImages"];
   delete values["removedImages"];

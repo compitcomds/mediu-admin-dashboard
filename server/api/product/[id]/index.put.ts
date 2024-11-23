@@ -28,6 +28,9 @@ export default defineEventHandler(async (event) => {
       title: body.title,
       descriptionHtml: body.description,
       tags: body.tags,
+      collections: body.collections.map(
+        (collection: any) => `gid://shopify/Collection/${collection}`
+      ),
       metafields,
       status: body.status.toUpperCase(),
       productOptions: body.options,

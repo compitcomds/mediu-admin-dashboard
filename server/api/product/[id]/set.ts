@@ -5,11 +5,8 @@ const SHOPIFY_GRAPHQL_API = `https://${config.shopifyDomain}/admin/api/2024-10/g
 const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
 
 const setProductMutation = `
-mutation setProductMutation($id: ID!, $productOptions: [OptionSetInput!], $variants: [ProductVariantSetInput!], $title: String, $tags: [String!], $status: ProductStatus, $metafields: [MetafieldInput!], $descriptionHtml: String) {
-  productSet(
-    input: {id: $id, productOptions: $productOptions, variants: $variants, title: $title, tags: $tags, status: $status, metafields: $metafields, descriptionHtml: $descriptionHtml}
-    synchronous: true
-  ) {
+mutation setProductMutation($input: ProductSetInput!) {
+  productSet(input: $input, synchronous: true) {
     product {
       options {
         name
@@ -39,6 +36,7 @@ export default async function setProduct(
     title: string;
     tags: string[];
     status: "ACTIVE" | "ARCHIVED" | "DRAFT";
+    collections: string[];
     metafields: Array<{
       namespace: string;
       key: string;
@@ -71,8 +69,7 @@ export default async function setProduct(
     {
       query: setProductMutation,
       variables: {
-        id: `gid://shopify/Product/${id}`,
-        ...product,
+        input: { ...product, id: `gid://shopify/Product/${id}` },
       },
     },
     {
@@ -82,8 +79,6 @@ export default async function setProduct(
       },
     }
   );
-
-  console.log(data);
 
   const updatedProduct = data.data?.productSet?.product as {
     options: Array<{ name: string; values: string[] }>;

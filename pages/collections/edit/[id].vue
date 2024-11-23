@@ -40,7 +40,7 @@
         <div class="lg:w-full lg:max-w-xs">
           <CollectionImagePicker
             @update:image="handleImageUpdate"
-            :default-preview="fetchedCollection?.image.url"
+            :default-preview="fetchedCollection?.image?.url"
           />
           <div class="mb-4">
             <label class="block text-gray-700">Collection is a brand?</label>

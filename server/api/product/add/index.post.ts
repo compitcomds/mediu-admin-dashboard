@@ -127,7 +127,7 @@ export default defineEventHandler(async (event) => {
     const createdProductId = data.product.id;
 
     for (const collection of body.collections) {
-      await addProductToCollection(createdProductId, collection.id);
+      await addProductToCollection(createdProductId, collection);
     }
 
     return { ...data, errors };
