@@ -1,6 +1,7 @@
 import { defineEventHandler, readBody } from "h3"; // Import readBody instead of useBody
 import axios from "axios";
 import config from "~/utils/config";
+import publishCollectionToAllPublications from "./publishCollection";
 
 export const COLLECTION_METAFIELDS_DEFINED: Record<
   string,
@@ -41,7 +42,9 @@ export default defineEventHandler(async (event) => {
       }
     );
 
-    return response.data.custom_collection;
+    const collection = response.data.custom_collection;
+    await publishCollectionToAllPublications(collection.admin_graphql_api_id);
+    return collection;
   } catch (error: any) {
     console.error("Error creating collection: ", error);
     throw new Error("Failed to create collection");

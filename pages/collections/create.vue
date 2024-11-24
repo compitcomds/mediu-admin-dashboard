@@ -125,7 +125,7 @@ async function createCollection() {
       };
     }
 
-    const response = await axios.post("/api/create-collections", {
+    const response = await axios.post("/api/collections/create", {
       ...newCollection.value,
       image,
     });

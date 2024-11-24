@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "~/utils/config";
-import { COLLECTION_METAFIELDS_DEFINED } from "../../create-collections";
+import { COLLECTION_METAFIELDS_DEFINED } from "../create/index.post";
 
 const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
 

@@ -12,7 +12,6 @@ const config = {
   Appwrite_Collection_prescription_Id: "66d1886f0022babc06a9",
   Appwrite_Prescription_Bucket_Id: "66b73310001ba896582b",
   Appwrite_Inventory_Batches_Id: "66d9cc9f000fd26554dd",
-
 };
 
 export default config;
