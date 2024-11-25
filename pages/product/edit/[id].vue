@@ -26,7 +26,6 @@
 <script setup lang="ts">
 import axios from "axios";
 
-const router = useRouter();
 const route = useRoute();
 
 const productId = route.params.id;
