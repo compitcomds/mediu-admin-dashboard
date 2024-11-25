@@ -1,11 +1,11 @@
 <template>
   <div
-    class="bg-[#28574e] flex items-center justify-between px-4 py-4 fixed z-50 w-full"
+    class="bg-[#238878] flex items-center justify-between px-4 lg:px-10 py-4 fixed z-50 w-full border-b"
   >
     <!-- Shopify Logo -->
     <div class="flex items-center space-x-2 max-w-16">
       <nuxt-link to="/"
-        ><img src="/mediu-logo.png" alt="Mediu Logo" class="w-5/6"
+        ><img src="https://ccdstest.b-cdn.net/Medi%20u/logos/logo_white.png" alt="Mediu Logo" class=""
       /></nuxt-link>
     </div>
 
