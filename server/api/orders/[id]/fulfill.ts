@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
       return { error: "Unable to fulfill order." };
     }
 
-    return { fulfillment };
+    return fulfillment;
   } catch (error) {
     console.error("Error fulfilling order:", error || error);
     return { error: "Unable to fulfill order." };

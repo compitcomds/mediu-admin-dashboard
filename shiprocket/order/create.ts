@@ -16,6 +16,7 @@ export default async function createShiprocketOrder(
 ) {
   const url = `${SHIPROCKET_API}/orders/create/adhoc`;
   const accessToken = getAccessToken();
+
   try {
     const { data } = await axios.post(
       url,
@@ -55,7 +56,6 @@ export default async function createShiprocketOrder(
       }
     );
   } catch (error: any) {
-    console.log(error);
     if (error.status === 401) {
       await getNewAcessToken();
       return await createShiprocketOrder(orderData, dimensions);
