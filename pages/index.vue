@@ -3,9 +3,9 @@
     <!-- Welcome Section -->
     <div class="bg-white flex flex-col rounded-xl p-12 mb-10 items-center space-y-6 w-full text-[#28574e]">
       <img
-        src="https://ccdstest.b-cdn.net/Medi%20u/logo%202.png"
+        src="https://ccdstest.b-cdn.net/Medi%20u/logos/logo%201.png"
         alt="Mediu Logo"
-        class="w-60 rounded-lg"
+        class="w-56 rounded-lg"
       />
       <h2 class="text-4xl text-center font-bold">Hey Admin</h2>
       <h2 class="text-4xl text-center font-bold">Welcome To Mediu</h2>
