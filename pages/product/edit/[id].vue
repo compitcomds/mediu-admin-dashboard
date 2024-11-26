@@ -1,26 +1,21 @@
 <template>
-  <AttachSidebar>
-    <div
-      v-if="!product"
-      class="flex items-center justify-center flex-col gap-3"
+  <div v-if="!product" class="flex items-center justify-center flex-col gap-3">
+    <h1 class="text-3xl font-bold text-center">NOT FOUND</h1>
+    <nuxt-link to="/product" class="underline hover:no-underline"
+      >All Products</nuxt-link
     >
-      <h1 class="text-3xl font-bold text-center">NOT FOUND</h1>
-      <nuxt-link to="/product" class="underline hover:no-underline"
-        >All Products</nuxt-link
-      >
-    </div>
+  </div>
 
-    <div v-else>
-      <h1 class="text-3xl font-bold mb-4">Edit Product #{{ productId }}</h1>
+  <div v-else>
+    <h1 class="text-3xl font-bold mb-4">Edit Product #{{ productId }}</h1>
 
-      <ProductForm
-        :default-values="product"
-        :product-id="Array.isArray(productId) ? productId[0] : productId"
-        :onSubmit="updateProduct"
-        :handle="fetchedProduct?.product.handle"
-      />
-    </div>
-  </AttachSidebar>
+    <ProductForm
+      :default-values="product"
+      :product-id="Array.isArray(productId) ? productId[0] : productId"
+      :onSubmit="updateProduct"
+      :handle="fetchedProduct?.product.handle"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">

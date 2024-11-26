@@ -1,8 +1,6 @@
 <template>
-  <AttachSidebar>
-    <h1 class="text-3xl font-bold mb-4">Add New Product</h1>
-    <ProductForm :on-submit="addProduct" />
-  </AttachSidebar>
+  <h1 class="text-3xl font-bold mb-4">Add New Product</h1>
+  <ProductForm :on-submit="addProduct" />
 </template>
 
 <script setup lang="ts">

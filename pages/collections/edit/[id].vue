@@ -1,87 +1,83 @@
 <template>
-  <AttachSidebar>
-    <h2 class="text-xl lg:text-3xl font-bold mb-4">Edit Collection</h2>
+  <h2 class="text-xl lg:text-3xl font-bold mb-4">Edit Collection</h2>
 
-    <div v-if="error" class="text-center">
-      <p class="text-red-500 mb-2">{{ error }}</p>
-      <nuxt-link
-        :to="'/collections'"
-        class="underline hover:no-underline text-[#28574e]"
-        >Go To All Collections</nuxt-link
-      >
-    </div>
+  <div v-if="error" class="text-center">
+    <p class="text-red-500 mb-2">{{ error }}</p>
+    <nuxt-link
+      :to="'/collections'"
+      class="underline hover:no-underline text-[#28574e]"
+      >Go To All Collections</nuxt-link
+    >
+  </div>
 
-    <div v-else>
-      <form
-        v-if="collection"
-        @submit.prevent="updateCollection"
-        class="flex flex-col lg:flex-row gap-5"
-      >
-        <div class="flex-1">
-          <div class="mb-4">
-            <label class="block text-gray-700">Title</label>
-            <input
-              type="text"
-              v-model="collection.title"
-              class="w-full p-2 border rounded"
-              required
-            />
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700">Description</label>
-            <textarea
-              v-model="collection.descriptionHtml"
-              class="w-full p-2 border rounded"
-              required
-              rows="10"
-            ></textarea>
-          </div>
-        </div>
-        <div class="lg:w-full lg:max-w-xs">
-          <CollectionImagePicker
-            @update:image="handleImageUpdate"
-            :default-preview="fetchedCollection?.image?.url"
+  <div v-else>
+    <form
+      v-if="collection"
+      @submit.prevent="updateCollection"
+      class="flex flex-col lg:flex-row gap-5"
+    >
+      <div class="flex-1">
+        <div class="mb-4">
+          <label class="block text-gray-700">Title</label>
+          <input
+            type="text"
+            v-model="collection.title"
+            class="w-full p-2 border rounded"
+            required
           />
-          <div class="mb-4">
-            <label class="block text-gray-700">Collection is a brand?</label>
-            <Switch
-              :checked="collection.metafields.isBrandCollection"
-              @update:checked="toggleBrandCollection"
-            />
-          </div>
-          <button
-            type="submit"
-            :disabled="isSubmitting"
-            class="bg-[#28574e] mb-4 block w-full disabled:cursor-not-allowed disabled:opacity-70 text-white px-4 py-2 rounded-md"
-          >
-            <span
-              v-if="isSubmitting"
-              class="flex items-center justify-center gap-5"
-              >Updating <Loader
-            /></span>
-            <span v-else>Update Collection</span>
-          </button>
-          <button
-            type="button"
-            :disabled="isDeleting"
-            @click="deleteCollection"
-            class="bg-red-500 block w-full disabled:cursor-not-allowed disabled:opacity-70 text-white px-4 py-2 rounded-md"
-          >
-            <span
-              v-if="isDeleting"
-              class="flex items-center justify-center gap-5"
-              >Deleting <Loader
-            /></span>
-            <span v-else>Delete Collection</span>
-          </button>
         </div>
-      </form>
-
-      <div v-else class="text-center text-gray-500">
-        <p>No collection selected. Please select a collection to edit.</p>
+        <div class="mb-4">
+          <label class="block text-gray-700">Description</label>
+          <textarea
+            v-model="collection.descriptionHtml"
+            class="w-full p-2 border rounded"
+            required
+            rows="10"
+          ></textarea>
+        </div>
       </div>
+      <div class="lg:w-full lg:max-w-xs">
+        <CollectionImagePicker
+          @update:image="handleImageUpdate"
+          :default-preview="fetchedCollection?.image?.url"
+        />
+        <div class="mb-4">
+          <label class="block text-gray-700">Collection is a brand?</label>
+          <Switch
+            :checked="collection.metafields.isBrandCollection"
+            @update:checked="toggleBrandCollection"
+          />
+        </div>
+        <button
+          type="submit"
+          :disabled="isSubmitting"
+          class="bg-[#28574e] mb-4 block w-full disabled:cursor-not-allowed disabled:opacity-70 text-white px-4 py-2 rounded-md"
+        >
+          <span
+            v-if="isSubmitting"
+            class="flex items-center justify-center gap-5"
+            >Updating <Loader
+          /></span>
+          <span v-else>Update Collection</span>
+        </button>
+        <button
+          type="button"
+          :disabled="isDeleting"
+          @click="deleteCollection"
+          class="bg-red-500 block w-full disabled:cursor-not-allowed disabled:opacity-70 text-white px-4 py-2 rounded-md"
+        >
+          <span v-if="isDeleting" class="flex items-center justify-center gap-5"
+            >Deleting <Loader
+          /></span>
+          <span v-else>Delete Collection</span>
+        </button>
+      </div>
+    </form>
+
+    <div v-else class="text-center text-gray-500">
+      <p>No collection selected. Please select a collection to edit.</p>
     </div>
-  </AttachSidebar>
+  </div>
 </template>
 
 <script setup lang="ts">

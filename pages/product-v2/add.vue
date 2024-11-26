@@ -1,8 +1,6 @@
 <template>
-  <AttachSidebar>
-    <h1 class="text-3xl font-bold mb-4">Add New Product</h1>
-    <ProductV2Form />
-  </AttachSidebar>
+  <h1 class="text-3xl font-bold mb-4">Add New Product</h1>
+  <ProductV2Form />
 </template>
 
 <script setup lang="ts">

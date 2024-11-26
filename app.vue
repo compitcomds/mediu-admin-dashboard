@@ -1,15 +1,15 @@
 <template>
   <NuxtLoadingIndicator />
   <NuxtLayout>
-    <NuxtPage />
+    <AttachSidebar v-if="!route.path.includes('auth/login')">
+      <NuxtPage />
+    </AttachSidebar>
+    <NuxtPage v-else />
   </NuxtLayout>
 </template>
 
-
-<script>
-  export default {
-    
-  }
+<script setup>
+const route = useRoute();
 </script>
 
 <style>

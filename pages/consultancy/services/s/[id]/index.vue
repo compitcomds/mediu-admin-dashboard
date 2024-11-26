@@ -1,20 +1,16 @@
 <template>
-  <AttachSidebar>
-    <h1 class="text-3xl font-bold mb-4">
-      Edit Consultancy #{{ consultancyId }}
-    </h1>
+  <h1 class="text-3xl font-bold mb-4">Edit Consultancy #{{ consultancyId }}</h1>
 
-    <div v-if="!consultancy">
-      <p class="text-red-500">Consultancy Not Found.</p>
-    </div>
+  <div v-if="!consultancy">
+    <p class="text-red-500">Consultancy Not Found.</p>
+  </div>
 
-    <ConsultancyForm
-      v-else
-      :on-submit="updateConsultancy"
-      :default-values="consultancy"
-      :consultancy-id="consultancyId"
-    />
-  </AttachSidebar>
+  <ConsultancyForm
+    v-else
+    :on-submit="updateConsultancy"
+    :default-values="consultancy"
+    :consultancy-id="consultancyId"
+  />
 </template>
 
 <script setup lang="ts">

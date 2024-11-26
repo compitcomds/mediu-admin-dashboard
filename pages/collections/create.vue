@@ -1,78 +1,74 @@
 <template>
-  <AttachSidebar>
-    <h2 class="text-xl lg:text-3xl font-bold mb-4">Create Collection</h2>
-    <form
-      @submit.prevent="createCollection"
-      class="flex flex-col lg:flex-row gap-5"
-    >
-      <div class="flex-1">
-        <div class="mb-4">
-          <label class="block text-gray-700">Title</label>
-          <input
-            type="text"
-            v-model="newCollection.title"
-            class="w-full p-2 border rounded"
-            required
-          />
-        </div>
-        <div class="mb-4">
-          <label class="block text-gray-700">Description</label>
-          <textarea
-            v-model="newCollection.body_html"
-            class="w-full p-2 border rounded"
-            required
-          ></textarea>
-        </div>
-        <div class="mb-6">
-          <!-- Label -->
-          <label class="block text-sm font-semibold text-gray-800 mb-2"
-            >Select Products</label
-          >
+  <h2 class="text-xl lg:text-3xl font-bold mb-4">Create Collection</h2>
+  <form
+    @submit.prevent="createCollection"
+    class="flex flex-col lg:flex-row gap-5"
+  >
+    <div class="flex-1">
+      <div class="mb-4">
+        <label class="block text-gray-700">Title</label>
+        <input
+          type="text"
+          v-model="newCollection.title"
+          class="w-full p-2 border rounded"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <label class="block text-gray-700">Description</label>
+        <textarea
+          v-model="newCollection.body_html"
+          class="w-full p-2 border rounded"
+          required
+        ></textarea>
+      </div>
+      <div class="mb-6">
+        <!-- Label -->
+        <label class="block text-sm font-semibold text-gray-800 mb-2"
+          >Select Products</label
+        >
 
-          <!-- Product List -->
-          <div class="space-y-2">
-            <div
-              v-for="product in products"
-              :key="product.id"
-              class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition duration-150 ease-in-out"
-            >
-              <!-- Checkbox -->
-              <input
-                type="checkbox"
-                :value="{ product_id: product.id }"
-                v-model="newCollection.collects"
-                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <!-- Product Title -->
-              <span class="ml-3 text-gray-700">{{ product.title }}</span>
-            </div>
+        <!-- Product List -->
+        <div class="space-y-2">
+          <div
+            v-for="product in products"
+            :key="product.id"
+            class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition duration-150 ease-in-out"
+          >
+            <!-- Checkbox -->
+            <input
+              type="checkbox"
+              :value="{ product_id: product.id }"
+              v-model="newCollection.collects"
+              class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+            <!-- Product Title -->
+            <span class="ml-3 text-gray-700">{{ product.title }}</span>
           </div>
         </div>
       </div>
-      <div class="lg:w-full lg:max-w-xs">
-        <CollectionImagePicker @update:image="handleImageUpdate" />
-        <div class="mb-4">
-          <label class="block text-gray-700">Collection is a brand?</label>
-          <Switch
-            :checked="newCollection.metafields.isBrandCollection"
-            @update:checked="toggleBrandCollection"
-          />
-        </div>
-        <button
-          type="submit"
-          :disabled="isSubmitting"
-          class="bg-[#28574e] block w-full disabled:cursor-not-allowed disabled:opacity-70 text-white px-4 py-2 rounded-md"
-        >
-          <span
-            v-if="isSubmitting"
-            class="flex items-center justify-center gap-5"
-            >Submitting <Loader
-          /></span>
-          <span v-else>Create Collection</span>
-        </button>
+    </div>
+    <div class="lg:w-full lg:max-w-xs">
+      <CollectionImagePicker @update:image="handleImageUpdate" />
+      <div class="mb-4">
+        <label class="block text-gray-700">Collection is a brand?</label>
+        <Switch
+          :checked="newCollection.metafields.isBrandCollection"
+          @update:checked="toggleBrandCollection"
+        />
       </div>
-    </form>
-  </AttachSidebar>
+      <button
+        type="submit"
+        :disabled="isSubmitting"
+        class="bg-[#28574e] block w-full disabled:cursor-not-allowed disabled:opacity-70 text-white px-4 py-2 rounded-md"
+      >
+        <span v-if="isSubmitting" class="flex items-center justify-center gap-5"
+          >Submitting <Loader
+        /></span>
+        <span v-else>Create Collection</span>
+      </button>
+    </div>
+  </form>
 </template>
 
 <script setup lang="ts">
