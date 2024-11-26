@@ -26,3 +26,11 @@ export async function updateConsultancyService(
     service
   );
 }
+
+export async function deleteConsultancyService(id: string) {
+  await database.deleteDocument(
+    config.appwriteDatabaseId,
+    config.appwriteConsultancyProductsCollectionId,
+    id
+  );
+}

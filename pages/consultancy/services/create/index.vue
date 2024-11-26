@@ -16,8 +16,8 @@ const addConsultancyService = async (service: {
   price: number;
   tags: string[];
 }) => {
-  await createConsultancyService(service);
-  alert("Successfully created the service");
-  router.replace("/consultancy/services");
+  const document = await createConsultancyService(service);
+  alert("Successfully created the service!");
+  router.replace(`/consultancy/services/s/${document.$id}`);
 };
 </script>

@@ -12,6 +12,7 @@
       v-else
       :on-submit="updateConsultancy"
       :default-values="consultancy"
+      :consultancy-id="consultancyId"
     />
   </AttachSidebar>
 </template>

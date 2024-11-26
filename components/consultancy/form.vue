@@ -59,6 +59,10 @@
         /></span>
         <span v-else>Submit</span>
       </button>
+      <ConsultancyDeleteButton
+        v-if="props.consultancyId"
+        :consultancy-id="props.consultancyId"
+      />
     </div>
   </form>
 </template>
@@ -75,6 +79,7 @@ type ServiceType = {
 const props = defineProps<{
   defaultValues?: ServiceType;
   onSubmit: (service: ServiceType) => Promise<void>;
+  consultancyId?: string;
 }>();
 
 const isSubmitting = ref(false);
