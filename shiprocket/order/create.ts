@@ -14,7 +14,7 @@ export default async function createShiprocketOrder(
   }
 ) {
   const accessToken = getAccessToken();
-  const { data } = await axios.post("/api/shiprocket/order/create", {
+  const { data } = await axios.post("/api/shiprocket/create-order", {
     accessToken,
     orderData,
     dimensions,
