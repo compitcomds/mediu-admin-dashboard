@@ -35,7 +35,7 @@
         </div>
 
         <!-- Order Table -->
-        <div class="bg-white rounded shadow">
+        <div class="bg-white rounded shadow overflow-x-auto">
           <table class="min-w-full text-left">
             <thead class="bg-gray-50">
               <tr>
