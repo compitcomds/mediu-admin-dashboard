@@ -9,3 +9,7 @@ export async function getNewAcessToken() {
 export function getAccessToken() {
   return localStorage.getItem("shiprocketAccessToken");
 }
+
+export function setShiprocketAccessToken(token: string) {
+  return localStorage.setItem("shiprocketAccessToken", token);
+}

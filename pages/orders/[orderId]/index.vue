@@ -188,7 +188,6 @@
 
 <script setup lang="ts">
 import axios from "axios";
-import { getNewAcessToken } from "~/shiprocket/auth";
 import createShiprocketOrder from "~/shiprocket/order/create";
 
 const route = useRoute();
@@ -241,9 +240,8 @@ const confirmOrder = async () => {
   isSubmitting.value = true;
   try {
     const orderId = route.params.orderId;
-    // await createShiprocketOrder(order.value, dimensions.value);
-    console.log(await getNewAcessToken());
-    return;
+    await createShiprocketOrder(order.value, dimensions.value);
+
     const { data } = await axios.post(`/api/orders/${orderId}/fulfill`, {
       headers: { "Content-Type": "application/json" },
     });
