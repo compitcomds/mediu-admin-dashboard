@@ -53,7 +53,9 @@ export default {
         if (result.documents && result.documents.length > 0) {
           this.consultancy = result.documents[0];
         } else {
-          this.error.push("No consultancy found or failed to fetch consultancy");
+          this.error.push(
+            "No consultancy found or failed to fetch consultancy"
+          );
         }
       } catch (error) {
         console.error("Error fetching consultancy:", error);

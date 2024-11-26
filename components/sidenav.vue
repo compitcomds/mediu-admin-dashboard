@@ -142,12 +142,41 @@
           </a>
         </li>
         <li class="mb-4">
-          <a
-            href="/consultancy"
-            class="flex items-center py-2 px-4 hover:bg-white hover:text-black rounded transition-colors"
+          <button
+            @click="toggleDropdown('consultancy')"
+            class="flex w-full items-center justify-between cursor-pointer py-2 px-4 hover:bg-white hover:text-black rounded transition-colors"
           >
-            <i class="fas fa-clipboard-list text-xl mr-3"></i> Consultancy
-          </a>
+            <span class="flex items-center">
+              <i class="fas fa-box text-xl mr-3"></i> Consultancy
+            </span>
+            <span
+              :class="{ 'rotate-180': dropdowns.consultancy }"
+              class="transition-transform transform"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-chevron-down"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </span>
+          </button>
+          <ul v-if="dropdowns.consultancy" class="ml-6 space-y-2 mt-2">
+            <li>
+              <nuxt-link
+                to="/consultancy/services"
+                class="block py-1 px-2 hover:bg-white hover:text-black rounded transition-colors"
+                >Services</nuxt-link
+              >
+            </li>
+          </ul>
         </li>
       </ul>
     </nav>
@@ -165,6 +194,7 @@ export default {
         content: false,
         analytics: false,
         marketing: false,
+        consultancy: false,
         discounts: false,
       },
     };
