@@ -1,9 +1,6 @@
 import axios from "axios";
 import { getAccessToken, setShiprocketAccessToken } from "../auth";
 
-const SHIPROCKET_API = import.meta.env.VITE_SHIPROCKET_API_URL;
-const SHIPROCKET_PICKUP_LOCATION = import.meta.env.VITE_PICKUP_LOCATION;
-
 export default async function createShiprocketOrder(
   orderData: any,
   dimensions: {

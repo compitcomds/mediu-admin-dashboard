@@ -59,7 +59,7 @@ const filteredTags = computed(() =>
             class="w-full px-3"
             :class="modelValue?.length > 0 ? 'mt-2' : ''"
             @keydown.enter.prevent
-            onfocus=""
+            :onfocus="() => (open = true)"
           />
         </ComboboxInput>
       </ComboboxAnchor>

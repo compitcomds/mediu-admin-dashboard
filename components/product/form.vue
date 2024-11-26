@@ -158,18 +158,6 @@
         />
       </div>
 
-      <!-- <div>
-      <label for="allowBackOrder" class="flex items-center">
-        <input
-          type="checkbox"
-          id="allowBackOrder"
-          v-model="form.allowBackOrder"
-          class="mr-2"
-        />
-        Allow Back Order
-      </label>
-    </div> -->
-
       <div>
         <label
           for="safetyInformationAndPrecaution"
