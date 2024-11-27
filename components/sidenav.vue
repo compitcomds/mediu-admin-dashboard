@@ -176,6 +176,13 @@
                 >Services</nuxt-link
               >
             </li>
+            <li>
+              <nuxt-link
+                to="/consultancy/bookings"
+                class="block py-1 px-2 hover:bg-white hover:text-black rounded transition-colors"
+                >Bookings</nuxt-link
+              >
+            </li>
           </ul>
         </li>
         <li class="mb-4">

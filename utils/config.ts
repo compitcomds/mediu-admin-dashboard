@@ -16,6 +16,8 @@ const config = {
   appwriteAlertCollectionId: import.meta.env.VITE_APPWRITE_ALERT_COLLECTION_ID,
   appwriteConsultancyProductsCollectionId: import.meta.env
     .VITE_APPWRITE_CONSULTANCY_PRODUCTS_COLLECTION_ID,
+  appwriteConsultancyBookingCollectionId: import.meta.env
+    .VITE_APPWRITE_CONSULTANCY_COLLECTION_ID,
 };
 
 export default config;
