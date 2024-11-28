@@ -38,8 +38,14 @@ const { documents } = await getConsultancyCustomerBookings();
         <TableCell>{{ document.firstName }} {{ document.lastName }}</TableCell>
         <TableCell>{{ document.price }}</TableCell>
         <TableCell>{{ document.paymentStatus }}</TableCell>
-        <TableCell>{{ document.bookingTime || "To be set" }}</TableCell>
-        <TableCell></TableCell>
+        <TableCell>{{
+          !!document.bookingTime
+            ? formatBookingDateTime(document.bookingTime)
+            : "To be set"
+        }}</TableCell>
+        <TableCell
+          ><ConsultancyBookingAllotDialog :document="document"
+        /></TableCell>
       </TableRow>
     </TableBody>
   </Table>
