@@ -1,5 +1,6 @@
 import axios from "axios";
 import config from "~/utils/config";
+import convertOptionsForRest from "~/utils/convertOptionsForRest";
 
 const SHOPIFY_API = `https://${config.shopifyDomain}/admin/api/2024-10/products.json`;
 const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
@@ -82,53 +83,39 @@ export default defineEventHandler(async (event) => {
       attachment: image.base64Image,
     })),
     status: body.status,
-    variants: [
-      {
-        taxable: false,
-        price: body.price,
-        compare_at_price: body.compareAtPrice,
-        inventory_management: "shopify",
-        inventory_quantity: body.quantity || 0,
-        sku: body.sku,
-      },
-    ],
+    options: body.options.map((option: any) => ({
+      name: option.name,
+      values: option.values.map((value: any) => value.name),
+    })),
+    variants: body.variants.map((variant: any) => ({
+      taxable: false,
+      price: variant.price,
+      compare_at_price: variant.price,
+      sku: variant.sku,
+      inventory_management: "shopify",
+      inventory_quantity: variant.quantity || 0,
+      ...convertOptionsForRest(variant.optionValues),
+    })),
   };
 
   const errors: any[] = [];
 
-  try {
-    const { data } = await axios.post(
-      SHOPIFY_API,
-      { product },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
-        },
-      }
-    );
-
-    const inventoryItemId = data.product.variants[0].inventory_item_id;
-    const { data: hsnUpdateResponse } = await axios.put(
-      `${PRODUCTION_API}/api/product/update-hsn`,
-      {
-        hsnCode: body.hsnCode,
-        inventoryItemId,
-      }
-    );
-
-    if (hsnUpdateResponse.error) errors.push(hsnUpdateResponse.error);
-
-    const createdProductId = data.product.id;
-
-    for (const collection of body.collections) {
-      await addProductToCollection(createdProductId, collection);
+  const { data } = await axios.post(
+    SHOPIFY_API,
+    { product },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
+      },
     }
+  );
 
-    return { ...data, errors };
-  } catch (error: any) {
-    console.log(error.message);
-    console.log(error.response.data.errors.type);
-    return { error: error.message };
+  const createdProductId = data.product.id;
+
+  for (const collection of body.collections) {
+    await addProductToCollection(createdProductId, collection);
   }
+
+  return { ...data, errors };
 });

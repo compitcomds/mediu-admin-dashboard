@@ -18,7 +18,9 @@ const { document } = defineProps<{
   <Dialog>
     <DialogTrigger
       class="bg-black text-white px-6 py-2 font-semibold rounded-lg"
-      >Allot Booking</DialogTrigger
+      >{{
+        !!document.bookingTime ? "View Details" : "Allot Booking"
+      }}</DialogTrigger
     >
     <DialogContent class="min-w-fit max-w-[90%] p-0 max-h-[90vh]">
       <DialogHeader class="p-6 pb-0">

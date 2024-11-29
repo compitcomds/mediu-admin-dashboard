@@ -20,6 +20,13 @@ query getAllProductsQuery($query: String, $after: String) {
       totalInventory
       productType
       vendor
+      variants(first: 100) {
+        nodes {
+          legacyResourceId
+          sku
+          inventoryQuantity
+        }
+      }
     }
     pageInfo {
       endCursor
@@ -47,6 +54,13 @@ query getAllProductsQuery($query: String, $before: String) {
       totalInventory
       productType
       vendor
+      variants(first: 100) {
+        nodes {
+          legacyResourceId
+          sku
+          inventoryQuantity
+        }
+      }
     }
     pageInfo {
       endCursor
@@ -85,6 +99,7 @@ export default defineEventHandler(async (event) => {
       products: products.nodes.map((prod: any) => ({
         ...prod,
         id: prod.id.replace("gid://shopify/Product/", ""),
+        variants: prod.variants.nodes,
       })),
       pageInfo: products.pageInfo,
     };

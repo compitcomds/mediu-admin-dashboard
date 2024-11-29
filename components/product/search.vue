@@ -33,6 +33,11 @@
 
 <script setup lang="ts">
 import { Search } from "lucide-vue-next";
+
+const props = defineProps<{
+  pathToRedirect?: string;
+}>();
+
 const route = useRoute();
 const searchVisible = ref(false);
 const searchQuery = ref(route.query.query || "");
@@ -52,7 +57,7 @@ const toggleSearch = () => {
 
 const performSearch = useDebounceFn(async () => {
   await navigateTo({
-    path: "/product",
+    path: props.pathToRedirect || "/product",
     query: { query: searchQuery.value || undefined },
   });
 }, 1000);

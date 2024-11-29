@@ -218,7 +218,6 @@ const fetchProducts = async ({
         query || ""
       }`
     );
-    console.log(data);
     products.value = data.products;
     pageInfo.value = data.pageInfo;
   } catch (e: any) {

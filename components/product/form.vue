@@ -59,19 +59,6 @@
       </div>
 
       <div>
-        <label for="title" class="block text-sm font-medium text-gray-700"
-          >SKU <span class="text-red-500">*</span></label
-        >
-        <input
-          type="text"
-          id="sku"
-          v-model="form.sku"
-          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-          required
-        />
-      </div>
-
-      <div>
         <label for="gstApplied" class="block text-sm font-medium text-gray-700"
           >HSN Code <span class="text-red-500">*</span></label
         >
@@ -86,20 +73,48 @@
       </div>
 
       <div>
+        <ProductOptionInput
+          :productId="productId"
+          v-model:model-value="options"
+        />
+      </div>
+
+      <div :class="{ hidden: variants.length <= 1 }">
+        <ProductVariantsInput
+          :options="options"
+          v-model:model-value="variants"
+          :default-variants="variants"
+        />
+      </div>
+
+      <div v-if="variants.length === 1">
+        <label for="title" class="block text-sm font-medium text-gray-700"
+          >SKU <span class="text-red-500">*</span></label
+        >
+        <input
+          type="text"
+          id="sku"
+          v-model="variants[0].sku"
+          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          required
+        />
+      </div>
+
+      <div v-if="variants.length === 1">
         <label for="price" class="block text-sm font-medium text-gray-700"
           >Price <span class="text-red-500">*</span></label
         >
         <input
           type="text"
           id="price"
-          v-model="form.price"
+          v-model="variants[0].price"
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           placeholder="0"
           required
         />
       </div>
 
-      <div>
+      <div v-if="variants.length === 1">
         <label
           for="compareAtPrice"
           class="block text-sm font-medium text-gray-700"
@@ -108,7 +123,7 @@
         <input
           type="text"
           id="compareAtPrice"
-          v-model="form.compareAtPrice"
+          v-model="variants[0].compareAtPrice"
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           placeholder="0"
         />
@@ -138,23 +153,6 @@
           v-model.number="form.quantity"
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           required
-        />
-      </div>
-
-      <div>
-        <ProductOptionInput
-          v-if="!!props.productId"
-          :productId="productId"
-          v-model:model-value="options"
-        />
-      </div>
-
-      <div>
-        <ProductVariantsInput
-          v-if="!!props.productId"
-          :options="options"
-          v-model:model-value="variants"
-          :default-variants="variants"
         />
       </div>
 
@@ -356,11 +354,7 @@ const form = ref({
   title: props.defaultValues?.title || "",
   description: props.defaultValues?.description || "",
   images: props.defaultValues?.images || [],
-  sku: props.defaultValues?.sku || "",
   collections: props.defaultValues?.collections || [],
-  price:
-    props.defaultValues?.price !== undefined ? props.defaultValues.price : "0",
-  compareAtPrice: props.defaultValues?.compareAtPrice || "",
   gstApplied:
     props.defaultValues?.gstApplied !== undefined
       ? props.defaultValues.gstApplied
@@ -398,8 +392,6 @@ const handleSubmit = async () => {
 
     const parsedData = {
       ...form.value,
-      price: parseFloat(form.value.price),
-      compareAtPrice: parseFloat(form.value.compareAtPrice),
       gstApplied: parseFloat(form.value.gstApplied),
       images,
       addedImages: addedImages.value,
@@ -413,11 +405,7 @@ const handleSubmit = async () => {
         .map((collection: any) => collection.id),
     };
 
-    if (
-      Number.isNaN(parsedData.price) ||
-      Number.isNaN(parsedData.compareAtPrice) ||
-      Number.isNaN(parsedData.gstApplied)
-    ) {
+    if (Number.isNaN(parsedData.gstApplied)) {
       throw new Error(
         "Invalid Input! Price, Compare at price and GST Applied must be decimal values."
       );

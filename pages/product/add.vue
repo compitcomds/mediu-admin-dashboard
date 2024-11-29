@@ -10,13 +10,14 @@ const router = useRouter();
 
 const addProduct = async (values: any) => {
   const { data } = await axios.post("/api/product/add", values);
-  if (data.errors.length > 0) {
+
+  if (data.errors?.length > 0) {
     data.errors.forEach((e: string) => {
       alert(e);
     });
   }
 
-  if (data.product.id) {
+  if (data.product?.id) {
     alert("Successfully created the product. Redirecting you to product...");
     await router.replace(`/product/edit/${data.product.id}`);
     return;

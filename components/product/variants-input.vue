@@ -24,15 +24,15 @@
         >
       </TableRow>
     </TableHeader>
-    <TableBody>
+    <TableBody v-if="variants.length > 1">
       <TableRow v-for="(variant, index) in variants">
         <TableCell>{{ index + 1 }}</TableCell>
-        <TableCell v-for="(option, i) in options"
+        <TableCell v-for="(_, i) in options"
           >{{ variant.optionValues[i].name }}
         </TableCell>
         <TableCell>
           <input
-            type="number"
+            type="text"
             v-model="variant.price"
             class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
             placeholder="0"
@@ -41,7 +41,7 @@
         </TableCell>
         <TableCell>
           <input
-            type="number"
+            type="text"
             v-model="variant.compareAtPrice"
             class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
             placeholder="0"

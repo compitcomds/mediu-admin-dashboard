@@ -1,12 +1,18 @@
 <template>
-  <div class="flex w-full h-screen justify-center items-center">
+  <div class="flex w-full justify-center items-center">
     <div class="w-1/3 p-6 bg-gray-100 rounded-md">
       <h1 class="text-2xl font-bold mb-4">Add Item</h1>
       <p>Product ID: {{ route.params.inventoryId }}</p>
 
-      <form @submit.prevent="handleSubmit" class="bg-white p-6 rounded shadow-md">
+      <form
+        @submit.prevent="handleSubmit"
+        class="bg-white p-6 rounded shadow-md"
+      >
         <div class="mb-4">
-          <label for="batchNumber" class="block text-sm font-medium text-gray-700">
+          <label
+            for="batchNumber"
+            class="block text-sm font-medium text-gray-700"
+          >
             Batch Number (Auto-Generated):
           </label>
           <input
@@ -19,7 +25,10 @@
         </div>
 
         <div class="mb-4">
-          <label for="expiryDate" class="block text-sm font-medium text-gray-700">
+          <label
+            for="expiryDate"
+            class="block text-sm font-medium text-gray-700"
+          >
             Expiry Date:
           </label>
           <input
@@ -55,7 +64,9 @@
 
       <div v-if="submittedData" class="mt-6 p-4 bg-gray-100 rounded shadow-md">
         <h2 class="text-lg font-bold">Submitted Data:</h2>
-        <p class="text-gray-700">Batch Number: {{ submittedData.BatchNumber }}</p>
+        <p class="text-gray-700">
+          Batch Number: {{ submittedData.BatchNumber }}
+        </p>
         <p class="text-gray-700">Expiry Date: {{ submittedData.ExpiryDate }}</p>
         <p class="text-gray-700">Quantity: {{ submittedData.Quantity }}</p>
         <p class="text-gray-700">Product ID: {{ submittedData.ProductId }}</p>
