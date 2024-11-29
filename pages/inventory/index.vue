@@ -1,13 +1,12 @@
 <template>
   <!-- Header Buttons -->
-  <div class="flex justify-between items-center mb-4">
-    <h1 class="text-xl md:text-2xl font-semibold">Products</h1>
+  <div class="flex justify-between items-center mb-4 lg:mt-10">
+    <h1 class="text-3xl font-bold mb-4">Inventory Products</h1>
     <div class="flex justify-center items-center gap-2">
       <ProductSearch path-to-redirect="/inventory" />
     </div>
   </div>
 
-  <!-- Responsive Product Cards for Small and Medium Screens -->
   <div class="lg:hidden rounded-lg p-4">
     <template v-for="product in products" :key="product.id">
       <template
@@ -59,66 +58,41 @@
     </template>
   </div>
 
-  <!-- Responsive Table for Large Screens -->
-  <div class="hidden lg:block overflow-x-auto bg-white shadow-md rounded-lg">
-    <table class="min-w-full table-auto divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Product Image
-          </th>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Product Title
-          </th>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Status
-          </th>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Inventory
-          </th>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            CTA
-          </th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
+  <div class="hidden lg:block overflow-x-auto">
+    <Table>
+      <TableCaption>A list of all the inventory.</TableCaption>
+      <TableHeader>
+        <TableRow>
+          <TableHead class="w-[130px]">Image</TableHead>
+          <TableHead>SKU</TableHead>
+          <TableHead>Title</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Inventory</TableHead>
+          <TableHead>CTA</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
         <template v-for="product in products" :key="product.id">
           <template v-for="variant in product.variants" :key="variant.id">
-            <tr class="hover:bg-gray-100">
-              <td class="px-4 py-4 whitespace-nowrap flex gap-2 items-center">
-                <img
-                  v-if="product.featuredImage"
-                  :src="product.featuredImage.url"
-                  :alt="product.title"
-                  class="product-image w-14 bg-white rounded-md border aspect-square"
-                />
-                <p
-                  class="text-xs p-1 rounded-full bg-gray-100"
-                  v-if="variant.sku"
-                >
-                  {{ variant.sku }}
-                </p>
-              </td>
-              <td
-                class="px-4 py-4 break-words whitespace-normal relative group cursor-pointer text-blue-600 hover:underline"
+            <TableRow class="hover:bg-white/40">
+              <TableCell
+                ><nuxt-link :to="`/inventory/${variant.legacyResourceId}`"
+                  ><img
+                    v-if="product.featuredImage"
+                    :src="product.featuredImage.url"
+                    :alt="product.title"
+                    class="product-image bg-white rounded-md border aspect-square" /></nuxt-link
+              ></TableCell>
+              <TableCell>
+                {{ variant.sku || "No SKU" }}
+              </TableCell>
+              <TableCell
+                ><nuxt-link :to="`/inventory/${variant.legacyResourceId}`">{{
+                  product.title
+                }}</nuxt-link></TableCell
               >
-                <NuxtLink :to="`/inventory/${variant.legacyResourceId}`">
-                  {{ product.title }}</NuxtLink
-                >
-              </td>
-
-              <td class="px-4 py-4 break-words whitespace-normal">
-                <span
+              <TableCell
+                ><span
                   :class="
                     product.status === 'Active'
                       ? 'bg-green-100 text-green-800'
@@ -127,26 +101,22 @@
                   class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                 >
                   {{ product.status }}
-                </span>
-              </td>
-              <td class="px-4 py-4 break-words whitespace-normal">
-                <div class="font-semibold">
-                  {{ variant.inventoryQuantity }}
-                </div>
-              </td>
-              <td class="px-4 py-4 break-words whitespace-normal">
-                <nuxt-link
+                </span></TableCell
+              >
+              <TableCell>{{ variant.inventoryQuantity }}</TableCell>
+              <TableCell
+                ><nuxt-link
                   :to="`/inventory/${variant.legacyResourceId}`"
                   class="bg-black text-white font-semibold p-2 rounded-lg mt-2 inline-block"
                 >
                   View
-                </nuxt-link>
-              </td>
-            </tr>
+                </nuxt-link></TableCell
+              >
+            </TableRow>
           </template>
         </template>
-      </tbody>
-    </table>
+      </TableBody>
+    </Table>
 
     <div class="flex items-center gap-5 my-5 justify-center">
       <nuxt-link
@@ -194,6 +164,15 @@
 </template>
 
 <script setup lang="ts">
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import axios from "axios";
 
 const route = useRoute();
