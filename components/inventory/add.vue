@@ -9,6 +9,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+const open = ref(false);
+
 const props = defineProps<{ variantId: string }>();
 const model = defineModel<any[]>();
 const form = ref<{
@@ -35,6 +37,8 @@ const handleSubmit = async () => {
       variantId: props.variantId,
     });
     if (model.value) model.value.push(createdBatch);
+    open.value = false;
+    form.value = { date: null, quantity: 0, batchId: "" };
     alert("Successfully created the batch.");
   } catch (error: any) {
     alert(error.message);
@@ -43,7 +47,7 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <Dialog>
+  <Dialog v-model:open="open">
     <DialogTrigger
       class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
       >Add Batch</DialogTrigger

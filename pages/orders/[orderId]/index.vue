@@ -1,34 +1,21 @@
 <template>
   <div class="" v-if="order">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-semibold">Orders: All locations</h1>
-      <div class="flex space-x-4">
-        <button class="bg-gray-200 py-2 px-4 rounded hover:bg-gray-300">
-          Export
-        </button>
-        <button class="bg-gray-200 py-2 px-4 rounded hover:bg-gray-300">
-          More actions
-        </button>
-        <nuxt-link
-          to="/create-order"
-          class="bg-black text-white py-2 px-4 rounded hover:bg-gray-800"
-        >
-          Create order
-        </nuxt-link>
-      </div>
-    </div>
-    <div class="bg-slate-200 h-fit flex gap-5 items-top w-full p-10">
-      <div class="bg-white border w-1/2 rounded-md p-2">
-        <div
-          class="p-2 text-white font-bold w-fit rounded-md capitalize"
+    <div class="flex justify-between items-center px-2">
+      <h1 class="text-2xl font-semibold">
+        Orders: All locations
+        <span
+          class="p-2 text-xs text-white font-bold w-fit rounded-md capitalize"
           :class="{
             'bg-[#28574e]': !!order.fulfillment_status,
             'bg-red-500': !order.fulfillment_status,
           }"
         >
           {{ order.fulfillment_status || "Unfulfilled" }}
-        </div>
-
+        </span>
+      </h1>
+    </div>
+    <div class="h-fit flex gap-5 items-top w-full">
+      <div class="w-1/2 rounded-md p-2">
         <div class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white">
           <h1 class="text-xl font-bold mb-2">Items ordered</h1>
           <template v-for="(item, index) in order.line_items">
@@ -97,62 +84,61 @@
           <img :src="prescriptionImage" alt="Prescription Image" />
         </div>
       </div>
-      <div class="bg-white border w-1/4 rounded-md p-2">
-        <div class="mt-3 rounded-lg bg-white space-y-11">
-          <div class="border-2 w-full border-gray-300 p-2 rounded">
-            <h3 class="text-xl font-semibold mb-4 text-gray-800">
-              Customer Details
-            </h3>
-            <div class="mb-4">
-              <p class="text-lg font-medium text-gray-800">
-                Name: {{ order.customer.first_name }}
-                {{ order.customer.last_name }}
-              </p>
-              <p class="text-gray-600">
-                Email:
-                <a
-                  href="mailto:{{ order.customer.email }}"
-                  class="text-blue-500 hover:underline"
-                  >{{ order.customer.email }}</a
-                >
-              </p>
-              <p class="text-gray-600">
-                Phone: {{ order.customer.phone || "N/A" }}
-              </p>
-              <p class="text-gray-600">
-                Account Status: {{ order.customer.state }}
-              </p>
-              <p class="text-gray-600">
-                Verified Email:
-                {{ order.customer.verified_email ? "Yes" : "No" }}
-              </p>
-            </div>
-          </div>
-
-          <div class="border-2 w-full border-gray-300 p-2 rounded">
-            <h4 class="text-lg font-semibold text-gray-700 mb-2">
-              Default Address
-            </h4>
-            <div class="text-gray-600">
-              <p>{{ order.customer.default_address.name }}</p>
-              <p>
-                {{ order.customer.default_address.address1
-                }}{{
-                  order.customer.default_address.address2
-                    ? ", " + order.customer.default_address.address2
-                    : ""
-                }}
-              </p>
-              <p>
-                {{ order.customer.default_address.city }},
-                {{ order.customer.default_address.province }} -
-                {{ order.customer.default_address.zip }}
-              </p>
-              <p>{{ order.customer.default_address.country }}</p>
-              <p>Phone: {{ order.customer.default_address.phone }}</p>
-            </div>
+      <div class="w-1/4 rounded-md px-2 py-5 flex flex-col gap-y-4">
+        <div class="border-2 w-full bg-white border-gray-300 p-2 rounded">
+          <h3 class="text-xl font-semibold mb-4 text-gray-800">
+            Customer Details
+          </h3>
+          <div class="mb-4">
+            <p class="text-lg font-medium text-gray-800">
+              Name: {{ order.customer.first_name }}
+              {{ order.customer.last_name }}
+            </p>
+            <p class="text-gray-600">
+              Email:
+              <a
+                href="mailto:{{ order.customer.email }}"
+                class="text-blue-500 hover:underline"
+                >{{ order.customer.email }}</a
+              >
+            </p>
+            <p class="text-gray-600">
+              Phone: {{ order.customer.phone || "N/A" }}
+            </p>
+            <p class="text-gray-600">
+              Account Status: {{ order.customer.state }}
+            </p>
+            <p class="text-gray-600">
+              Verified Email:
+              {{ order.customer.verified_email ? "Yes" : "No" }}
+            </p>
           </div>
         </div>
+
+        <div class="border-2 w-full bg-white border-gray-300 p-2 rounded">
+          <h4 class="text-lg font-semibold text-gray-700 mb-2">
+            Default Address
+          </h4>
+          <div class="text-gray-600">
+            <p>{{ order.customer.default_address.name }}</p>
+            <p>
+              {{ order.customer.default_address.address1
+              }}{{
+                order.customer.default_address.address2
+                  ? ", " + order.customer.default_address.address2
+                  : ""
+              }}
+            </p>
+            <p>
+              {{ order.customer.default_address.city }},
+              {{ order.customer.default_address.province }} -
+              {{ order.customer.default_address.zip }}
+            </p>
+            <p>{{ order.customer.default_address.country }}</p>
+            <p>Phone: {{ order.customer.default_address.phone }}</p>
+          </div>
+        </div>
+        <OrdersConfirmDialog :items="order.line_items" />
         <button
           @click="openDimensionDialog"
           :disabled="isSubmitting"
@@ -169,7 +155,6 @@
         </p>
       </div>
     </div>
-    <!-- {{ order }} -->
   </div>
   <div v-else>loading the data</div>
 

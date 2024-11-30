@@ -13,7 +13,7 @@
       <TableCaption>A list of all batches of {{ inventoryId }}.</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead class="w-[300px] lg:w-[500px]"> BarCode </TableHead>
+          <TableHead class="w-[300px] lg:w-[500px]">BarCode</TableHead>
           <TableHead>Created Date</TableHead>
           <TableHead>Expiry Date</TableHead>
           <TableHead>Quantity</TableHead>
@@ -26,8 +26,8 @@
             <svg
               :id="'barcode-' + batch.batchId"
               class="barcode max-w-full"
-            ></svg
-          ></TableCell>
+            ></svg>
+          </TableCell>
           <TableCell>{{
             new Date(batch.$createdAt).toLocaleDateString()
           }}</TableCell>
@@ -113,4 +113,12 @@ onMounted(async () => {
   await fetchBatches();
   generateBarcodes();
 });
+
+watch(
+  () => batches.value,
+  () => {
+    generateBarcodes();
+  },
+  { immediate: true, deep: true }
+);
 </script>
