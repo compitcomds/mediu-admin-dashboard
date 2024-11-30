@@ -22,7 +22,7 @@
             class="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-white hover:text-black rounded transition-colors"
           >
             <span class="flex items-center">
-              <i class="fas fa-box text-xl mr-3"></i> Orders
+              <i class="fas fa-boxes text-xl mr-3"></i> Orders
             </span>
             <span
               :class="{ 'rotate-180': dropdowns.orders }"
@@ -130,7 +130,7 @@
             to="/alert"
             class="flex items-center py-2 px-4 hover:bg-white hover:text-black rounded transition-colors"
           >
-            <i class="fas fa-alert text-xl mr-3"></i> Alert Users
+            <i class="fas fa-exclamation-circle text-xl mr-3"></i> Alert Users
           </nuxt-link>
         </li>
         <li class="mb-4">
@@ -147,7 +147,7 @@
             class="flex w-full items-center justify-between cursor-pointer py-2 px-4 hover:bg-white hover:text-black rounded transition-colors"
           >
             <span class="flex items-center">
-              <i class="fas fa-box text-xl mr-3"></i> Consultancy
+              <i class="fas fa-handshake text-xl mr-3"></i> Consultancy
             </span>
             <span
               :class="{ 'rotate-180': dropdowns.consultancy }"
@@ -190,7 +190,15 @@
             to="/guide"
             class="flex items-center py-2 px-4 hover:bg-white hover:text-black rounded transition-colors"
           >
-            <i class="fas fa-alert text-xl mr-3"></i> Guide
+            <i class="fas fa-book text-xl mr-3"></i> Guide
+          </nuxt-link>
+        </li>
+        <li class="mb-4">
+          <nuxt-link
+            to="/helpAndSupport"
+            class="flex items-center py-2 px-4 hover:bg-white hover:text-black rounded transition-colors"
+          >
+            <i class="fas fa-headset text-xl mr-3"></i> Help & Support
           </nuxt-link>
         </li>
       </ul>
