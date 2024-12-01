@@ -1,150 +1,136 @@
 <template>
-  <Dialog>
+  <Dialog v-model:open="open">
     <DialogTrigger
-      class="bg-black text-white text-xl sticky font-semibold rounded-md px-1 py-2 w-full disabled:animate-pulse disabled:cursor-not-allowed"
+      class="bg-black text-white text-xl font-semibold rounded-md px-1 py-2 w-full disabled:animate-pulse disabled:cursor-not-allowed"
     >
-      Actual Confirm
+      Confirm Order
     </DialogTrigger>
-    <DialogContent class="p-0 max-h-[90vh]">
+    <DialogContent class="p-0 max-h-[90vh] min-w-[62vw] overflow-clip">
       <DialogHeader class="p-6 pb-0">
         <DialogTitle>Confirm the order</DialogTitle>
+        {{ dimensionData }}
       </DialogHeader>
-      <ul
-        class="flex flex-col gap-y-5 px-6 overflow-y-auto max-h-[70vh] overflow-x-clip mb-10"
+      <div
+        class="overflow-y-auto max-h-[70vh] py-10 overflow-x-clip grid grid-cols-2 gap-5 min-w-fit"
       >
-        <li v-for="item in items" class="border-b border-gray-200 pb-4">
-          <h4 class="text-lg font-semibold text-gray-800">
-            {{ item.title }} #{{ item.sku }}
-          </h4>
-          <p class="text-gray-600">Quantity: {{ item.quantity }}</p>
-          <div v-for="index in item.quantity" class="mb-2">
-            <div class="grid grid-cols-6 gap-2">
-              <input
-                type="text"
-                :id="generateInputId(item.variant_id, index)"
-                placeholder="Batch Id"
-                class="mt-1 lg:max-w-sm col-span-5 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-                v-on:keydown.enter.prevent="
-                  verifyBatchId(item.variant_id, index)
-                "
-              />
-              <button
-                :id="generateBatchVerifyButtonId(item.variant_id, index)"
-                @click="verifyBatchId(item.variant_id, index)"
-                v-if="index > batchForm[item.variant_id]?.batches.length"
-                type="button"
-                class="bg-black text-white group disabled:cursor-not-allowed flex flex-wrap items-center gap-2 px-4 py-2 text-sm rounded-lg"
-              >
-                <span class="block group-disabled:hidden">Verify</span>
-                <Loader class="group-disabled:block hidden" />
-              </button>
-              <p v-else class="flex items-center text-emerald-800">
-                <CircleCheckBig />
-              </p>
-              <p
-                :id="generateBatchErrorId(item.variant_id, index)"
-                class="col-span-6 text-red-500 text-xs hidden"
-              >
-                Invalid Batch Id
-              </p>
-            </div>
-          </div>
-        </li>
-      </ul>
+        <OrdersBatchInput
+          :items="order.line_items"
+          @update:batch-data="updateBatchData"
+        />
+        <OrdersDimensionBox v-model:dimensions="dimensionData" />
+      </div>
+      <DialogFooter class="px-6"
+        ><button
+          @click="confirmAndCreateShiprocketOrder"
+          :disabled="isSubmitting"
+          class="bg-black text-white font-semibold text-lg rounded-md py-2 px-6 disabled:animate-pulse disabled:cursor-not-allowed"
+        >
+          <span v-if="!isSubmitting">Confirm order</span>
+          <span v-else class="flex items-center gap-2"
+            >Confirming... <Loader
+          /></span>
+        </button>
+      </DialogFooter>
     </DialogContent>
   </Dialog>
 </template>
 
 <script setup lang="ts">
-import { CircleCheckBig } from "lucide-vue-next";
+import axios from "axios";
+import createShiprocketOrder from "~/shiprocket/order/create";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
-import { getOldestAvailableBatch } from "~/appwrite/inventory/get-inventory";
+import decreaseBatchesQuantity from "~/appwrite/inventory/decrease-quantity";
 
-const { items } = defineProps<{
-  items: any[];
+const { order, orderId } = defineProps<{
+  order: any;
+  orderId: string;
 }>();
 
-const batchForm = ref<{
-  [key: string]: {
-    quantityRequired: number;
-    batches: string[];
-  };
-}>({});
+const emit = defineEmits<{
+  (event: "orderFulfilled"): void;
+}>();
 
-items.forEach((item) => {
-  batchForm.value[item.variant_id] = {
-    quantityRequired: item.quantity,
-    batches: [],
-  };
-});
+const open = ref(false);
+const isSubmitting = ref(false);
 
-const verifyBatchId = async (variantId: string, index: number) => {
-  const inputId = generateInputId(variantId, index);
-  const input = document.getElementById(inputId) as HTMLInputElement;
-  if (!input || !input.value) {
-    alert("Please enter a valid value.");
-    return;
-  }
-  const batchId = input.value;
-  const batches = await getOldestAvailableBatch(variantId);
-  console.log(batches);
-};
+const batchData = ref<
+  Record<string, { quantityRequired: number; batchesSatisfied: string[] }>
+>({});
 
-const generateInputId = (variantId: string, index: number) => {
-  return `batch-input-${variantId}-${index}`;
-};
+const dimensionData = ref({ length: 0, breadth: 0, height: 0, weight: 0 });
 
-const toggleVerifyButtonSubmitting = ({
-  variantId,
-  index,
-  show,
-}: {
+const updateBatchData = (data: {
   variantId: string;
-  index: number;
-  show?: boolean;
+  quantityRequired: number;
+  batchesSatisfied: string[];
 }) => {
-  const id = generateBatchVerifyButtonId(variantId, index);
-  const button = document.getElementById(id) as HTMLButtonElement;
-  if (!button) return;
-  const toShow = show !== undefined ? show : !button.disabled;
-  button.disabled = toShow;
+  batchData.value[data.variantId] = {
+    quantityRequired: data.quantityRequired,
+    batchesSatisfied: data.batchesSatisfied,
+  };
 };
 
-const generateBatchVerifyButtonId = (variantId: string, index: number) => {
-  return `batch-verify-button-${variantId}-${index}`;
-};
-
-const toggleBatchError = ({
-  variantId,
-  index,
-  message,
-  show,
-}: {
-  variantId: string;
-  index: number;
-  show?: boolean;
-  message?: string;
-}) => {
-  const id = generateBatchErrorId(variantId, index);
-  const element = document.getElementById(id);
-  if (!element) return;
-  const toShow =
-    show !== undefined ? show : element.classList.contains("hidden");
-  if (!toShow) {
-    element.classList.add("hidden");
-    return;
+const checkDimensions = () => {
+  const { breadth, height, length, weight } = dimensionData.value;
+  if (
+    typeof breadth !== "number" ||
+    typeof length !== "number" ||
+    typeof weight !== "number" ||
+    typeof height !== "number"
+  ) {
+    throw new Error(
+      "Length, breadth, height and weight must be decimal values. Please enter valid decimal values for each."
+    );
   }
-  element.classList.remove("hidden");
-  element.innerText = message || "Invalid batch id.";
+
+  if (breadth <= 0.5 || height <= 0.5 || length <= 0.5) {
+    throw new Error("Length, breadth and height must be greater than 0.5 cms");
+  }
+  if (weight <= 0) throw new Error("Weight must be greater than 0 kgs");
+  else if (weight >= 200) throw new Error("Weight must be less than 200 kgs");
 };
 
-const generateBatchErrorId = (variantId: string, index: number) => {
-  return `batch-error-${variantId}-${index}`;
+const checkBatches = () => {
+  for (const item of order.line_items) {
+    const data = batchData.value[item.variant_id];
+    if (!data || data.batchesSatisfied.length < data.quantityRequired)
+      throw new Error(
+        "Please provide all the batch id's to continue to shipment"
+      );
+  }
+};
+
+const createOrder = async () => {
+  await createShiprocketOrder(order, dimensionData.value);
+  const { data } = await axios.post(`/api/orders/${orderId}/fulfill`, {
+    headers: { "Content-Type": "application/json" },
+  });
+  if (data?.error) throw new Error(data.error);
+};
+
+const confirmAndCreateShiprocketOrder = async () => {
+  isSubmitting.value = true;
+  try {
+    checkBatches();
+    checkDimensions();
+    await createOrder();
+    await decreaseBatchesQuantity(batchData.value);
+    alert(
+      "Successfully created the order for shipment. Please proceed to shiprocket dashboard to continue the process of shipment."
+    );
+    emit("orderFulfilled");
+    open.value = false;
+  } catch (error: any) {
+    alert(error.message);
+  } finally {
+    isSubmitting.value = false;
+  }
 };
 </script>

@@ -45,10 +45,10 @@
           </div>
           <ul v-if="dropdowns.orders" class="ml-6 space-y-2 mt-2">
             <li>
-              <a
-                href="/orders"
+              <nuxt-link
+                to="/orders"
                 class="block py-1 px-2 hover:bg-white hover:text-black rounded transition-colors"
-                >All Orders</a
+                >All Orders</nuxt-link
               >
             </li>
             <li>
@@ -96,31 +96,24 @@
           </div>
           <ul v-if="dropdowns.products" class="ml-6 space-y-2 mt-2">
             <li>
-              <a
-                href="/product"
+              <nuxt-link
+                to="/product"
                 class="block py-1 px-2 hover:bg-white hover:text-black rounded transition-colors"
-                >All Products</a
+                >All Products</nuxt-link
               >
             </li>
             <li>
-              <a
-                href="/collections"
+              <nuxt-link
+                to="/collections"
                 class="block py-1 px-2 hover:bg-white hover:text-black rounded transition-colors"
-                >Collections</a
+                >Collections</nuxt-link
               >
             </li>
             <li>
-              <a
-                href="/inventory"
+              <nuxt-link
+                to="/inventory"
                 class="block py-1 px-2 hover:bg-white hover:text-black rounded transition-colors"
-                >Inventory</a
-              >
-            </li>
-            <li>
-              <a
-                href="/purchase"
-                class="block py-1 px-2 hover:bg-white hover:text-black rounded transition-colors"
-                >Purchase Orders</a
+                >Inventory</nuxt-link
               >
             </li>
           </ul>

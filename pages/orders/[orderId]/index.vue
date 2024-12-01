@@ -6,11 +6,11 @@
         <span
           class="p-2 text-xs text-white font-bold w-fit rounded-md capitalize"
           :class="{
-            'bg-[#28574e]': !!order.fulfillment_status,
-            'bg-red-500': !order.fulfillment_status,
+            'bg-[#28574e]': !!fulfillmentStatus,
+            'bg-red-500': !fulfillmentStatus,
           }"
         >
-          {{ order.fulfillment_status || "Unfulfilled" }}
+          {{ fulfillmentStatus || "Unfulfilled" }}
         </span>
       </h1>
     </div>
@@ -138,18 +138,15 @@
             <p>Phone: {{ order.customer.default_address.phone }}</p>
           </div>
         </div>
-        <OrdersConfirmDialog :items="order.line_items" />
-        <button
-          @click="openDimensionDialog"
-          :disabled="isSubmitting"
-          v-if="!order.fulfillment_status"
-          class="bg-black text-white text-xl sticky mt-12 font-semibold rounded-md p-1 w-full disabled:animate-pulse disabled:cursor-not-allowed"
-        >
-          {{ isSubmitting ? "Confirming the order..." : "Confirm" }}
-        </button>
+        <OrdersConfirmDialog
+          v-if="!fulfillmentStatus"
+          :order="order"
+          :orderId="orderId"
+          v-on:orderFulfilled="fulfillmentStatus = 'Confirmed'"
+        />
         <p
           v-else
-          class="bg-[#28574e] text-center text-white text-xl sticky mt-12 font-semibold rounded-md p-1 w-full"
+          class="bg-[#28574e] text-center text-white text-xl sticky font-semibold rounded-md p-1 w-full"
         >
           Confirmed
         </p>
@@ -157,50 +154,27 @@
     </div>
   </div>
   <div v-else>loading the data</div>
-
-  <ProductDimensionBox
-    :isOpen="isDialogOpen"
-    @submit="handleDimensionSubmit"
-    @close="closeDimensionDialog"
-  />
 </template>
 
 <script setup lang="ts">
 import axios from "axios";
-import createShiprocketOrder from "~/shiprocket/order/create";
 
 const route = useRoute();
+const orderId = Array.isArray(route.params.orderId)
+  ? route.params.orderId[0]
+  : route.params.orderId;
 const order = ref<any>(null);
 const error = ref<Array<any>>([]);
 const loading = ref(true);
 const prescriptionImage = ref(null);
-const isSubmitting = ref(false);
-const isDialogOpen = ref(false);
-const dimensions = ref({ length: 0, breadth: 0, height: 0, weight: 0 });
-
-const openDimensionDialog = () => {
-  isDialogOpen.value = true;
-};
-
-const closeDimensionDialog = () => {
-  isDialogOpen.value = false;
-};
-
-const handleDimensionSubmit = (data: any) => {
-  dimensions.value = data;
-  closeDimensionDialog();
-  confirmOrder();
-};
+const fulfillmentStatus = ref<string | null>("");
 
 onMounted(async () => {
-  const orderId = route.params.orderId;
-
   try {
-    const response = await fetch(`/api/orders/${orderId}`);
-    const data = await response.json();
-
-    if (response.ok) {
+    const { data } = await axios.get(`/api/orders/${orderId}`);
+    if (data.order) {
       order.value = data.order;
+      fulfillmentStatus.value = data.order.fulfillment_status;
       prescriptionImage.value =
         data.order?.metafields?.find(
           (field: any) => field.key === "prescriptionUrl"
@@ -214,28 +188,6 @@ onMounted(async () => {
     loading.value = false;
   }
 });
-
-const confirmOrder = async () => {
-  isSubmitting.value = true;
-  try {
-    const orderId = route.params.orderId;
-    await createShiprocketOrder(order.value, dimensions.value);
-
-    const { data } = await axios.post(`/api/orders/${orderId}/fulfill`, {
-      headers: { "Content-Type": "application/json" },
-    });
-    if (data?.error) {
-      alert(data.error);
-    } else {
-      alert("Fulfilled the product");
-      order.value.fulfillment_status = data.status;
-    }
-  } catch (error: any) {
-    alert(error.message);
-  } finally {
-    isSubmitting.value = false;
-  }
-};
 </script>
 
 <style scoped>
