@@ -10,21 +10,24 @@
           id="product-search"
           type="text"
           placeholder="Searching all products"
-          class="bg-white px-4 border focus:outline text-sm py-2 w-48 lg:w-64"
+          class="bg-white px-4 pl-7 border focus:outline text-sm py-2 w-48 lg:w-64"
           @input="performSearch"
         />
         <Search
-          class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500"
+          class="absolute left-2 top-1/2 w-4 -translate-y-1/2 text-gray-500"
         />
+        <button
+          @click="clearSearch"
+          class="ml-2 absolute top-1/2 -translate-y-1/2 right-2 text-gray-500 hover:text-black"
+        >
+          <X class="w-5" />
+        </button>
       </div>
-      <button @click="clearSearch" class="ml-2 text-gray-500 hover:text-black">
-        Cancel
-      </button>
     </div>
     <button
       v-else
       @click="toggleSearch"
-      class="text-gray-500 hover:text-black focus:outline-none bg-slate-200 p-2 rounded-lg"
+      class="text-gray-500 hover:text-black focus:outline-none bg-gray-200 p-2 rounded-lg"
     >
       <Search />
     </button>
@@ -32,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { Search } from "lucide-vue-next";
+import { Search, X } from "lucide-vue-next";
 
 const props = defineProps<{
   pathToRedirect?: string;
