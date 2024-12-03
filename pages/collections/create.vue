@@ -23,29 +23,7 @@
         ></textarea>
       </div>
       <div class="mb-6">
-        <!-- Label -->
-        <label class="block text-sm font-semibold text-gray-800 mb-2"
-          >Select Products</label
-        >
-
-        <!-- Product List -->
-        <div class="space-y-2">
-          <div
-            v-for="product in products"
-            :key="product.id"
-            class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition duration-150 ease-in-out"
-          >
-            <!-- Checkbox -->
-            <input
-              type="checkbox"
-              :value="{ product_id: product.id }"
-              v-model="newCollection.collects"
-              class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-            />
-            <!-- Product Title -->
-            <span class="ml-3 text-gray-700">{{ product.title }}</span>
-          </div>
-        </div>
+        <CollectionProductSelect v-model:products="newCollection.collects" />
       </div>
     </div>
     <div class="lg:w-full lg:max-w-xs">
@@ -75,7 +53,6 @@
 import axios from "axios";
 import Switch from "~/components/ui/switch/Switch.vue";
 
-const products = ref<any[]>([]);
 const newCollection = ref({
   title: "",
   body_html: "",
@@ -89,10 +66,6 @@ const isSubmitting = ref(false);
 
 const router = useRouter();
 
-onMounted(async () => {
-  await fetchProducts();
-});
-
 const toggleBrandCollection = () => {
   newCollection.value.metafields.isBrandCollection =
     !newCollection.value.metafields.isBrandCollection;
@@ -101,15 +74,6 @@ const toggleBrandCollection = () => {
 const handleImageUpdate = (image: File) => {
   collectionImage.value = image;
 };
-
-async function fetchProducts() {
-  try {
-    const response = await axios.get("/api/products");
-    products.value = response.data.products; // Assuming API returns a products array
-  } catch (error) {
-    console.error("Error fetching products:", error);
-  }
-}
 
 async function createCollection() {
   isSubmitting.value = true;
