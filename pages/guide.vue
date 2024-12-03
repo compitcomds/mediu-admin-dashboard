@@ -50,7 +50,10 @@ export default {
         { url: 'https://www.youtube.com/embed/64j8oA_reCQ?si=spzW4bJIBQtQUTtC', title: 'Create Collection', thumbnail: 'https://img.youtube.com/vi/64j8oA_reCQ/hqdefault.jpg' },
         { url: 'https://www.youtube.com/embed/zx-054RK_wA?si=F_OuoGrpBTWPTmjj', title: 'Add Products', thumbnail: 'https://img.youtube.com/vi/zx-054RK_wA/hqdefault.jpg' },
         { url: 'https://www.youtube.com/embed/bmIFfbFHs9k?si=DeVlTJI6K0rtLH6h', title: 'Active Products', thumbnail: 'https://img.youtube.com/vi/bmIFfbFHs9k/hqdefault.jpg' },
-        { url: 'https://www.youtube.com/embed/dVaTI17eEtg?si=5JcJ0nQjKFlQeHjE', title: 'Confirm Order Shipment', thumbnail: 'https://img.youtube.com/vi/dVaTI17eEtg/hqdefault.jpg' }
+        { url: 'https://www.youtube.com/embed/dVaTI17eEtg?si=5JcJ0nQjKFlQeHjE', title: 'Confirm Order Shipment', thumbnail: 'https://img.youtube.com/vi/dVaTI17eEtg/hqdefault.jpg' },
+        { url: 'https://www.youtube.com/embed/z9q6fBhZujY?si=cB7lUlCB6ewV_Zzg', title: 'Manage Inventory', thumbnail: 'https://img.youtube.com/vi/z9q6fBhZujY/hqdefault.jpg' },
+        { url: 'https://www.youtube.com/embed/YedIr2hKbfw?si=1yScDtvC4fSqXreB', title: 'Product Options And Varients', thumbnail: 'https://img.youtube.com/vi/YedIr2hKbfw/hqdefault.jpg' },
+
       ],
       isModalOpen: false,
       currentVideoUrl: ''
