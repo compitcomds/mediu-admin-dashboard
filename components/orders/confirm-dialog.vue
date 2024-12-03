@@ -8,7 +8,6 @@
     <DialogContent class="p-0 max-h-[90vh] min-w-[62vw] overflow-clip">
       <DialogHeader class="p-6 pb-0">
         <DialogTitle>Confirm the order</DialogTitle>
-        {{ dimensionData }}
       </DialogHeader>
       <div
         class="overflow-y-auto max-h-[70vh] py-10 overflow-x-clip grid grid-cols-2 gap-5 min-w-fit"
