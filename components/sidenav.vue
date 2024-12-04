@@ -1,8 +1,8 @@
 <template>
   <aside
-    class="w-64 bg-[#238878] text-white p-6 fixed inset-y-0 left-0 top-16 hidden lg:block shadow-lg"
+    class="w-64 bg-[#238878] text-white p-6 fixed inset-y-0 left-0 top-16 hidden lg:block shadow-lg overflow-y-auto"
   >
-    <h1 class="text-2xl font-bold my-4 text-center text-white">
+    <h1 class="text-xl font-bold my-4 text-center text-white">
       Admin Dashboard
     </h1>
     <div class="border-t border-white my-4"></div>
