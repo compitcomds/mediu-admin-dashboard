@@ -5,7 +5,7 @@ const SHOPIFY_GRAPHQL_API = `https://${config.shopifyDomain}/admin/api/2024-10/g
 const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
 
 const getCollectionQuery = `
-query getCollectionQuery($handle: String!) {
+query getCollectionQuery($handle: String!, $after: String) {
   collectionByHandle(handle: $handle) {
     id
     title
@@ -18,6 +18,12 @@ query getCollectionQuery($handle: String!) {
       altText
       height
       width
+    }
+    products(first: 100, after: $after) {
+      nodes {
+        title
+        product_id: legacyResourceId
+      }
     }
     isBrandCollection: metafield(key: "isBrandCollection", namespace: "custom") {
       value
@@ -58,6 +64,7 @@ export default defineEventHandler(async (event) => {
       },
       productsCount: collection.productsCount?.count,
       id: collection.id.replace("gid://shopify/Collection/", ""),
+      products: collection.products.nodes,
     };
   }
   throw new Error("Collection with provided slug could not be found.");

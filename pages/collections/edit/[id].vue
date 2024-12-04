@@ -16,8 +16,8 @@
       @submit.prevent="updateCollection"
       class="flex flex-col lg:flex-row gap-5"
     >
-      <div class="flex-1">
-        <div class="mb-4">
+      <div class="flex-1 flex flex-col gap-y-4">
+        <div>
           <label class="block text-gray-700">Title</label>
           <input
             type="text"
@@ -26,7 +26,7 @@
             required
           />
         </div>
-        <div class="mb-4">
+        <div>
           <label class="block text-gray-700">Description</label>
           <textarea
             v-model="collection.descriptionHtml"
@@ -34,6 +34,12 @@
             required
             rows="10"
           ></textarea>
+        </div>
+        <div>
+          <CollectionProductSelect
+            :hide-all-products-list="true"
+            v-model:products="collection.products"
+          />
         </div>
       </div>
       <div class="lg:w-full lg:max-w-xs">
@@ -108,6 +114,7 @@ const collection = ref<{
   descriptionHtml: string;
   id: string;
   metafields: Record<string, any>;
+  products: Array<{ product_id: string }>;
 } | null>(null);
 
 const handleImageUpdate = (image: File) => {
@@ -118,6 +125,7 @@ const fetchCollection = async () => {
   error.value = null;
   try {
     const { data } = await axios.get(`/api/collections/${handle}`);
+    console.log(data);
     collection.value = { ...data };
     fetchedCollection.value = { ...data };
     console.log(data);

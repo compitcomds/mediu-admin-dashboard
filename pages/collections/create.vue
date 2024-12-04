@@ -53,7 +53,12 @@
 import axios from "axios";
 import Switch from "~/components/ui/switch/Switch.vue";
 
-const newCollection = ref({
+const newCollection = ref<{
+  title: string;
+  body_html: string;
+  collects: any[];
+  metafields: { isBrandCollection: boolean };
+}>({
   title: "",
   body_html: "",
   collects: [],
@@ -85,30 +90,16 @@ async function createCollection() {
       };
     }
 
-    const response = await axios.post("/api/collections/create", {
+    const { data } = await axios.post("/api/collections/create", {
       ...newCollection.value,
       image,
+      collects: newCollection.value.collects.map((collect) => ({
+        product_id: collect.product_id,
+      })),
     });
 
-    if (
-      response.status === 200 &&
-      response.data &&
-      response.data.custom_collection
-    ) {
-      alert("Successfully created the collection");
-
-      newCollection.value = {
-        title: "",
-        body_html: "",
-        collects: [],
-        metafields: { isBrandCollection: false },
-      };
-      collectionImage.value = null;
-      router.push("/collections");
-    } else {
-      alert("Successfully created the collection.");
-      router.push("/collections");
-    }
+    alert("Successfully created the collection.");
+    router.push(`/collections/edit/${data.handle}`);
   } catch (error: any) {
     alert("Failed to create collection: " + (error.message || "Unknown error"));
   } finally {
