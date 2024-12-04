@@ -21,6 +21,46 @@
       />
       <span class="ml-3 text-gray-700">{{ product.title }}</span>
     </div>
+    <div class="flex items-center gap-5 my-5 justify-center">
+      <nuxt-link
+        v-if="pageInfo.hasPreviousPage"
+        :to="{
+          query: {
+            ...route.query,
+            before: pageInfo.startCursor || '',
+            after: undefined,
+          },
+        }"
+        class="py-3 px-8 rounded-lg hover:bg-gray-200"
+        >Previous</nuxt-link
+      >
+      <button
+        v-else
+        class="py-3 px-8 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
+        disabled
+      >
+        Previous
+      </button>
+      <nuxt-link
+        class="py-3 px-8 rounded-lg hover:bg-gray-200"
+        v-if="pageInfo.hasNextPage"
+        :to="{
+          query: {
+            ...route.query,
+            before: undefined,
+            after: pageInfo.endCursor || '',
+          },
+        }"
+        >Next</nuxt-link
+      >
+      <button
+        v-else
+        class="py-3 px-8 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
+        disabled
+      >
+        Next
+      </button>
+    </div>
   </div>
 </template>
 
@@ -30,6 +70,17 @@ import axios from "axios";
 const products = ref<any[]>([]);
 const model = defineModel<any[]>("products");
 const route = useRoute();
+const pageInfo = ref<{
+  endCursor: string;
+  hasNextPage: boolean;
+  startCursor: string;
+  hasPreviousPage: boolean;
+}>({
+  endCursor: "",
+  startCursor: "",
+  hasNextPage: false,
+  hasPreviousPage: false,
+});
 
 const fetchProducts = async ({
   after,
@@ -47,7 +98,7 @@ const fetchProducts = async ({
       }`
     );
     products.value = data.products;
-    // pageInfo.value = data.pageInfo;
+    pageInfo.value = data.pageInfo;
   } catch (e: any) {
     alert(e.message);
   }
