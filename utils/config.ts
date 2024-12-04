@@ -12,6 +12,10 @@ const config = {
     .VITE_APPWRITE_CONSULTANCY_COLLECTION_ID,
   appwriteInventoryCollectionId: import.meta.env
     .VITE_APPWRITE_INVENTORY_COLLECTION_ID,
+  appwriteHelpAndSupportCollectionId: import.meta.env
+    .VITE_APPWRITE_HELP_AND_SUPPORT_COLLECTION_ID,
+  appwriteHelpAndSupportBucketId: import.meta.env
+    .VITE_APPWRITE_HELP_AND_SUPPORT_BUCKET_ID,
 };
 
 export default config;

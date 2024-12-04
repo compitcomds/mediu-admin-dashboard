@@ -188,7 +188,7 @@
         </li>
         <li class="mb-4">
           <nuxt-link
-            to="/helpAndSupport"
+            to="/help-and-support"
             class="flex items-center py-2 px-4 hover:bg-white hover:text-black rounded transition-colors"
           >
             <i class="fas fa-headset text-xl mr-3"></i> Help & Support
