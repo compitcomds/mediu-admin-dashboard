@@ -9,63 +9,20 @@
     <nav>
       <ul>
         <li class="mb-4">
-          <a
-            href="/"
+          <nuxt-link
+            to="/"
             class="flex items-center py-2 px-4 hover:bg-white hover:text-black rounded transition-colors"
           >
             <i class="fas fa-home text-xl mr-3"></i> Home
-          </a>
+          </nuxt-link>
         </li>
         <li class="mb-4">
-          <div
-            @click="toggleDropdown('orders')"
-            class="flex items-center justify-between cursor-pointer py-2 px-4 hover:bg-white hover:text-black rounded transition-colors"
+          <nuxt-link
+            to="/orders"
+            class="flex items-center py-2 px-4 hover:bg-white hover:text-black rounded transition-colors"
           >
-            <span class="flex items-center">
-              <i class="fas fa-boxes text-xl mr-3"></i> Orders
-            </span>
-            <span
-              :class="{ 'rotate-180': dropdowns.orders }"
-              class="transition-transform transform"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-chevron-down"
-              >
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </span>
-          </div>
-          <ul v-if="dropdowns.orders" class="ml-6 space-y-2 mt-2">
-            <li>
-              <nuxt-link
-                to="/orders"
-                class="block py-1 px-2 hover:bg-white hover:text-black rounded transition-colors"
-                >All Orders</nuxt-link
-              >
-            </li>
-            <li>
-              <a
-                href="/drafts"
-                class="block py-1 px-2 hover:bg-white hover:text-black rounded transition-colors"
-                >Drafts</a
-              >
-            </li>
-            <li>
-              <a
-                href="/abandoned-checkouts"
-                class="block py-1 px-2 hover:bg-white hover:text-black rounded transition-colors"
-                >Abandoned Checkouts</a
-              >
-            </li>
-          </ul>
+            <i class="fas fa-boxes text-xl mr-3"></i> Orders
+          </nuxt-link>
         </li>
         <li class="mb-4">
           <div
@@ -199,28 +156,21 @@
   </aside>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      dropdowns: {
-        orders: false,
-        products: false,
-        customers: false,
-        content: false,
-        analytics: false,
-        marketing: false,
-        consultancy: false,
-        discounts: false,
-      },
-    };
-  },
-  methods: {
-    toggleDropdown(dropdown) {
-      this.dropdowns[dropdown] = !this.dropdowns[dropdown];
-    },
-  },
-};
+<script setup lang="ts">
+const dropdowns = ref({
+  orders: false,
+  products: false,
+  customers: false,
+  content: false,
+  analytics: false,
+  marketing: false,
+  consultancy: false,
+  discounts: false,
+});
+
+function toggleDropdown(dropdown: keyof typeof dropdowns.value) {
+  dropdowns.value[dropdown] = !dropdowns.value[dropdown];
+}
 </script>
 
 <style scoped>
