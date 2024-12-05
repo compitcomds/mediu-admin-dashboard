@@ -117,16 +117,16 @@
 
 <script setup lang="ts">
 import axios from "axios";
-import { formatDate } from "date-fns";
 
 const availableFilterList = [
   "all",
   "fulfilled",
   "unfulfilled",
   "unpaid",
+  "paid",
 ] as const;
-const activeFilter = ref<(typeof availableFilterList)[number]>("all");
 
+const activeFilter = ref<(typeof availableFilterList)[number]>("all");
 const orders = ref<any[]>([]);
 const error = ref<string | null>(null);
 
@@ -155,6 +155,7 @@ const checkOrder = (order: any): boolean => {
     return true;
 
   if (active === "unpaid" && order.financial_status !== "paid") return true;
+  if (active === "paid" && order.financial_status === "paid") return true;
   return false;
 };
 </script>
