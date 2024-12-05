@@ -3,12 +3,17 @@
     <DialogTrigger class="bg-black text-white px-6 py-2 rounded-lg">
       View Data
     </DialogTrigger>
-    <DialogContent>
+    <DialogContent class="max-h-[90vh] overflow-y-auto">
       <DialogHeader>
         <DialogTitle>People to Notify</DialogTitle>
         <DialogDescription>
           <p>Product Id: {{ productId }}</p>
-          <p>Product Title: {{ productTitle }}</p>
+          <p class="flex items-start gap-1">
+            Product Title: {{ productTitle }}
+            <nuxt-link :to="`/product/edit/${productId}`" target="_blank"
+              ><ExternalLink :size="14"
+            /></nuxt-link>
+          </p>
         </DialogDescription>
       </DialogHeader>
       <Table>
@@ -39,6 +44,7 @@
 </template>
 
 <script setup lang="ts">
+import { ExternalLink } from "lucide-vue-next";
 import {
   Table,
   TableBody,

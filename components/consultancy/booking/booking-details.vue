@@ -82,12 +82,12 @@ const { document } = defineProps<{
 const isSubmitting = ref(false);
 const showingDate = ref<string | Date | null>(document.bookingTime);
 const date = ref<Date | null>(null);
-
 const onSubmit = async () => {
   if (!date.value) {
     alert("Please select a booking date and time.");
     return;
   }
+
   isSubmitting.value = true;
   try {
     await updateConsultancyBooking(document.$id, date.value);

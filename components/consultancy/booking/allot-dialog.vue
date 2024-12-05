@@ -18,10 +18,8 @@ const { document } = defineProps<{
   <Dialog>
     <DialogTrigger
       class="bg-black text-white px-6 py-2 font-semibold rounded-lg"
-      >{{
-        !!document.bookingTime ? "View Details" : "Allot Booking"
-      }}</DialogTrigger
-    >
+      >{{ !!document.bookingTime ? "View Details" : "Allot Booking" }}
+    </DialogTrigger>
     <DialogContent class="min-w-fit max-w-[90%] p-0 max-h-[90vh]">
       <DialogHeader class="p-6 pb-0">
         <DialogTitle>Alott Booking #{{ document.$id }}</DialogTitle>
@@ -31,11 +29,12 @@ const { document } = defineProps<{
       >
         <ConsultancyBookingCustomerDetails :document="document" />
         <div class="flex-1">
-          <ConsultancyBookingConsultancyDetails :document="document" />
+          <ConsultancyBookingConsultancyDetails
+            :consultancy="document.consultancy[0]"
+          />
           <ConsultancyBookingDetails :document="document" />
         </div>
       </div>
-      <DialogFooter class="p-6 pt-0"> </DialogFooter>
     </DialogContent>
   </Dialog>
 </template>

@@ -1,17 +1,17 @@
 <template>
   <h2 class="min-w-fit mb-3 font-bold text-nowrap overflow-x-hidden">
-    Consultancy Booked #{{ document.consultancy[0].$id }}
+    Consultancy Booked #{{ consultancy?.$id || "n/a" }}
   </h2>
   <div class="mb-5">
-    <p>Title: {{ document.consultancy[0].title }}</p>
-    <p>Price: {{ document.consultancy[0].price }}</p>
-    <p>Description: {{ document.consultancy[0].descriptionHtml }}</p>
+    <p>Title: {{ consultancy?.title || "n/a" }}</p>
+    <p>Price: {{ consultancy?.price || "n/a" }}</p>
+    <p>Description: {{ consultancy?.descriptionHtml || "n/a" }}</p>
     <div>
       Image:
       <img
-        v-if="document.consultancy[0].image"
-        :src="document.consultancy[0].image"
-        alt=""
+        v-if="consultancy?.image"
+        :src="consultancy.image"
+        :alt="`Consultancy Image | ${consultancy?.title}`"
       />
       <p v-else class="text-xs text-yellow-500">
         Consultancy does not have any image.
@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import type { Models } from "appwrite";
 
-const { document } = defineProps<{
-  document: Models.Document;
+const { consultancy } = defineProps<{
+  consultancy: Models.Document | null | undefined;
 }>();
 </script>
