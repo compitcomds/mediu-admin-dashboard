@@ -84,12 +84,12 @@
           </nuxt-link>
         </li>
         <li class="mb-4">
-          <a
-            href="/customers"
+          <nuxt-link
+            to="/customers"
             class="flex items-center py-2 px-4 hover:bg-white hover:text-black rounded transition-colors"
           >
             <i class="fas fa-users text-xl mr-3"></i> Customers
-          </a>
+          </nuxt-link>
         </li>
         <li class="mb-4">
           <button
