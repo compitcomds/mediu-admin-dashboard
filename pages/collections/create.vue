@@ -99,7 +99,7 @@ async function createCollection() {
     });
 
     alert("Successfully created the collection.");
-    router.push(`/collections/edit/${data.handle}`);
+    router.replace(`/collections/edit/${data.handle}`);
   } catch (error: any) {
     alert("Failed to create collection: " + (error.message || "Unknown error"));
   } finally {

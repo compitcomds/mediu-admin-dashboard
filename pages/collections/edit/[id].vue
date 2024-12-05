@@ -1,5 +1,7 @@
 <template>
-  <h2 class="text-xl lg:text-3xl font-bold mb-4">Edit Collection</h2>
+  <h2 class="text-xl lg:text-3xl font-bold mb-4">
+    Edit Collection #{{ collection?.id || handle }}
+  </h2>
 
   <div v-if="error" class="text-center">
     <p class="text-red-500 mb-2">{{ error }}</p>

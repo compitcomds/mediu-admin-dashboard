@@ -1,28 +1,15 @@
 <template>
-  <div class="flex gap-3 items-center justify-between">
+  <div class="flex mb-2 gap-3 items-center justify-between">
     <h2 class="block text-sm font-semibold text-gray-800">Select Products</h2>
     <div v-if="!hideAllProductsList" class="flex gap-2 items-center">
       <ProductSearch path-to-redirect="/collections/create" />
     </div>
   </div>
-  <div class="flex flex-col gap-y-2 mb-8">
-    <div>
-      <p class="text-xs">Selected products: {{ model?.length || 0 }}</p>
-    </div>
-    <template v-for="product in model" :key="product.product_id">
-      <div
-        class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition duration-150 ease-in-out"
-      >
-        <input
-          type="checkbox"
-          :disabled="!!props.hideAllProductsList"
-          :value="{ product_id: product.product_id, title: product.title }"
-          v-model="model"
-          class="w-4 h-4 text-blue-600 disabled:cursor-not-allowed border-gray-300 rounded focus:ring-blue-500"
-        />
-        <span class="ml-3 text-gray-700">{{ product.title }}</span>
-      </div>
-    </template>
+  <div class="mb-8">
+    <CollectionSelectedProducts
+      v-model:products="model"
+      :hide-all-products-list="props.hideAllProductsList"
+    />
   </div>
   <div v-if="!props.hideAllProductsList" class="flex flex-col gap-y-2">
     <div>

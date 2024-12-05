@@ -4,88 +4,67 @@
   >
     <h1 class="text-xl md:text-2xl font-semibold">Collections</h1>
     <nuxt-link
-      class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
+      class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4 hover:bg-black/80"
       to="collections/create"
       >Create New Collection</nuxt-link
     >
   </div>
 
-  <!-- Responsive Table for Large Screens -->
-  <div class="overflow-x-auto bg-white shadow-md rounded-lg w-full h-full">
-    <table class="min-w-full table-auto divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            <input type="checkbox" />
-          </th>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Image
-          </th>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Title
-          </th>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Description
-          </th>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            *
-          </th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <tr
-          v-for="collection in collections"
-          :key="collection.id"
-          class="hover:bg-gray-100"
+  <Table>
+    <TableCaption>A list of all the collections.</TableCaption>
+    <TableHeader>
+      <TableRow>
+        <TableHead class="w-[100px]"> Image </TableHead>
+        <TableHead>Title</TableHead>
+        <TableHead>Description</TableHead>
+        <TableHead> * </TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      <TableRow v-for="collection in collections" :key="collection.id">
+        <TableCell>
+          <nuxt-link :to="`/collections/edit/${collection.handle}`">
+            <img
+              :src="
+                collection.image?.src ||
+                'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'
+              "
+              alt="Collection Image"
+              class="w-16 h-16 mr-4 rounded"
+            />
+          </nuxt-link>
+        </TableCell>
+        <TableCell
+          ><nuxt-link
+            :to="`/collections/edit/${collection.handle}`"
+            class="hover:underline"
+            >{{ collection.title }}</nuxt-link
+          ></TableCell
         >
-          <td class="px-4 py-4 whitespace-nowrap">
-            <input type="checkbox" />
-          </td>
-          <td class="px-4 py-4 break-words whitespace-normal">
-            <nuxt-link :to="`/collections/edit/${collection.handle}`">
-              <img
-                :src="
-                  collection.image?.src ||
-                  'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'
-                "
-                alt="Collection Image"
-                class="w-16 h-16 mr-4 rounded"
-              />
-            </nuxt-link>
-          </td>
-          <td class="px-4 py-4 break-words whitespace-normal">
-            <nuxt-link :to="`/collections/edit/${collection.handle}`">{{
-              collection.title
-            }}</nuxt-link>
-          </td>
-          <td class="px-4 py-4 break-words whitespace-normal">
-            {{ collection.body_html }}
-          </td>
-          <td>
-            <nuxt-link
-              :to="`/collections/edit/${collection.handle}`"
-              class="bg-black text-white rounded-lg px-4 py-2"
-              >Edit</nuxt-link
-            >
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+        <TableCell>{{ collection.body_html }}</TableCell>
+        <TableCell>
+          <nuxt-link
+            :to="`/collections/edit/${collection.handle}`"
+            class="bg-black text-white rounded-lg px-4 py-2 hover:bg-black/80"
+            >Edit</nuxt-link
+          >
+        </TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
 </template>
 
 <script setup lang="ts">
 import axios from "axios";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const collections = ref<
   {
@@ -112,7 +91,6 @@ const fetchCollections = async () => {
 </script>
 
 <style scoped>
-/* Responsive grid layout for small and medium screens */
 .grid {
   display: grid;
   grid-template-columns: 1fr;

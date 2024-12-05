@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center gap-3 justify-between mt-10">
     <h2 class="text-3xl font-semibold flex-1 w-full mb-6">
-      Your Submitted Tickets
+      Your Raised Tickets
     </h2>
     <HelpAndSupportTickerGenerator />
   </div>
