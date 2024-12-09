@@ -1,8 +1,8 @@
 <template>
-  <div class="flex space-x-2 lg:space-x-4 items-center">
+  <div class="flex items-center">
     <div
       v-if="searchVisible || searchQuery"
-      class="flex items-center bg-gray-100 rounded-lg px-4 py-1"
+      class="flex items-center bg-gray-100 rounded-lg"
     >
       <div class="relative">
         <input
@@ -10,7 +10,7 @@
           id="product-search"
           type="text"
           placeholder="Searching all products"
-          class="bg-white px-4 pl-7 border focus:outline text-sm py-2 w-48 lg:w-64"
+          class="bg-white px-4 pl-7 border focus:outline text-sm py-2 w-24 md:w-48 lg:w-64"
           @input="performSearch"
         />
         <Search

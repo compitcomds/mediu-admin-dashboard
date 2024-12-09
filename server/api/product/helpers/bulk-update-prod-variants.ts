@@ -5,8 +5,8 @@ const SHOPIFY_GRAPHQL_API = `https://${config.shopifyDomain}/admin/api/2024-10/g
 const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
 
 const bulkpdateProductVariantsMutation = `
-mutation bulkUpdateProductVariants($productId: ID!, $variants: [ProductVariantsBulkInput!]) {
-  productVariantsBulkUpdate(productId: $productId, variants: $variants) {
+mutation bulkUpdateProductVariants($productId: ID!, $variants: [ProductVariantsBulkInput!]!) {
+  productVariantsBulkUpdate(productId: $productId, variants: $variants, allowPartialUpdates: true) {
     product {
       id
     }
@@ -14,13 +14,23 @@ mutation bulkUpdateProductVariants($productId: ID!, $variants: [ProductVariantsB
 }
 `;
 
-export default async function bulkpdateProductVariants(id: string) {
+export default async function bulkpdateProductVariants(
+  productId: string,
+  variants: Array<{
+    id: string;
+    inventoryItem?: {
+      harmonizedSystemCode?: string;
+      countryCodeOfOrigin?: "IN";
+    };
+  }>
+) {
   const { data } = await axios.post(
     SHOPIFY_GRAPHQL_API,
     {
       query: bulkpdateProductVariantsMutation,
       variables: {
-        productId: `gid://shopify/Product/${id}`,
+        productId,
+        variants,
       },
     },
     {

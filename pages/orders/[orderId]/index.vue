@@ -153,7 +153,9 @@
       </div>
     </div>
   </div>
-  <div v-else>loading the data</div>
+  <div v-else class="flex items-center justify-center gap-2">
+    <Loader /> Loading the data
+  </div>
 </template>
 
 <script setup lang="ts">

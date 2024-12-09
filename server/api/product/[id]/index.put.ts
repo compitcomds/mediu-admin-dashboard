@@ -1,11 +1,6 @@
-import axios from "axios";
-import config from "~/utils/config";
 import { DEFINED_METAFIELDS } from "../add/index.post";
 import setProduct from "./set";
-
-const PRODUCTION_API = process.env.VITE_PRODUCTION_API;
-const SHOPIFY_API = `https://${config.shopifyDomain}/admin/api/2024-10/products`;
-const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
+import bulkpdateProductVariants from "../helpers/bulk-update-prod-variants";
 
 export default defineEventHandler(async (event) => {
   const productId = event.context.params?.id;
@@ -42,18 +37,17 @@ export default defineEventHandler(async (event) => {
     };
 
     const updatedProduct = await setProduct(productId, product);
-    // console.log(updatedProduct.variants.nodes);
-    // const hsnPromises = [];
-    // for (const variant of updatedProduct.variants.nodes) {
-    //   const promise = axios.put(
-    //     `${PRODUCTION_API}/api/product/update-hsn`,
-    //     {
-    //       hsnCode: body.hsnCode,
-    //       inventoryItemId: variant.inventoryItem.id,
-    //     }
-    //   );
-    //   if (hsnUpdateResponse.error) errors.push(hsnUpdateResponse.error);
-    // }
+
+    await bulkpdateProductVariants(
+      `gid://shopify/Product/${productId}`,
+      updatedProduct.variants.nodes.map((variant: any) => ({
+        id: variant.id,
+        inventoryItem: {
+          harmonizedSystemCode: body.hsnCode,
+          countryCodeOfOrigin: "IN",
+        },
+      }))
+    );
 
     return { product: updatedProduct, errors };
   } catch (error: any) {

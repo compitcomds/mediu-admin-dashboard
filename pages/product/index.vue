@@ -1,22 +1,20 @@
 <template>
-  <div
-    class="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0"
-  >
+  <div class="flex justify-between items-center mb-4">
     <h1 class="text-xl md:text-2xl font-semibold">Products</h1>
-    <div class="flex flex-wrap space-x-2">
+    <div class="flex flex-wrap gap-x-2">
       <ProductSearch />
       <div>
         <nuxt-link
-          class="block bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
+          class="flex items-center gap-2 hover:bg-black/70 bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
           to="/product/add"
         >
-          Add New Product
+          <span class="md:block hidden">Add New Product</span>
+          <span class=""><PlusCircle /></span>
         </nuxt-link>
       </div>
     </div>
   </div>
 
-  <!-- Responsive Product Cards for Small and Medium Screens -->
   <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:hidden">
     <div
       v-for="(product, index) in products"
@@ -54,140 +52,56 @@
     </div>
   </div>
 
-  <!-- Responsive Table for Large Screens -->
-  <div class="hidden lg:block overflow-x-auto bg-white shadow-md rounded-lg">
-    <table class="min-w-full table-auto divide-y divide-gray-200">
-      <thead class="bg-gray-50">
-        <tr>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Product Image
-          </th>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Product Title
-          </th>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Status
-          </th>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Inventory
-          </th>
-
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Type
-          </th>
-          <th
-            class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-          >
-            Vendor
-          </th>
-        </tr>
-      </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        <tr
-          v-for="(product, index) in products"
-          :key="product.id"
-          class="hover:bg-gray-100"
-        >
-          <td class="px-4 py-4 whitespace-nowrap">
-            <img
-              v-if="product.featuredImage"
-              :src="product.featuredImage.url"
-              :alt="product.featuredImage.altText || product.title"
-              class="product-image w-36"
-            />
-          </td>
-          <td>
-            <nuxt-link
-              :to="`/product/edit/${product.id}`"
-              class="px-4 py-4 break-words whitespace-normal relative group cursor-pointer text-blue-600 hover:underline"
-              >{{ product.title }}</nuxt-link
-            >
-          </td>
-          <td class="px-4 py-4 break-words whitespace-normal">
-            <span
-              :class="
-                product.status === 'Active'
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-gray-100 text-gray-800'
-              "
-              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-            >
-              {{ product.status }}
-            </span>
-          </td>
-
-          <td class="px-4 py-4 break-words whitespace-normal">
-            {{ product.totalInventory }}
-          </td>
-
-          <td class="px-4 py-4 break-words whitespace-normal">
-            {{ product.product_type }}
-          </td>
-          <td class="px-4 py-4 break-words whitespace-normal">
-            {{ product.vendor }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div class="flex items-center gap-5 my-5 justify-center">
-      <nuxt-link
-        v-if="pageInfo.hasPreviousPage"
-        :to="{
-          path: '/product',
-          query: {
-            ...route.query,
-            before: pageInfo.startCursor || '',
-            after: undefined,
-          },
-        }"
-        class="py-3 px-8 rounded-lg hover:bg-gray-200"
-        >Previous</nuxt-link
-      >
-      <button
-        v-else
-        class="py-3 px-8 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
-        disabled
-      >
-        Previous
-      </button>
-      <nuxt-link
-        class="py-3 px-8 rounded-lg hover:bg-gray-200"
-        v-if="pageInfo.hasNextPage"
-        :to="{
-          path: '/product',
-          query: {
-            ...route.query,
-            before: undefined,
-            after: pageInfo.endCursor || '',
-          },
-        }"
-        >Next</nuxt-link
-      >
-      <button
-        v-else
-        class="py-3 px-8 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
-        disabled
-      >
-        Next
-      </button>
-    </div>
+  <div class="hidden lg:block">
+    <ProductViewTable :products="products" />
+  </div>
+  <div class="flex items-center gap-5 my-5 justify-center">
+    <nuxt-link
+      v-if="pageInfo.hasPreviousPage"
+      :to="{
+        path: '/product',
+        query: {
+          ...route.query,
+          before: pageInfo.startCursor || '',
+          after: undefined,
+        },
+      }"
+      class="py-3 px-8 rounded-lg hover:bg-gray-200"
+      >Previous</nuxt-link
+    >
+    <button
+      v-else
+      class="py-3 px-8 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
+      disabled
+    >
+      Previous
+    </button>
+    <nuxt-link
+      class="py-3 px-8 rounded-lg hover:bg-gray-200"
+      v-if="pageInfo.hasNextPage"
+      :to="{
+        path: '/product',
+        query: {
+          ...route.query,
+          before: undefined,
+          after: pageInfo.endCursor || '',
+        },
+      }"
+      >Next</nuxt-link
+    >
+    <button
+      v-else
+      class="py-3 px-8 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
+      disabled
+    >
+      Next
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
+import { PlusCircle } from "lucide-vue-next";
 import axios from "axios";
-
 const route = useRoute();
 
 const products = ref<any[]>([]);

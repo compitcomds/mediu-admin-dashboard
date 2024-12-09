@@ -15,9 +15,6 @@ mutation setProductMutation($input: ProductSetInput!) {
       variants(first: 100) {
         nodes {
           id
-          inventoryItem {
-            id
-          }
         }
       }
     }
@@ -82,7 +79,7 @@ export default async function setProduct(
 
   const updatedProduct = data.data?.productSet?.product as {
     options: Array<{ name: string; values: string[] }>;
-    variants: { nodes: Array<{ id: string; inventoryItem: { id: string } }> };
+    variants: { nodes: Array<{ id: string }> };
   };
 
   return updatedProduct;

@@ -1,6 +1,7 @@
 import axios from "axios";
 import config from "~/utils/config";
 import convertOptionsForRest from "~/utils/convertOptionsForRest";
+import bulkpdateProductVariants from "../helpers/bulk-update-prod-variants";
 
 const SHOPIFY_API = `https://${config.shopifyDomain}/admin/api/2024-10/products.json`;
 const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
@@ -90,7 +91,7 @@ export default defineEventHandler(async (event) => {
     variants: body.variants.map((variant: any) => ({
       taxable: false,
       price: variant.price,
-      compare_at_price: variant.price,
+      compare_at_price: variant.compareAtPrice || variant.price,
       sku: variant.sku,
       inventory_management: "shopify",
       inventory_quantity: variant.quantity || 0,
@@ -111,11 +112,23 @@ export default defineEventHandler(async (event) => {
     }
   );
 
-  const createdProductId = data.product.id;
+  const createdProduct = data.product;
+  const createdProductId = createdProduct.id;
 
   for (const collection of body.collections) {
     await addProductToCollection(createdProductId, collection);
   }
+
+  await bulkpdateProductVariants(
+    createdProduct.admin_graphql_api_id,
+    createdProduct.variants.map((variant: any) => ({
+      id: variant.admin_graphql_api_id,
+      inventoryItem: {
+        harmonizedSystemCode: body.hsnCode,
+        countryCodeOfOrigin: "IN",
+      },
+    }))
+  );
 
   return { ...data, errors };
 });
