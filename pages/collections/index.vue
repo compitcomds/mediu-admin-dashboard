@@ -26,10 +26,10 @@
           <nuxt-link :to="`/collections/edit/${collection.handle}`">
             <img
               :src="
-                collection.image?.src ||
+                collection.image?.url ||
                 'https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png'
               "
-              alt="Collection Image"
+              :alt="collection.image?.altText || collection.title"
               class="w-16 h-16 mr-4 rounded"
             />
           </nuxt-link>
@@ -41,7 +41,7 @@
             >{{ collection.title }}</nuxt-link
           ></TableCell
         >
-        <TableCell>{{ collection.body_html }}</TableCell>
+        <TableCell>{{ collection.description }}</TableCell>
         <TableCell>
           <nuxt-link
             :to="`/collections/edit/${collection.handle}`"
@@ -68,11 +68,13 @@ import {
 
 const collections = ref<
   {
-    id: number;
-    title: string;
-    body_html: string;
-    image: any;
+    id: string;
     handle: string;
+    title: string;
+    isBrandCollection: boolean;
+    productsCount: number;
+    description: string;
+    image?: { url: string; altText?: string | null } | null;
   }[]
 >([]);
 
@@ -82,8 +84,8 @@ onMounted(async () => {
 
 const fetchCollections = async () => {
   try {
-    const response = await axios.get("/api/collections");
-    collections.value = response.data;
+    const { data } = await axios.get("/api/collections/all");
+    collections.value = data.collections;
   } catch (error) {
     console.error("Error fetching collections:", error);
   }

@@ -11,8 +11,16 @@ query getAllCollectionsQuery {
       id
       handle
       title
-      isBrandCollection:metafield(key: "isBrandCollection", namespace:"custom"){
+      isBrandCollection: metafield(key: "isBrandCollection", namespace: "custom") {
         value
+      }
+      productsCount {
+        count
+      }
+      description(truncateAt: 50)
+      image {
+        url
+        altText
       }
     }
     pageInfo {
@@ -45,6 +53,7 @@ export default defineEventHandler(async (event) => {
       ...node,
       id: node.id.replace("gid://shopify/Collection/", ""),
       isBrandCollection: node.isBrandCollection?.value === "true",
+      productsCount: node.productsCount.count,
     })),
     pageInfo: collections.pageInfo,
   };
