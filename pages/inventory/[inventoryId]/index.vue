@@ -7,49 +7,57 @@
     </h1>
     <InventoryAdd :variant-id="inventoryId" v-model:model-value="batches" />
   </div>
-
-  <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-    <Table>
-      <TableCaption>A list of all batches of {{ inventoryId }}.</TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead class="w-[300px] lg:w-[500px]">BarCode</TableHead>
-          <TableHead>Created Date</TableHead>
-          <TableHead>Expiry Date</TableHead>
-          <TableHead>Quantity</TableHead>
-          <TableHead>Action</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        <TableRow v-for="batch in batches" :key="batch.batchId">
-          <TableCell>
-            <svg
-              :id="'barcode-' + batch.batchId"
-              class="barcode max-w-full"
-            ></svg>
-          </TableCell>
-          <TableCell>{{
-            new Date(batch.$createdAt).toLocaleDateString()
-          }}</TableCell>
-          <TableCell>
-            {{ new Date(batch.expiryDate).toLocaleDateString() }}</TableCell
-          >
-          <TableCell>{{ batch.quantity }}</TableCell>
-          <TableCell>
+  <Table>
+    <TableCaption>A list of all batches of {{ inventoryId }}.</TableCaption>
+    <TableHeader>
+      <TableRow>
+        <TableHead class="w-[300px] lg:w-[500px]">BarCode</TableHead>
+        <TableHead>Created Date</TableHead>
+        <TableHead>Expiry Date</TableHead>
+        <TableHead>Quantity</TableHead>
+        <TableHead>Action</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      <TableRow v-for="batch in batches" :key="batch.batchId">
+        <TableCell>
+          <svg
+            :id="'barcode-' + batch.batchId"
+            class="barcode max-w-full"
+          ></svg>
+        </TableCell>
+        <TableCell>{{
+          new Date(batch.$createdAt).toLocaleDateString()
+        }}</TableCell>
+        <TableCell>
+          {{ new Date(batch.expiryDate).toLocaleDateString() }}</TableCell
+        >
+        <TableCell>{{ batch.quantity }}</TableCell>
+        <TableCell>
+          <div class="flex gap-2 items-center pt-1">
             <button
               @click="downloadBarcode(batch.batchId)"
-              class="p-1 bg-black text-white font-semibold rounded-md w-fit mt-1"
+              title="Download Batch"
+              class="p-1 bg-black text-white font-semibold rounded-md w-fit"
             >
-              Download
-            </button></TableCell
-          >
-        </TableRow>
-      </TableBody>
-    </Table>
-  </div>
+              <span class="sr-only">Download</span> <Download :size="18" />
+            </button>
+            <button
+              @click="deleteBatch(batch.$id)"
+              title="Delete Batch"
+              class="text-red-500 p-1 border-2 border-red-500 rounded-md hover:bg-red-500 hover:text-white transition"
+            >
+              <span class="sr-only">Delete Batch</span><Trash :size="16" />
+            </button>
+          </div>
+        </TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
 </template>
 
 <script setup lang="ts">
+import { Trash, Download } from "lucide-vue-next";
 import {
   Table,
   TableBody,
@@ -61,8 +69,10 @@ import {
 } from "@/components/ui/table";
 import JsBarcode from "jsbarcode";
 import { getInventory } from "~/appwrite/inventory/get-inventory";
+import { deleteBatchFromInventory } from "~/appwrite/inventory/delete-batch";
+import type { Models } from "appwrite";
 
-const batches = ref<any[]>([]);
+const batches = ref<Models.Document[]>([]);
 const route = useRoute();
 const inventoryId = route.params.inventoryId as string;
 
@@ -72,6 +82,18 @@ const fetchBatches = async () => {
     batches.value = documents;
   } catch (error) {
     console.error("Error fetching inventory:", error);
+  }
+};
+
+const deleteBatch = async (id: string) => {
+  if (!confirm("Are you sure you want to delete the batch?")) return;
+  try {
+    await deleteBatchFromInventory(id);
+    alert("Successfully deleted the batch!");
+    const index = batches.value.findIndex((batch) => batch.$id === id);
+    if (index !== -1) batches.value.splice(index, 1);
+  } catch (error: any) {
+    alert(error.message);
   }
 };
 
@@ -117,8 +139,8 @@ onMounted(async () => {
 watch(
   () => batches.value,
   () => {
-    generateBarcodes();
+    nextTick(() => generateBarcodes());
   },
-  { immediate: true, deep: true }
+  { deep: true, immediate: true }
 );
 </script>
