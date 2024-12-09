@@ -22,11 +22,12 @@
         <TableCell>{{ formatDateTime(ticket.$createdAt) }}</TableCell>
         <TableCell
           ><p
-            class="px-6 py-1 text-center bg-gray-700 rounded-r-full rounded-l-full text-white"
+            class="px-6 py-1 text-center rounded-r-full rounded-l-full text-white"
             :class="{
               'bg-amber-500': ticket.status === 'IN-PROGRESS',
-              'bg-[#238878]': ticket.status === 'SOLVED',
+              'bg-[#186054]': ticket.status === 'SOLVED',
               'bg-red-700': ticket.status === 'REJECTED',
+              'bg-gray-700': ticket.status === 'CREATED',
             }"
           >
             {{ ticket.status }}
