@@ -1,6 +1,7 @@
 import axios from "axios";
 import config from "~/utils/config";
 import { COLLECTION_METAFIELDS_DEFINED } from "../create/index.post";
+import editCollectionProducts from "./edit-collection-products";
 
 const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
 
@@ -10,9 +11,10 @@ export default defineEventHandler(async (event) => {
     throw new Error("Collection ID is missing");
   }
   const body = await readBody(event);
+  const collection = body.collection;
   const metafields = [];
   for (const key of Object.keys(COLLECTION_METAFIELDS_DEFINED)) {
-    const value = body.metafields[key];
+    const value = collection.metafields[key];
     if (value) {
       metafields.push({
         ...COLLECTION_METAFIELDS_DEFINED[key],
@@ -20,8 +22,8 @@ export default defineEventHandler(async (event) => {
       });
     }
   }
-  const custom_collection = { ...body, metafields };
-  const response = await axios.put(
+  const custom_collection = { ...collection, metafields };
+  const { data } = await axios.put(
     `https://${config.shopifyDomain}/admin/api/2024-07/custom_collections/${id}.json`,
     {
       custom_collection,
@@ -34,5 +36,17 @@ export default defineEventHandler(async (event) => {
     }
   );
 
-  return response.data.custom_collection;
+  const updatedCollection = data.custom_collection;
+
+  await editCollectionProducts({
+    id: updatedCollection.admin_graphql_api_id,
+    addedIds: body.addedProductIds.map(
+      (id: string) => `gid://shopify/Product/${id}`
+    ),
+    removedIds: body.removedProductIds.map(
+      (id: string) => `gid://shopify/Product/${id}`
+    ),
+  });
+
+  return updatedCollection;
 });

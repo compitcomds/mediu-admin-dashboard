@@ -38,10 +38,7 @@
           ></textarea>
         </div>
         <div>
-          <CollectionProductSelect
-            :hide-all-products-list="true"
-            v-model:products="collection.products"
-          />
+          <CollectionProductSelect v-model:products="collection.products" />
         </div>
       </div>
       <div class="lg:w-full lg:max-w-xs">
@@ -106,6 +103,8 @@ const fetchedCollection = ref<{
   productsCount: number;
   descriptionHtml: string;
   id: string;
+  metafields: Record<string, any>;
+  products: Array<{ product_id: string }>;
 } | null>(null);
 
 const collection = ref<{
@@ -172,17 +171,38 @@ const updateCollection = async () => {
     image,
   };
 
+  const { addedIds, removedIds } = separateAddedAndRemovedCollections();
+
   try {
-    await axios.put(
-      `/api/collections/${collection.value.id}`,
-      updatedCollection
-    );
+    await axios.put(`/api/collections/${collection.value.id}`, {
+      collection: updatedCollection,
+      addedProductIds: addedIds,
+      removedProductIds: removedIds,
+    });
     alert("Collection updated successfully!");
   } catch (err: any) {
     alert(`Failed to update collection: ${err.message}`);
   } finally {
     isSubmitting.value = false;
   }
+};
+
+const separateAddedAndRemovedCollections = () => {
+  const addedIds: string[] = [];
+  const removedIds: string[] = [];
+
+  const fetchedIds =
+    fetchedCollection.value?.products.map((prod) => prod.product_id) || [];
+  const updatedIds =
+    collection.value?.products.map((prod) => prod.product_id) || [];
+
+  for (const id of updatedIds) {
+    if (!fetchedIds.includes(id)) addedIds.push(id);
+  }
+  for (const id of fetchedIds) {
+    if (!updatedIds.includes(id)) removedIds.push(id);
+  }
+  return { addedIds, removedIds };
 };
 
 const toggleBrandCollection = () => {
