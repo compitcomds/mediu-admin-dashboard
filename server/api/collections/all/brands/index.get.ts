@@ -8,7 +8,10 @@ const getAllCollectionsQuery = `
 query getAllCollectionsQuery {
   collections(first: 250) {
     nodes {
-      id
+      id: legacyResourceId
+      isBrandCollection: metafield(key: "isBrandCollection", namespace: "custom") {
+        value
+      }
     }
     pageInfo {
       endCursor
@@ -36,7 +39,9 @@ export default defineEventHandler(async (event) => {
 
   const collections = data?.data?.collections;
   return {
-    collections: collections.nodes,
+    collections: collections.nodes
+      .filter((node: any) => node.isBrandCollection?.value === "true")
+      .map((node: any) => node.id),
     pageInfo: collections.pageInfo,
   };
 });

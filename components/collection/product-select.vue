@@ -17,6 +17,10 @@
     </div>
     <template v-for="product in products" :key="product.id">
       <div
+        v-if="
+          !props.isCollectionBrand ||
+          !checkIfBrandedProduct(product.collections)
+        "
         class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition duration-150 ease-in-out"
       >
         <input
@@ -76,10 +80,13 @@ import axios from "axios";
 
 const props = defineProps<{
   hideAllProductsList?: boolean;
+  isCollectionBrand?: boolean;
 }>();
 const products = ref<any[]>([]);
 const model = defineModel<any[]>("products");
+const brands = ref<string[]>([]);
 const route = useRoute();
+
 const pageInfo = ref<{
   endCursor: string;
   hasNextPage: boolean;
@@ -116,6 +123,19 @@ const fetchProducts = async ({
   }
 };
 
+const fetchAllCollectionBrands = async () => {
+  try {
+    const { data } = await axios.get("/api/collections/all/brands");
+    brands.value = data.collections;
+  } catch (e: any) {
+    alert(e.message);
+  }
+};
+
+onMounted(() => {
+  fetchAllCollectionBrands();
+});
+
 watch(
   () => route.query,
   (newQuery) => {
@@ -130,4 +150,12 @@ watch(
     immediate: true,
   }
 );
+
+function checkIfBrandedProduct(productCollections: any[]) {
+  const set2 = new Set(productCollections);
+  for (let element of brands.value) {
+    if (set2.has(element)) return true;
+  }
+  return false;
+}
 </script>

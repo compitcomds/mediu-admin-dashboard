@@ -38,7 +38,10 @@
           ></textarea>
         </div>
         <div>
-          <CollectionProductSelect v-model:products="collection.products" />
+          <CollectionProductSelect
+            v-model:products="collection.products"
+            :is-collection-brand="collection.metafields.isBrandCollection"
+          />
         </div>
       </div>
       <div class="lg:w-full lg:max-w-xs">
@@ -126,10 +129,8 @@ const fetchCollection = async () => {
   error.value = null;
   try {
     const { data } = await axios.get(`/api/collections/${handle}`);
-    console.log(data);
     collection.value = { ...data };
     fetchedCollection.value = { ...data };
-    console.log(data);
   } catch (err: any) {
     console.log(err);
     error.value = `Failed to fetch collection: ${err.message}`;

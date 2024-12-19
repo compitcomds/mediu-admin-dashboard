@@ -23,7 +23,10 @@
         ></textarea>
       </div>
       <div class="mb-6">
-        <CollectionProductSelect v-model:products="newCollection.collects" />
+        <CollectionProductSelect
+          v-model:products="newCollection.collects"
+          :is-collection-brand="newCollection.metafields.isBrandCollection"
+        />
       </div>
     </div>
     <div class="lg:w-full lg:max-w-xs">
