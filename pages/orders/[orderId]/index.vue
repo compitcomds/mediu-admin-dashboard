@@ -171,7 +171,7 @@ const loading = ref(true);
 const prescriptionImage = ref(null);
 const fulfillmentStatus = ref<string | null>("");
 
-onMounted(async () => {
+const fetchOrder = async () => {
   try {
     const { data } = await axios.get(`/api/orders/${orderId}`);
     if (data.order) {
@@ -189,6 +189,10 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
+};
+
+onMounted(() => {
+  fetchOrder();
 });
 </script>
 

@@ -5,7 +5,13 @@
       class="border-b border-gray-200 pb-4"
     >
       <h4 class="text-lg font-semibold text-gray-800">
-        {{ batch.title }} <span class="text-sm">#{{ batch.sku }}</span>
+        {{ batch.title }}
+        <nuxt-link
+          class="text-sm hover:underline inline-flex items-center gap-1"
+          :to="`/inventory/${variantId}`"
+          target="_blank"
+          >#{{ batch.sku }} <SquareArrowOutUpRight :size="13"
+        /></nuxt-link>
       </h4>
       <p class="text-gray-600">Quantity: {{ batch.quantityRequired }}</p>
       <div v-for="index in batch.batchesInput.length" class="mb-2">
@@ -53,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { CircleCheckBig } from "lucide-vue-next";
+import { CircleCheckBig, SquareArrowOutUpRight } from "lucide-vue-next";
 import verifyProductInventoryBatch from "~/appwrite/inventory/verify-batch";
 
 const { items } = defineProps<{
@@ -92,6 +98,12 @@ items.forEach((item) => {
   };
 });
 
+const focusNextBatchId = (variantId: string | number, index: number) => {
+  const nextBatchInputId = generateInputId(variantId, index + 1);
+  const nextBatchInput = document.getElementById(nextBatchInputId);
+  if (nextBatchInput) nextBatchInput.focus();
+};
+
 const verifyBatchId = async (variantId: string | number, index: number) => {
   const inputId = generateInputId(variantId, index);
   const input = document.getElementById(inputId) as HTMLInputElement;
@@ -115,6 +127,7 @@ const verifyBatchId = async (variantId: string | number, index: number) => {
       quantityRequired: batch.quantityRequired,
       batchesSatisfied: batch.batchesSatisfied,
     });
+    focusNextBatchId(variantId, index);
   } catch (error: any) {
     toggleBatchError({ index, variantId, message: error.message, show: true });
   } finally {

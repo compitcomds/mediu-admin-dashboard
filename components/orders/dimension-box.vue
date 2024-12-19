@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="px-6">
     <h2 class="text-xl font-semibold mb-4">Enter Dimensions and Weight</h2>
     <div>
       <div class="mb-4">

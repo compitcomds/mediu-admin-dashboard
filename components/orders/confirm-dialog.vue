@@ -10,7 +10,7 @@
         <DialogTitle>Confirm the order</DialogTitle>
       </DialogHeader>
       <div
-        class="overflow-y-auto max-h-[70vh] py-10 overflow-x-clip grid grid-cols-2 gap-5 min-w-fit"
+        class="overflow-y-auto max-h-[70vh] py-10 overflow-x-clip grid grid-cols-1 lg:grid-cols-2 gap-5 min-w-fit"
       >
         <OrdersBatchInput
           :items="order.line_items"
@@ -127,6 +127,7 @@ const confirmAndCreateShiprocketOrder = async () => {
     emit("orderFulfilled");
     open.value = false;
   } catch (error: any) {
+    console.log(error);
     alert(error.message);
   } finally {
     isSubmitting.value = false;

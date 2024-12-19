@@ -104,10 +104,11 @@ const fetchProducts = async ({
   if (props.hideAllProductsList) return [];
   try {
     const { data } = await axios.get(
-      `/api/products?after=${after || ""}&before=${before || ""}&query=${
-        query || ""
-      }`
+      `/api/collections/products?after=${after || ""}&before=${
+        before || ""
+      }&query=${query || ""}`
     );
+    console.log(data);
     products.value = data.products;
     pageInfo.value = data.pageInfo;
   } catch (e: any) {

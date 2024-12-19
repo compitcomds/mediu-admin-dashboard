@@ -7,7 +7,7 @@ const PRODUCTION_API = process.env.VITE_PRODUCTION_API;
 
 export default defineEventHandler(async (event) => {
   const { accessToken, orderData, dimensions } = await readBody(event);
-  return await createShiprocketOrder(accessToken, orderData, dimensions);
+  return await createShiprocketOrder(accessToken, orderData, dimensions, 0);
 });
 
 async function createShiprocketOrder(
@@ -18,7 +18,8 @@ async function createShiprocketOrder(
     breadth: number;
     height: number;
     weight: number;
-  }
+  },
+  retry: number = 0
 ) {
   const url = `${SHIPROCKET_API}/orders/create/adhoc`;
 
@@ -63,9 +64,15 @@ async function createShiprocketOrder(
 
     return { accessToken };
   } catch (error: any) {
-    if (error.status === 401) {
-      await getNewAcessToken();
-      return await createShiprocketOrder(accessToken, orderData, dimensions);
+    console.log(error);
+    if (error.status === 401 && retry < 3) {
+      const newAccessToken = await getNewAcessToken();
+      return await createShiprocketOrder(
+        newAccessToken,
+        orderData,
+        dimensions,
+        retry + 1
+      );
     }
     throw new Error(
       "Unable to pass the order for shipment right now. Please try again later."

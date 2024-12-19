@@ -172,7 +172,6 @@ const updateCollection = async () => {
   };
 
   const { addedIds, removedIds } = separateAddedAndRemovedCollections();
-
   try {
     await axios.put(`/api/collections/${collection.value.id}`, {
       collection: updatedCollection,
