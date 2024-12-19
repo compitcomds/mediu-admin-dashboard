@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   const metafields = [];
   for (const key of Object.keys(COLLECTION_METAFIELDS_DEFINED)) {
     const value = collection.metafields[key];
-    if (value) {
+    if (value !== undefined) {
       metafields.push({
         ...COLLECTION_METAFIELDS_DEFINED[key],
         value,
