@@ -1,6 +1,8 @@
 <template>
   <div class="px-6">
-    <h2 class="text-xl font-semibold mb-4">Enter Dimensions and Weight</h2>
+    <h2 class="text-xl font-semibold mb-4">
+      Enter Package Dimensions and Weight
+    </h2>
     <div>
       <div class="mb-4">
         <label for="length" class="block text-sm font-medium text-gray-700"
