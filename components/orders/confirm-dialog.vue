@@ -108,10 +108,10 @@ const checkBatches = () => {
 
 const createOrder = async () => {
   await createShiprocketOrder(order, dimensionData.value);
-  // const { data } = await axios.post(`/api/orders/${orderId}/fulfill`, {
-  //   headers: { "Content-Type": "application/json" },
-  // });
-  // if (data?.error) throw new Error(data.error);
+  const { data } = await axios.post(`/api/orders/${orderId}/fulfill`, {
+    headers: { "Content-Type": "application/json" },
+  });
+  if (data?.error) throw new Error(data.error);
 };
 
 const confirmAndCreateShiprocketOrder = async () => {

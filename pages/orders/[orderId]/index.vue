@@ -14,8 +14,8 @@
         </span>
       </h1>
     </div>
-    <div class="h-fit flex gap-5 items-top w-full">
-      <div class="w-1/2 rounded-md p-2">
+    <div class="h-fit md:flex gap-5 items-top w-full">
+      <div class="md:w-1/2 rounded-md p-2">
         <div class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white">
           <h1 class="text-xl font-bold mb-2">Items ordered</h1>
           <template v-for="(item, index) in order.line_items">
@@ -84,7 +84,9 @@
           <img :src="prescriptionImage" alt="Prescription Image" />
         </div>
       </div>
-      <div class="w-1/4 rounded-md px-2 py-5 flex flex-col gap-y-4">
+      <div
+        class="md:w-1/2 lg:w-1/3 xl:w-1/4 rounded-md px-2 py-5 flex flex-col gap-y-4"
+      >
         <div class="border-2 w-full bg-white border-gray-300 p-2 rounded">
           <h3 class="text-xl font-semibold mb-4 text-gray-800">
             Customer Details

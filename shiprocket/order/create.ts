@@ -1,5 +1,9 @@
 import axios from "axios";
-import { getAccessToken, setShiprocketAccessToken } from "../auth";
+import {
+  getAccessToken,
+  setShiprocketAccessToken,
+  getNewAcessToken,
+} from "../auth";
 
 export default async function createShiprocketOrder(
   orderData: any,
@@ -10,6 +14,8 @@ export default async function createShiprocketOrder(
     weight: number;
   }
 ) {
+  console.log("Access token: ", await getNewAcessToken());
+  throw new Error("Access token obtained from shiprockeet.");
   const accessToken = getAccessToken();
   const { data } = await axios.post("/api/shiprocket/create-order", {
     accessToken,
