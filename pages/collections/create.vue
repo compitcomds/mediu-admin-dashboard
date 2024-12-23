@@ -109,6 +109,10 @@ async function createCollection() {
     isSubmitting.value = false;
   }
 }
+
+useHead({
+  title: "Create Collection",
+});
 </script>
 
 <style lang="scss" scoped>

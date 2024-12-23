@@ -90,6 +90,10 @@ const fetchCollections = async () => {
     console.error("Error fetching collections:", error);
   }
 };
+
+useHead({
+  title: "Collections",
+});
 </script>
 
 <style scoped>

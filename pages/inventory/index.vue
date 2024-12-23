@@ -226,6 +226,10 @@ watch(
     immediate: true,
   }
 );
+
+useHead({
+  title: "Inventory Products",
+});
 </script>
 
 <style lang="scss" scoped></style>

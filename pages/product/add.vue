@@ -27,4 +27,8 @@ const addProduct = async (values: any) => {
       "Unable to create the product at the time. Please try again later."
   );
 };
+
+useHead({
+  title: "Add Product",
+});
 </script>

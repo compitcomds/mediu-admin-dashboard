@@ -158,6 +158,10 @@ const checkOrder = (order: any): boolean => {
   if (active === "paid" && order.financial_status === "paid") return true;
   return false;
 };
+
+useHead({
+  title: `All Orders`,
+});
 </script>
 
 <style scoped></style>

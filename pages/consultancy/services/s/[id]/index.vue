@@ -46,4 +46,8 @@ const updateConsultancy = async (service: {
   await updateConsultancyService(consultancyId, service);
   alert("Successfully updated the consultancy");
 };
+
+useHead({
+  title: `Consultancy | ${consultancy?.title || consultancyId}`,
+});
 </script>

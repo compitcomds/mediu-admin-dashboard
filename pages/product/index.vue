@@ -153,6 +153,10 @@ watch(
     immediate: true,
   }
 );
+
+useHead({
+  title: "All Products",
+});
 </script>
 
 <style lang="scss" scoped></style>

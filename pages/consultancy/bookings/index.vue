@@ -11,6 +11,10 @@ import {
 } from "@/components/ui/table";
 
 const { documents } = await getConsultancyCustomerBookings();
+
+useHead({
+  title: "Consultancy Bookings",
+});
 </script>
 
 <template>

@@ -18,4 +18,8 @@ const addConsultancyService = async (service: {
   alert("Successfully created the service!");
   router.replace(`/consultancy/services/s/${document.$id}`);
 };
+
+useHead({
+  title: "Create Consultancy Service",
+});
 </script>

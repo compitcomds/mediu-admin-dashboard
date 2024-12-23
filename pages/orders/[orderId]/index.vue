@@ -2,7 +2,7 @@
   <div class="" v-if="order">
     <div class="flex justify-between items-center px-2">
       <h1 class="text-2xl font-semibold">
-        Orders: All locations
+        Order #{{ orderId }}
         <span
           class="p-2 text-xs text-white font-bold w-fit rounded-md capitalize"
           :class="{
@@ -195,6 +195,10 @@ const fetchOrder = async () => {
 
 onMounted(() => {
   fetchOrder();
+});
+
+useHead({
+  title: `Order | ${orderId}`,
 });
 </script>
 

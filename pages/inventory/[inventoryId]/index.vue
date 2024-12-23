@@ -143,4 +143,8 @@ watch(
   },
   { deep: true, immediate: true }
 );
+
+useHead({
+  title: `Inventory Product | ${inventoryId}`,
+});
 </script>

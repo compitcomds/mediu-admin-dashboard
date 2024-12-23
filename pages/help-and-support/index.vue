@@ -57,4 +57,8 @@ onMounted(async () => {
   const { documents } = await getTicketsRaisedFromAppwrite();
   tickets.value = documents;
 });
+
+useHead({
+  title: "Help & Support - Mediu",
+});
 </script>

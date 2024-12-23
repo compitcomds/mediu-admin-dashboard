@@ -212,4 +212,8 @@ const toggleBrandCollection = () => {
 };
 
 await fetchCollection();
+
+useHead({
+  title: `Collection | ${fetchedCollection.value?.title || handle}`,
+});
 </script>

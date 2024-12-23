@@ -95,4 +95,8 @@ const updateProduct = async (values: any) => {
 
   alert("Successfully updated the product.");
 };
+
+useHead({
+  title: `Product | ${product.title}`,
+});
 </script>

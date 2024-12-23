@@ -31,4 +31,8 @@ import {
 import getUserAlertsData from "~/appwrite/alert/get-alerts";
 
 const { documents: userAlerts } = await getUserAlertsData();
+
+useHead({
+  title: "Notify Users | For Back In Stock",
+});
 </script>

@@ -173,7 +173,11 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+useHead({
+  title: "Mediu | Home",
+});
+</script>
 
 <style scoped>
 .bg-white {

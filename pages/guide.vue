@@ -117,6 +117,10 @@ const videos = [
     thumbnail: "https://img.youtube.com/vi/zC4DXXGoFdI/hqdefault.jpg",
   },
 ];
+
+useHead({
+  title: "Guide -  Mediu",
+});
 </script>
 
 <style scoped></style>
