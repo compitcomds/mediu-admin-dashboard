@@ -31,9 +31,14 @@
       class="bg-gradient-to-r from-blue-200 to-white border rounded-lg p-10 flex flex-col items-center transition transform"
     >
       <h3 class="text-3xl font-semibold text-gray-900 mb-4">Total Orders</h3>
-      <p class="text-5xl font-extrabold text-blue-800">1,245</p>
+      <p class="text-5xl font-extrabold text-blue-800">
+        {{ orderCount.totalOrders }}
+      </p>
       <p class="text-sm text-gray-600 mt-2">
-        New orders today: <span class="text-blue-600 font-semibold">32</span>
+        New orders today:
+        <span class="text-blue-600 font-semibold">{{
+          orderCount.currentDayOrders
+        }}</span>
       </p>
     </div>
     <div
@@ -174,6 +179,21 @@
 </template>
 
 <script setup lang="ts">
+import axios from "axios";
+const orderCount = ref({
+  totalOrders: 0,
+  currentDayOrders: 0,
+});
+
+const fetchShopDetails = async () => {
+  const { data } = await axios.get("/api/shop");
+  orderCount.value = data.orders;
+};
+
+onMounted(() => {
+  fetchShopDetails();
+});
+
 useHead({
   title: "Mediu | Home",
 });
