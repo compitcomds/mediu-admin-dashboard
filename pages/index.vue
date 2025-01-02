@@ -20,11 +20,15 @@
     <div
       class="bg-gradient-to-r from-green-200 to-white border rounded-lg p-10 flex flex-col items-center transition transform"
     >
-      <h3 class="text-3xl font-semibold text-gray-900 mb-4">Total Sales</h3>
-      <p class="text-5xl font-extrabold text-green-800">₹56,000</p>
+      <h3 class="text-3xl font-semibold text-gray-900 mb-4">Total Products</h3>
+      <p class="text-5xl font-extrabold text-green-800">
+        {{ count.prod.products }}
+      </p>
       <p class="text-sm text-gray-600 mt-2">
-        Compared to last month:
-        <span class="text-green-600 font-semibold">+12%</span>
+        Collections:
+        <span class="text-green-600 font-semibold">{{
+          count.prod.collections
+        }}</span>
       </p>
     </div>
     <div
@@ -32,12 +36,12 @@
     >
       <h3 class="text-3xl font-semibold text-gray-900 mb-4">Total Orders</h3>
       <p class="text-5xl font-extrabold text-blue-800">
-        {{ orderCount.totalOrders }}
+        {{ count.orders.total }}
       </p>
       <p class="text-sm text-gray-600 mt-2">
         New orders today:
         <span class="text-blue-600 font-semibold">{{
-          orderCount.currentDayOrders
+          count.orders.today
         }}</span>
       </p>
     </div>
@@ -45,10 +49,14 @@
       class="bg-gradient-to-r from-indigo-200 to-white border rounded-lg p-10 flex flex-col items-center transition transform"
     >
       <h3 class="text-3xl font-semibold text-gray-900 mb-4">Total Customers</h3>
-      <p class="text-5xl font-extrabold text-indigo-800">980</p>
+      <p class="text-5xl font-extrabold text-indigo-800">
+        {{ count.customers.total }}
+      </p>
       <p class="text-sm text-gray-600 mt-2">
         New customers this week:
-        <span class="text-indigo-600 font-semibold">15</span>
+        <span class="text-indigo-600 font-semibold">{{
+          count.customers.today
+        }}</span>
       </p>
     </div>
   </div>
@@ -118,7 +126,8 @@
 
   <!-- Quick Links for Actions -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 w-full mb-16">
-    <button
+    <nuxt-link
+      to="/product"
       class="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 rounded-xl shadow-xl hover:shadow-2xl transition transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-300 flex items-center justify-center space-x-3"
     >
       <svg
@@ -136,8 +145,9 @@
         />
       </svg>
       <span>Manage Products</span>
-    </button>
-    <button
+    </nuxt-link>
+    <nuxt-link
+      to="/orders"
       class="bg-gradient-to-r from-green-600 to-green-800 text-white p-6 rounded-xl shadow-xl hover:shadow-2xl transition transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 flex items-center justify-center space-x-3"
     >
       <svg
@@ -155,8 +165,9 @@
         />
       </svg>
       <span>Manage Orders</span>
-    </button>
-    <button
+    </nuxt-link>
+    <nuxt-link
+      to="/customers"
       class="bg-gradient-to-r from-indigo-600 to-indigo-800 text-white p-6 rounded-xl shadow-xl hover:shadow-2xl transition transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-300 flex items-center justify-center space-x-3"
     >
       <svg
@@ -174,20 +185,22 @@
         />
       </svg>
       <span>Manage Customers</span>
-    </button>
+    </nuxt-link>
   </div>
 </template>
 
 <script setup lang="ts">
 import axios from "axios";
-const orderCount = ref({
-  totalOrders: 0,
-  currentDayOrders: 0,
+
+const count = ref({
+  orders: { total: 0, today: 0 },
+  customers: { total: 0, today: 0 },
+  prod: { products: 0, collections: 0 },
 });
 
 const fetchShopDetails = async () => {
   const { data } = await axios.get("/api/shop");
-  orderCount.value = data.orders;
+  count.value = data;
 };
 
 onMounted(() => {
