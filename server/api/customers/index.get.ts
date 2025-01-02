@@ -7,6 +7,7 @@ query customersAfterQuery($after: String = "") {
       id: legacyResourceId
       displayName
       email
+      createdAt
       numberOfOrders
       amountSpent {
         amount

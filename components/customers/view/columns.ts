@@ -11,6 +11,7 @@ export interface CustomerInterface {
   numberOfOrders: number;
   amountSpent: { amount: string; currencyCode: string };
   defaultAddress: null | { province: string; country: string; city: string };
+  createdAt: string;
 }
 
 export const columns: ColumnDef<CustomerInterface>[] = [
@@ -82,7 +83,6 @@ export const columns: ColumnDef<CustomerInterface>[] = [
     },
     cell: ({ row }) => {
       const numberOfOrders: number = row.getValue("numberOfOrders");
-
       return h("p", {}, numberOfOrders);
     },
   },
@@ -111,4 +111,37 @@ export const columns: ColumnDef<CustomerInterface>[] = [
       return h("p", `${amountSpent.currencyCode} ${amountSpent.amount}`);
     },
   },
+  {
+    accessorKey: "createdAt",
+    header: ({ column }) => {
+      return h(
+        Button,
+        {
+          onClick: () => column.toggleSorting(column.getIsSorted() === "asc"),
+          class:
+            "bg-transparent text-black shadow-none text-inherit hover:bg-white/40",
+        },
+        () => ["Created At", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+      );
+    },
+    sortingFn: (rowA, rowB) => {
+      return (
+        new Date(rowB.original.createdAt).getTime() -
+        new Date(rowA.original.createdAt).getTime()
+      );
+    },
+    cell: ({ row }) => {
+      const createdAt: string = row.getValue("createdAt");
+      return h("p", {}, formatDate(createdAt));
+    },
+  },
 ];
+
+const formatDate = (dateString: string): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  };
+  return new Intl.DateTimeFormat("en-US", options).format(new Date(dateString));
+};
