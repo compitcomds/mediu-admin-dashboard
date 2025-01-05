@@ -1,7 +1,7 @@
 <template>
-  <div class="flex items-center justify-center h-screen bg-gray-100">
-    <div class="bg-white p-8 rounded-lg shadow-md w-96">
-      <h1 class="text-2xl font-semibold text-center text-[#28574e]">Login</h1>
+  <div class="flex h-screen items-center justify-center bg-gray-100">
+    <div class="w-96 rounded-lg bg-white p-8 shadow-md">
+      <h1 class="text-center text-2xl font-semibold text-[#28574e]">Login</h1>
       <form @submit.prevent="handleSubmit">
         <div class="mt-4">
           <label for="email" class="block text-sm font-medium text-gray-700"
@@ -12,7 +12,7 @@
             id="email"
             v-model="email"
             required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#28574e] focus:border-transparent"
+            class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#28574e]"
           />
         </div>
         <div class="mt-4">
@@ -24,15 +24,18 @@
             id="password"
             v-model="password"
             required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#28574e] focus:border-transparent"
+            class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#28574e]"
           />
         </div>
         <button
           type="submit"
           :disabled="isLoading"
-          class="mt-6 w-full bg-[#28574e] text-white py-2 rounded-md hover:bg-[#1f3b3e] transition duration-200 disabled:animate-pulse disabled:cursor-not-allowed"
+          class="mt-6 w-full rounded-md bg-[#28574e] py-2 text-white transition duration-200 hover:bg-[#1f3b3e] disabled:animate-pulse disabled:cursor-not-allowed"
         >
-          Log In
+          <span v-if="!isLoading">Log In</span>
+          <span v-else class="flex items-center justify-center gap-1"
+            >Logging in <Loader
+          /></span>
         </button>
       </form>
       <p class="mt-4 text-center text-sm text-gray-600">
@@ -50,14 +53,13 @@ import { loginAdminUser } from "~/appwrite/login-admin";
 
 const email = ref("");
 const password = ref("");
-const router = useRouter();
 const isLoading = ref(false);
 
 const handleSubmit = async () => {
   isLoading.value = true;
   try {
     await loginAdminUser(email.value, password.value);
-    router.replace("/");
+    window.location.href = "/";
   } catch (error) {
     alert(error.message);
   }

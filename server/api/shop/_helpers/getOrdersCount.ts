@@ -18,7 +18,7 @@ export default async function fetchOrderCount() {
     variables: { query: `created_at:${formattedDate}` },
   });
   return {
-    total: data.data.ordersCount.count,
-    today: currentDayOrders.data.ordersCount.count,
+    total: data.data.ordersCount.count as number,
+    today: currentDayOrders.data.ordersCount.count as number,
   };
 }
