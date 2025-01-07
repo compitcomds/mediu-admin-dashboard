@@ -15,7 +15,7 @@
       </h1>
     </div>
     <div class="items-top h-fit w-full gap-5 md:flex">
-      <div class="rounded-md p-2 md:w-1/2">
+      <div class="rounded-md p-2 md:w-1/2 lg:w-[60%]">
         <div class="mt-3 rounded-lg border-2 border-gray-300 bg-white p-4">
           <h1 class="mb-2 text-xl font-bold">Items ordered</h1>
           <template v-for="(item, index) in order.lineItems">
@@ -35,7 +35,14 @@
               <div class="max-w-full flex-1 overflow-x-auto">
                 <div class="mb-2 flex flex-wrap gap-2">
                   <h4 class="text-lg text-gray-800">
-                    {{ item.name }}
+                    <nuxt-link
+                      v-if="item.id"
+                      :to="`/product/edit/${item.id}`"
+                      class="hover:underline"
+                      target="_blank"
+                      >{{ item.name }}</nuxt-link
+                    >
+                    <span v-else>{{ item.name }}</span>
                   </h4>
                   <p
                     class="flex min-w-fit items-center justify-center rounded-l-full rounded-r-full bg-gray-700 px-3 text-xs text-white"
@@ -46,32 +53,39 @@
                 <p class="font-bold text-gray-800">
                   Quantity: {{ item.quantity }}
                 </p>
-                <p class="font-bold text-gray-800">
-                  Price: ₹{{ item.discountedTotal.amount }}
-                  <span
-                    v-if="
-                      item.discountedTotal.amount < item.originalTotal.amount
-                    "
-                    class="text-xs line-through"
-                    >₹{{ item.originalTotal.amount }}</span
-                  >
-                </p>
+                <div class="flex items-center gap-8">
+                  <p class="font-bold text-gray-800">
+                    Unit Price: ₹{{ item.unitPrice.amount }}
+                  </p>
+                  <p class="font-bold text-gray-800">
+                    Total Price: ₹{{ item.discountedTotal.amount }}
+                    <span
+                      v-if="
+                        item.discountedTotal.amount < item.originalTotal.amount
+                      "
+                      class="text-xs line-through"
+                      >₹{{ item.originalTotal.amount }}</span
+                    >
+                  </p>
+                </div>
                 <div class="mt-2">
                   <h5 class="text-md font-semibold text-gray-700">
                     Tax Details
                   </h5>
-                  <p class="text-gray-600">
-                    GST Applied: {{ item.gstApplied }}%
-                  </p>
-                  <p class="text-sm text-gray-500">
-                    Total Tax: ₹{{
-                      calculateGSTApplied({
-                        cost: item.discountedTotal,
-                        quantity: item.quantity,
-                        gstApplied: item.gstApplied,
-                      })
-                    }}
-                  </p>
+                  <div class="flex items-center gap-8">
+                    <p class="text-sm text-gray-600">
+                      GST Applied: {{ item.gstApplied }}%
+                    </p>
+                    <p class="text-sm text-gray-500">
+                      Total Tax: ₹{{
+                        calculateGSTApplied({
+                          cost: item.discountedTotal,
+                          quantity: item.quantity,
+                          gstApplied: item.gstApplied,
+                        })
+                      }}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -120,22 +134,19 @@
           <img :src="prescriptionImage" alt="Prescription Image" />
         </div>
       </div>
-      <div
-        class="flex flex-col gap-y-4 rounded-md px-2 py-5 md:w-1/2 lg:w-1/3 xl:w-1/4"
-      >
+      <div class="flex flex-col gap-y-4 rounded-md px-2 py-5 md:w-1/2 lg:w-1/3">
         <div class="w-full rounded border-2 border-gray-300 bg-white p-2">
           <h3 class="mb-4 text-xl font-semibold text-gray-800">
             Customer Details
           </h3>
           <div class="mb-4">
             <p class="text-lg font-medium text-gray-800">
-              Name: {{ order.customer.first_name }}
-              {{ order.customer.last_name }}
+              Name: {{ order.customer.displayName }}
             </p>
             <p class="text-gray-600">
               Email:
               <a
-                href="mailto:{{ order.customer.email }}"
+                :href="`mailto:${order.customer.email}`"
                 class="text-blue-500 hover:underline"
                 >{{ order.customer.email }}</a
               >
@@ -143,15 +154,14 @@
             <p class="text-gray-600">
               Phone: {{ order.customer.phone || "N/A" }}
             </p>
-            <p class="text-gray-600">
-              Account Status: {{ order.customer.state }}
-            </p>
-            <p class="text-gray-600">
-              Verified Email:
-              {{ order.customer.verified_email ? "Yes" : "No" }}
-            </p>
           </div>
         </div>
+        <OrdersPaymentDetails
+          :appwriteOrderId="order.appwriteOrderId?.value"
+          :discountCodes="order.discountCodes"
+          :originalTotalAmount="order.originalTotalPriceSet"
+          :discountedAmount="order.discountedTotalPriceSet"
+        />
         <OrdersConfirmDialog
           v-if="fulfillmentStatus !== 'FULFILLED'"
           :order="order"

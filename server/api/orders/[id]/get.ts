@@ -19,12 +19,19 @@ query MyQuery($id: ID!) {
             currencyCode
           }
         }
+        unitPrice: originalUnitPriceSet {
+          presentmentMoney {
+            amount
+            currencyCode
+          }
+        }
         sku
         image {
           url
           altText
         }
         product {
+          id: legacyResourceId
           gstApplied: metafield(key: "gst_applied", namespace: "custom") {
             value
           }
@@ -58,6 +65,7 @@ query MyQuery($id: ID!) {
     customer {
       displayName
       email
+      phone
     }
     displayFulfillmentStatus
     appwriteOrderId: metafield(key: "appwriteOrderId", namespace: "custom"){
@@ -80,6 +88,7 @@ export default async function getOrderById(id: string) {
 
   const lineItems = order.lineItems.nodes.map((node: any) => ({
     ...node,
+    id: node.product?.id,
     gstApplied: parseFloat(node.product?.gstApplied?.value || "0"),
     originalTotal: convertShopifAmountToFloat(
       node.originalTotal.presentmentMoney,
@@ -87,6 +96,7 @@ export default async function getOrderById(id: string) {
     discountedTotal: convertShopifAmountToFloat(
       node.discountedTotal.presentmentMoney,
     ),
+    unitPrice: convertShopifAmountToFloat(node.unitPrice.presentmentMoney),
   }));
   return {
     ...order,
