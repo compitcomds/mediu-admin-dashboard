@@ -1,94 +1,130 @@
 <template>
   <div class="" v-if="order">
-    <div class="flex justify-between items-center px-2">
+    <div class="flex items-center justify-between px-2">
       <h1 class="text-2xl font-semibold">
         Order #{{ orderId }}
         <span
-          class="p-2 text-xs text-white font-bold w-fit rounded-md capitalize"
+          class="w-fit rounded-md p-2 text-xs font-bold capitalize text-white"
           :class="{
-            'bg-[#28574e]': !!fulfillmentStatus,
-            'bg-red-500': !fulfillmentStatus,
+            'bg-[#28574e]': fulfillmentStatus === 'FULFILLED',
+            'bg-red-500': fulfillmentStatus !== 'FULFILLED',
           }"
         >
-          {{ fulfillmentStatus || "Unfulfilled" }}
+          {{ fulfillmentStatus.toLowerCase() }}
         </span>
       </h1>
     </div>
-    <div class="h-fit md:flex gap-5 items-top w-full">
-      <div class="md:w-1/2 rounded-md p-2">
-        <div class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white">
-          <h1 class="text-xl font-bold mb-2">Items ordered</h1>
-          <template v-for="(item, index) in order.line_items">
+    <div class="items-top h-fit w-full gap-5 md:flex">
+      <div class="rounded-md p-2 md:w-1/2">
+        <div class="mt-3 rounded-lg border-2 border-gray-300 bg-white p-4">
+          <h1 class="mb-2 text-xl font-bold">Items ordered</h1>
+          <template v-for="(item, index) in order.lineItems">
             <div
-              class="border-b border-gray-200 pb-4 mb-4 last:mb-0 last:border-0"
+              class="mb-4 flex gap-4 border-b border-gray-200 pb-4 last:mb-0 last:border-0"
             >
-              <h4 class="text-lg font-semibold text-gray-800">
-                {{ item.title }}
-              </h4>
-              <p class="text-gray-600">Vendor: {{ item.vendor }}</p>
-              <p class="text-gray-600">Quantity: {{ item.quantity }}</p>
-              <p class="text-gray-800 font-bold">Price: ₹{{ item.price }}</p>
-              <p class="text-gray-500 text-sm">SKU: {{ item.sku || "N/A" }}</p>
-              <div class="mt-2">
-                <h5 class="text-md font-semibold text-gray-700">Tax Details</h5>
-                <p class="text-gray-600">
-                  Total Tax: ₹{{ item.tax_lines[0]?.price || "0.00" }}
+              <div class="h-fit min-w-24 max-w-24 overflow-clip rounded-lg p-2">
+                <img
+                  class="h-auto w-full"
+                  :src="
+                    item.image?.url ||
+                    `https://placehold.co/400x400/png/text=${item.name}`
+                  "
+                  :alt="item.image?.altText || `Image ${item.name}`"
+                />
+              </div>
+              <div class="max-w-full flex-1 overflow-x-auto">
+                <div class="mb-2 flex flex-wrap gap-2">
+                  <h4 class="text-lg text-gray-800">
+                    {{ item.name }}
+                  </h4>
+                  <p
+                    class="flex min-w-fit items-center justify-center rounded-l-full rounded-r-full bg-gray-700 px-3 text-xs text-white"
+                  >
+                    {{ item.sku || "N/A" }}
+                  </p>
+                </div>
+                <p class="font-bold text-gray-800">
+                  Quantity: {{ item.quantity }}
                 </p>
-                <p class="text-gray-500 text-sm">
-                  Tax Rate: {{ item.tax_lines[0]?.rate || "0" }}%
+                <p class="font-bold text-gray-800">
+                  Price: ₹{{ item.discountedTotal.amount }}
+                  <span
+                    v-if="
+                      item.discountedTotal.amount < item.originalTotal.amount
+                    "
+                    class="text-xs line-through"
+                    >₹{{ item.originalTotal.amount }}</span
+                  >
                 </p>
+                <div class="mt-2">
+                  <h5 class="text-md font-semibold text-gray-700">
+                    Tax Details
+                  </h5>
+                  <p class="text-gray-600">
+                    GST Applied: {{ item.gstApplied }}%
+                  </p>
+                  <p class="text-sm text-gray-500">
+                    Total Tax: ₹{{
+                      calculateGSTApplied({
+                        cost: item.discountedTotal,
+                        quantity: item.quantity,
+                        gstApplied: item.gstApplied,
+                      })
+                    }}
+                  </p>
+                </div>
               </div>
             </div>
           </template>
         </div>
 
-        <div class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white">
-          <h3 class="text-lg font-semibold mb-2 text-gray-800">
+        <div class="mt-3 rounded-lg border-2 border-gray-300 bg-white p-4">
+          <h3 class="mb-2 text-lg font-semibold text-gray-800">
             Shipping Address
           </h3>
           <p class="mb-1">
-            <strong>Name:</strong> {{ order.billing_address.name }}
+            <strong>Name:</strong> {{ order.shippingAddress?.name }}
           </p>
           <p class="mb-1">
-            <strong>Address:</strong> {{ order.billing_address.address1
+            <strong>Address:</strong> {{ order.shippingAddress?.address1
             }}{{
-              order.billing_address.address2
-                ? ", " + order.billing_address.address2
+              !!order.shippingAddress?.address2
+                ? ", " + order.shippingAddress.address2
                 : ""
             }}
           </p>
           <p class="mb-1">
-            <strong>City:</strong> {{ order.billing_address.city }}
+            <strong>City:</strong> {{ order.shippingAddress?.city }}
           </p>
           <p class="mb-1">
-            <strong>State:</strong> {{ order.billing_address.province }}
+            <strong>State:</strong> {{ order.shippingAddress?.province }}
           </p>
           <p class="mb-1">
-            <strong>Zip Code:</strong> {{ order.billing_address.zip }}
+            <strong>Zip Code:</strong> {{ order.shippingAddress?.zip }}
           </p>
           <p class="mb-1">
-            <strong>Country:</strong> {{ order.billing_address.country }}
+            <strong>Country:</strong> {{ order.shippingAddress?.country }}
           </p>
           <p class="mb-1">
-            <strong>Phone:</strong> {{ order.billing_address.phone }}
+            <strong>Phone:</strong> {{ order.shippingAddress?.phone }}
           </p>
         </div>
 
         <div
           v-if="prescriptionImage"
-          class="p-4 mt-3 border-2 border-gray-300 rounded-lg bg-white"
+          class="mt-3 rounded-lg border-2 border-gray-300 bg-white p-4"
         >
-          <h3 class="text-xl font-semibold mb-4 text-gray-800">
+          <h3 class="mb-4 text-xl font-semibold text-gray-800">
             Prescription Image
           </h3>
           <img :src="prescriptionImage" alt="Prescription Image" />
         </div>
       </div>
       <div
-        class="md:w-1/2 lg:w-1/3 xl:w-1/4 rounded-md px-2 py-5 flex flex-col gap-y-4"
+        class="flex flex-col gap-y-4 rounded-md px-2 py-5 md:w-1/2 lg:w-1/3 xl:w-1/4"
       >
-        <div class="border-2 w-full bg-white border-gray-300 p-2 rounded">
-          <h3 class="text-xl font-semibold mb-4 text-gray-800">
+        <div class="w-full rounded border-2 border-gray-300 bg-white p-2">
+          <h3 class="mb-4 text-xl font-semibold text-gray-800">
             Customer Details
           </h3>
           <div class="mb-4">
@@ -116,39 +152,15 @@
             </p>
           </div>
         </div>
-
-        <div class="border-2 w-full bg-white border-gray-300 p-2 rounded">
-          <h4 class="text-lg font-semibold text-gray-700 mb-2">
-            Default Address
-          </h4>
-          <div class="text-gray-600">
-            <p>{{ order.customer.default_address.name }}</p>
-            <p>
-              {{ order.customer.default_address.address1
-              }}{{
-                order.customer.default_address.address2
-                  ? ", " + order.customer.default_address.address2
-                  : ""
-              }}
-            </p>
-            <p>
-              {{ order.customer.default_address.city }},
-              {{ order.customer.default_address.province }} -
-              {{ order.customer.default_address.zip }}
-            </p>
-            <p>{{ order.customer.default_address.country }}</p>
-            <p>Phone: {{ order.customer.default_address.phone }}</p>
-          </div>
-        </div>
         <OrdersConfirmDialog
-          v-if="!fulfillmentStatus"
+          v-if="fulfillmentStatus !== 'FULFILLED'"
           :order="order"
           :orderId="orderId"
-          v-on:orderFulfilled="fulfillmentStatus = 'Confirmed'"
+          v-on:orderFulfilled="fulfillmentStatus = 'FULFILLED'"
         />
         <p
           v-else
-          class="bg-[#28574e] text-center text-white text-xl sticky font-semibold rounded-md p-1 w-full"
+          class="sticky w-full rounded-md bg-[#28574e] p-1 text-center text-xl font-semibold text-white"
         >
           Confirmed
         </p>
@@ -171,21 +183,18 @@ const order = ref<any>(null);
 const error = ref<Array<any>>([]);
 const loading = ref(true);
 const prescriptionImage = ref(null);
-const fulfillmentStatus = ref<string | null>("");
+const fulfillmentStatus = ref<string>("");
 
 const fetchOrder = async () => {
   try {
     const { data } = await axios.get(`/api/orders/${orderId}`);
-    if (data.order) {
-      order.value = data.order;
-      fulfillmentStatus.value = data.order.fulfillment_status;
-      prescriptionImage.value =
-        data.order?.metafields?.find(
-          (field: any) => field.key === "prescriptionUrl"
-        )?.value || null;
-    } else {
-      error.value.push(data.error || "Error fetching order details");
-    }
+    if (!data) throw new Error("Error fetching the order.");
+    console.log(data);
+    order.value = data;
+    fulfillmentStatus.value = data.displayFulfillmentStatus;
+    prescriptionImage.value =
+      data?.metafields?.find((field: any) => field.key === "prescriptionUrl")
+        ?.value || null;
   } catch (err) {
     error.value.push("Error fetching the order.");
   } finally {
