@@ -1,11 +1,25 @@
 import shopifyClient from "~/server/helpers/shopify-graphql-client";
 
 const getOrderByIdQuery = `
-query MyQuery($id: ID!) {
+query getOrderByIdQuery($id: ID!) {
   order(id: $id) {
+    id: legacyResourceId
+    createdAt
+    billingAddress {
+      firstName
+      lastName
+      address1
+      address2
+      city
+      zip
+      province
+      country
+      phone
+    }
     lineItems(first: 100) {
       nodes {
         name
+        title
         quantity
         discountedTotal: discountedTotalSet(withCodeDiscounts: true) {
           presentmentMoney {
@@ -36,6 +50,9 @@ query MyQuery($id: ID!) {
             value
           }
         }
+        variant {
+          id: legacyResourceId
+        }
       }
     }
     createdAt
@@ -61,17 +78,21 @@ query MyQuery($id: ID!) {
       country
       zip
       phone
+      firstName
+      lastName
     }
     customer {
       displayName
       email
       phone
+      firstName
+      lastName
     }
     displayFulfillmentStatus
-    appwriteOrderId: metafield(key: "appwriteOrderId", namespace: "custom"){
+    appwriteOrderId: metafield(key: "appwriteOrderId", namespace: "custom") {
       value
     }
-    prescriptionUrl: metafield(key: "prescriptionUrl", namespace: "custom"){
+    prescriptionUrl: metafield(key: "prescriptionUrl", namespace: "custom") {
       value
     }
   }
@@ -89,6 +110,7 @@ export default async function getOrderById(id: string) {
   const lineItems = order.lineItems.nodes.map((node: any) => ({
     ...node,
     id: node.product?.id,
+    variantId: node.variant.id,
     gstApplied: parseFloat(node.product?.gstApplied?.value || "0"),
     originalTotal: convertShopifAmountToFloat(
       node.originalTotal.presentmentMoney,

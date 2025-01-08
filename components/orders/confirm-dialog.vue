@@ -1,19 +1,21 @@
 <template>
   <Dialog v-model:open="open">
     <DialogTrigger
-      class="bg-black text-white text-xl font-semibold rounded-md px-1 py-2 w-full disabled:animate-pulse disabled:cursor-not-allowed"
+      class="w-full rounded-md bg-black px-1 py-2 text-xl font-semibold text-white disabled:animate-pulse disabled:cursor-not-allowed"
     >
       Confirm Order
     </DialogTrigger>
-    <DialogContent class="p-0 max-h-[90vh] min-w-[62vw] overflow-clip">
+    <DialogContent
+      class="max-h-[90vh] min-w-[70vw] overflow-y-auto overflow-x-clip p-0 pb-4"
+    >
       <DialogHeader class="p-6 pb-0">
         <DialogTitle>Confirm the order</DialogTitle>
       </DialogHeader>
       <div
-        class="overflow-y-auto max-h-[70vh] py-10 overflow-x-clip grid grid-cols-1 lg:grid-cols-2 gap-5 min-w-fit"
+        class="grid max-h-[70vh] min-w-fit grid-cols-1 gap-5 overflow-y-auto overflow-x-clip py-10 lg:grid-cols-2"
       >
         <OrdersBatchInput
-          :items="order.line_items"
+          :items="orderData.lineItems"
           @update:batch-data="updateBatchData"
         />
         <OrdersDimensionBox v-model:dimensions="dimensionData" />
@@ -22,7 +24,7 @@
         ><button
           @click="confirmAndCreateShiprocketOrder"
           :disabled="isSubmitting"
-          class="bg-black text-white font-semibold text-lg rounded-md py-2 px-6 disabled:animate-pulse disabled:cursor-not-allowed"
+          class="rounded-md bg-black px-6 py-2 text-lg font-semibold text-white disabled:animate-pulse disabled:cursor-not-allowed"
         >
           <span v-if="!isSubmitting">Confirm order</span>
           <span v-else class="flex items-center gap-2"
@@ -47,9 +49,9 @@ import {
 } from "@/components/ui/dialog";
 import decreaseBatchesQuantity from "~/appwrite/inventory/decrease-quantity";
 
-const { order, orderId } = defineProps<{
-  order: any;
+const { orderId, orderData } = defineProps<{
   orderId: string;
+  orderData: any;
 }>();
 
 const emit = defineEmits<{
@@ -85,7 +87,7 @@ const checkDimensions = () => {
     typeof height !== "number"
   ) {
     throw new Error(
-      "Length, breadth, height and weight must be decimal values. Please enter valid decimal values for each."
+      "Length, breadth, height and weight must be decimal values. Please enter valid decimal values for each.",
     );
   }
 
@@ -97,17 +99,17 @@ const checkDimensions = () => {
 };
 
 const checkBatches = () => {
-  for (const item of order.line_items) {
-    const data = batchData.value[item.variant_id];
+  for (const item of orderData.lineItems) {
+    const data = batchData.value[item.variantId];
     if (!data || data.batchesSatisfied.length < data.quantityRequired)
       throw new Error(
-        "Please provide all the batch id's to continue to shipment"
+        "Please provide all the batch id's to continue to shipment",
       );
   }
 };
 
 const createOrder = async () => {
-  await createShiprocketOrder(order, dimensionData.value);
+  await createShiprocketOrder(orderData, dimensionData.value);
   const { data } = await axios.post(`/api/orders/${orderId}/fulfill`, {
     headers: { "Content-Type": "application/json" },
   });
@@ -122,7 +124,7 @@ const confirmAndCreateShiprocketOrder = async () => {
     await createOrder();
     await decreaseBatchesQuantity(batchData.value);
     alert(
-      "Successfully created the order for shipment. Please proceed to shiprocket dashboard to continue the process of shipment."
+      "Successfully created the order for shipment. Please proceed to shiprocket dashboard to continue the process of shipment.",
     );
     emit("orderFulfilled");
     open.value = false;

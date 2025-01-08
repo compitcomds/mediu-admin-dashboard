@@ -164,7 +164,7 @@
         />
         <OrdersConfirmDialog
           v-if="fulfillmentStatus !== 'FULFILLED'"
-          :order="order"
+          :order-data="order"
           :orderId="orderId"
           v-on:orderFulfilled="fulfillmentStatus = 'FULFILLED'"
         />
@@ -199,7 +199,6 @@ const fetchOrder = async () => {
   try {
     const { data } = await axios.get(`/api/orders/${orderId}`);
     if (!data) throw new Error("Error fetching the order.");
-    console.log(data);
     order.value = data;
     fulfillmentStatus.value = data.displayFulfillmentStatus;
     prescriptionImage.value =

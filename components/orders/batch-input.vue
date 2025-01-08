@@ -7,7 +7,7 @@
       <h4 class="text-lg font-semibold text-gray-800">
         {{ batch.title }}
         <nuxt-link
-          class="text-sm hover:underline inline-flex items-center gap-1"
+          class="inline-flex items-center gap-1 text-sm hover:underline"
           :to="`/inventory/${variantId}`"
           target="_blank"
           >#{{ batch.sku }} <SquareArrowOutUpRight :size="13"
@@ -21,7 +21,7 @@
             :id="generateInputId(variantId, index)"
             v-model="batch.batchesInput[index - 1]"
             placeholder="Batch Id"
-            class="mt-1 lg:max-w-sm col-span-5 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-200"
+            class="col-span-5 mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-200 lg:max-w-sm"
             v-on:keydown.enter.prevent="verifyBatchId(variantId, index)"
             :disabled="
               !!batch.batchesSatisfied[index - 1] &&
@@ -38,17 +38,17 @@
               !batch.batchesSatisfied[index - 1]
             "
             type="button"
-            class="bg-black text-white group disabled:cursor-not-allowed flex flex-wrap items-center gap-2 px-4 py-2 text-sm rounded-lg"
+            class="group flex flex-wrap items-center gap-2 rounded-lg bg-black px-4 py-2 text-sm text-white disabled:cursor-not-allowed"
           >
-            <span class="block group-disabled:hidden">Verify</span>
-            <Loader class="group-disabled:block hidden" />
+            <span class="group-disabled:hidden">Verify</span>
+            <Loader class="hidden group-disabled:block" />
           </button>
           <p v-else class="flex items-center text-emerald-800">
             <CircleCheckBig />
           </p>
           <p
             :id="generateBatchErrorId(variantId, index)"
-            class="col-span-6 text-red-500 text-xs hidden"
+            class="col-span-6 hidden text-xs text-red-500"
           >
             Invalid Batch Id
           </p>
@@ -63,7 +63,18 @@ import { CircleCheckBig, SquareArrowOutUpRight } from "lucide-vue-next";
 import verifyProductInventoryBatch from "~/appwrite/inventory/verify-batch";
 
 const { items } = defineProps<{
-  items: any[];
+  items: {
+    name: string;
+    title: string;
+    quantity: number;
+    discountedTotal: { amount: number; currencyCode: string };
+    originalTotal: { amount: number; currencyCode: string };
+    unitPrice: { amount: number; currencyCode: string };
+    sku: string;
+    id: string;
+    variantId: string;
+    gstApplied: number;
+  }[];
 }>();
 const emit = defineEmits<{
   (
@@ -72,7 +83,7 @@ const emit = defineEmits<{
       quantityRequired: number;
       batchesSatisfied: string[];
       variantId: string;
-    }
+    },
   ): void;
 }>();
 
@@ -89,12 +100,12 @@ const batchForm = ref<{
 items.forEach((item) => {
   const batchesInput = [];
   for (let i = 0; i < item.quantity; i++) batchesInput.push("");
-  batchForm.value[item.variant_id] = {
+  batchForm.value[item.variantId] = {
     quantityRequired: item.quantity,
     batchesInput,
     batchesSatisfied: [...batchesInput],
     sku: item.sku,
-    title: item.title,
+    title: item.name,
   };
 });
 
@@ -119,7 +130,7 @@ const verifyBatchId = async (variantId: string | number, index: number) => {
     await verifyProductInventoryBatch(
       variantId.toString(),
       batchId,
-      batch.batchesSatisfied
+      batch.batchesSatisfied,
     );
     batch.batchesSatisfied[index - 1] = batchId;
     emit("update:batchData", {
@@ -133,7 +144,6 @@ const verifyBatchId = async (variantId: string | number, index: number) => {
   } finally {
     toggleVerifyButtonSubmitting({ variantId, index, show: false });
   }
-  // console.log(batches);
 };
 
 const generateInputId = (variantId: string | number, index: number) => {
@@ -158,7 +168,7 @@ const toggleVerifyButtonSubmitting = ({
 
 const generateBatchVerifyButtonId = (
   variantId: string | number,
-  index: number
+  index: number,
 ) => {
   return `batch-verify-button-${variantId}-${index}`;
 };

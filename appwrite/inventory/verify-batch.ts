@@ -6,19 +6,18 @@ import generateBatchIdCount from "~/utils/generateBatchIdCount";
 export default async function verifyProductInventoryBatch(
   variantId: string,
   batchId: string,
-  batchesSatisfied: string[]
+  batchesSatisfied: string[],
 ) {
   const satisfiedCount = generateBatchIdCount(batchesSatisfied);
-  const { documents: batches } = await getAllOrderedAvailableVariantBatches(
-    variantId
-  );
+  const { documents: batches } =
+    await getAllOrderedAvailableVariantBatches(variantId);
   for (const batch of batches) {
     if (
       batch.batchId === batchId &&
       batch.quantity >= 1 + (satisfiedCount[batchId] || 0)
-    )
+    ) {
       return true;
-    else if (batch.batchId === batchId) {
+    } else if (batch.batchId === batchId) {
       console.log(batch.quantity, satisfiedCount[batchId] + 1);
       throw new Error("Batch does not have enough quantity.");
     } else if (
@@ -28,7 +27,7 @@ export default async function verifyProductInventoryBatch(
       continue;
     else
       throw new Error(
-        `Batch with older batch id exists. Please use that to continue`
+        `Batch with older batch id exists. Please use that to continue`,
       );
   }
 
@@ -44,6 +43,6 @@ export async function getAllOrderedAvailableVariantBatches(variantId: string) {
       Query.greaterThan("quantity", 0),
       Query.orderAsc("expiryDate"),
       Query.limit(100),
-    ]
+    ],
   );
 }

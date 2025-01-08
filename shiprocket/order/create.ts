@@ -8,7 +8,7 @@ export default async function createShiprocketOrder(
     breadth: number;
     height: number;
     weight: number;
-  }
+  },
 ) {
   const accessToken = getAccessToken();
   const { data } = await axios.post("/api/shiprocket/create-order", {
