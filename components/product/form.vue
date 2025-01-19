@@ -1,9 +1,9 @@
 <template>
   <form
     @submit.prevent="handleSubmit"
-    class="flex flex-col lg:flex-row gap-5 flex-wrap"
+    class="flex flex-col flex-wrap gap-5 lg:flex-row"
   >
-    <div class="space-y-4 flex-1">
+    <div class="flex-1 space-y-4">
       <div>
         <label for="title" class="block text-sm font-medium text-gray-700"
           >Title <span class="text-red-500">*</span></label
@@ -43,7 +43,7 @@
       </div>
 
       <div>
-        <label for="images" class="block text-sm font-medium text-gray-700 mb-4"
+        <label for="images" class="mb-4 block text-sm font-medium text-gray-700"
           >Images <span class="text-red-500">*</span></label
         >
         <ProductNewImagePicker
@@ -144,19 +144,6 @@
       </div>
 
       <div>
-        <label for="quantity" class="block text-sm font-medium text-gray-700"
-          >Quantity <span class="text-red-500">*</span></label
-        >
-        <input
-          type="number"
-          id="quantity"
-          v-model.number="form.quantity"
-          class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-          required
-        />
-      </div>
-
-      <div>
         <label
           for="safetyInformationAndPrecaution"
           class="block text-sm font-medium text-gray-700"
@@ -194,7 +181,7 @@
         ></textarea>
       </div>
     </div>
-    <div class="lg:w-1/3 space-y-4 rounded-xl max-h-fit">
+    <div class="max-h-fit space-y-4 rounded-xl lg:w-1/3">
       <div>
         <ProductCollectionBox
           :fetched-collections="fetchedCollections.collections"
@@ -208,7 +195,7 @@
         />
       </div>
       <div>
-        <label for="tags" class="block text-sm font-medium text-gray-700 mb-2"
+        <label for="tags" class="mb-2 block text-sm font-medium text-gray-700"
           >Tags</label
         >
         <ProductTagInput v-model:model-value="form.tags" />
@@ -217,7 +204,7 @@
       <div>
         <label
           for="concerns"
-          class="block text-sm font-medium text-gray-700 mb-2"
+          class="mb-2 block text-sm font-medium text-gray-700"
           >Concerns</label
         >
         <ProductConcernInput v-model:model-value="form.tags" />
@@ -226,7 +213,7 @@
       <div>
         <label
           for="ingredients"
-          class="block text-sm font-medium text-gray-700 mb-2"
+          class="mb-2 block text-sm font-medium text-gray-700"
           >Ingredients</label
         >
         <ProductIngredientsInput v-model:model-value="form.tags" />
@@ -235,7 +222,7 @@
       <div>
         <label
           for="is-prescription-required"
-          class="block text-sm font-medium text-gray-700 mb-2"
+          class="mb-2 block text-sm font-medium text-gray-700"
           >Prescription Required</label
         >
         <Switch
@@ -245,11 +232,11 @@
       </div>
 
       <div>
-        <p class="block text-sm font-medium text-gray-700 mb-2">
+        <p class="mb-2 block text-sm font-medium text-gray-700">
           Product Status
         </p>
         <Select v-model:model-value="form.status">
-          <SelectTrigger class="bg-white font-medium py-1">
+          <SelectTrigger class="bg-white py-1 font-medium">
             <SelectValue placeholder="Select product status" />
           </SelectTrigger>
           <SelectContent>
@@ -265,7 +252,7 @@
         <button
           type="submit"
           :disabled="isSubmitting"
-          class="w-full py-2 px-4 bg-[#28574e] text-white font-semibold hover:bg-[#1f4d42] disabled:cursor-not-allowed disabled:opacity-70"
+          class="w-full bg-[#28574e] px-4 py-2 font-semibold text-white hover:bg-[#1f4d42] disabled:cursor-not-allowed disabled:opacity-70"
         >
           <span
             v-if="isSubmitting"
@@ -278,7 +265,7 @@
           v-if="props.defaultValues.status === 'active' && !!props.handle"
           :to="`https://mediu.in/shop/product/${props.handle}`"
           target="_blank"
-          class="w-full py-2 px-4 border border-[#28574e] flex items-center justify-center hover:text-white font-semibold hover:bg-[#1f4d42] disabled:cursor-not-allowed disabled:opacity-70"
+          class="flex w-full items-center justify-center border border-[#28574e] px-4 py-2 font-semibold hover:bg-[#1f4d42] hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
         >
           View Live
         </nuxt-link>
@@ -286,6 +273,8 @@
           v-if="!!props.productId"
           :product-id="props.productId"
         />
+
+        <ProductEditFormQuickLinks v-if="props.productId" :title="form.title" />
       </div>
     </div>
   </form>
@@ -323,7 +312,6 @@ const props = defineProps({
 });
 
 const isSubmitting = ref(false);
-const isDeleting = ref(false);
 const removedImages = ref([]);
 const addedImages = ref([]);
 
@@ -347,7 +335,7 @@ if (
 }
 
 const variants = ref<Array<{ [key: string]: string }>>(
-  props.defaultValues.variants || []
+  props.defaultValues.variants || [],
 );
 
 const form = ref({
@@ -359,10 +347,6 @@ const form = ref({
     props.defaultValues?.gstApplied !== undefined
       ? props.defaultValues.gstApplied
       : "",
-  quantity:
-    props.defaultValues?.quantity !== undefined
-      ? props.defaultValues.quantity
-      : 0,
   allowBackOrder: props.defaultValues?.allowBackOrder || false,
   tags: props.defaultValues?.tags || [],
   safetyInformationAndPrecaution:
@@ -400,14 +384,14 @@ const handleSubmit = async () => {
       variants: variants.value,
       collections: fetchedCollections.collections
         .filter((collection: any) =>
-          form.value.collections.includes(collection.handle)
+          form.value.collections.includes(collection.handle),
         )
         .map((collection: any) => collection.id),
     };
 
     if (Number.isNaN(parsedData.gstApplied)) {
       throw new Error(
-        "Invalid Input! Price, Compare at price and GST Applied must be decimal values."
+        "Invalid Input! Price, Compare at price and GST Applied must be decimal values.",
       );
     }
 

@@ -1,13 +1,15 @@
 <template>
-  <div v-if="!product" class="flex items-center justify-center flex-col gap-3">
-    <h1 class="text-3xl font-bold text-center">NOT FOUND</h1>
+  <div v-if="!product" class="flex flex-col items-center justify-center gap-3">
+    <h1 class="text-center text-3xl font-bold">NOT FOUND</h1>
     <nuxt-link to="/product" class="underline hover:no-underline"
       >All Products</nuxt-link
     >
   </div>
 
   <div v-else>
-    <h1 class="text-3xl font-bold mb-4">Edit Product #{{ productId }}</h1>
+    <h1 class="mb-4 text-3xl font-bold">Edit Product #{{ productId }}</h1>
+
+    <ProductInventoryAlert :product-id="productId" />
 
     <ProductForm
       :default-values="product"
@@ -23,7 +25,8 @@ import axios from "axios";
 
 const route = useRoute();
 
-const productId = route.params.id;
+const prod = route.params.id;
+const productId = Array.isArray(prod) ? prod[0] : prod;
 
 let fetchedProduct: any = null;
 let product: any = null;
@@ -75,7 +78,7 @@ const updateProduct = async (values: any) => {
     },
     {
       headers: { "Content-Type": "application/json" },
-    }
+    },
   );
 
   // remove already used information. (just maybe optimisation happens...)

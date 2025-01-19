@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
       descriptionHtml: body.description,
       tags: body.tags,
       collections: body.collections.map(
-        (collection: any) => `gid://shopify/Collection/${collection}`
+        (collection: any) => `gid://shopify/Collection/${collection}`,
       ),
       metafields,
       status: body.status.toUpperCase(),
@@ -35,7 +35,6 @@ export default defineEventHandler(async (event) => {
         inventoryPolicy: "DENY",
       })),
     };
-
     const updatedProduct = await setProduct(productId, product);
 
     await bulkpdateProductVariants(
@@ -46,7 +45,7 @@ export default defineEventHandler(async (event) => {
           harmonizedSystemCode: body.hsnCode,
           countryCodeOfOrigin: "IN",
         },
-      }))
+      })),
     );
 
     return { product: updatedProduct, errors };

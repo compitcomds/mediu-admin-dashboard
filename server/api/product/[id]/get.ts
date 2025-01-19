@@ -1,8 +1,4 @@
-import axios from "axios";
-import config from "~/utils/config";
-
-const SHOPIFY_GRAPHQL_API = `https://${config.shopifyDomain}/admin/api/2024-10/graphql.json`;
-const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
+import shopifyClient from "~/server/helpers/shopify-graphql-client";
 
 const getProductByIdQuery = `
 query getProductById($id: ID!) {
@@ -57,21 +53,12 @@ query getProductById($id: ID!) {
 `;
 
 export default async function getProductById(id: string) {
-  const { data } = await axios.post(
-    SHOPIFY_GRAPHQL_API,
-    {
-      query: getProductByIdQuery,
-      variables: {
-        id: `gid://shopify/Product/${id}`,
-      },
+  const { data } = await shopifyClient.request({
+    query: getProductByIdQuery,
+    variables: {
+      id: `gid://shopify/Product/${id}`,
     },
-    {
-      headers: {
-        "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  });
 
   return data?.data.product;
 }
