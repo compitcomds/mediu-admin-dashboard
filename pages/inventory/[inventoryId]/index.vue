@@ -1,8 +1,8 @@
 <template>
   <div
-    class="flex flex-col md:flex-row justify-between items-center mb-4 space-y-4 md:space-y-0"
+    class="mb-4 flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0"
   >
-    <h1 class="text-xl md:text-2xl font-semibold">
+    <h1 class="text-xl font-semibold md:text-2xl">
       Product #{{ inventoryId }}
     </h1>
     <InventoryAdd :variant-id="inventoryId" v-model:model-value="batches" />
@@ -34,21 +34,18 @@
         >
         <TableCell>{{ batch.quantity }}</TableCell>
         <TableCell>
-          <div class="flex gap-2 items-center pt-1">
+          <div class="flex items-center gap-2 pt-1">
             <button
               @click="downloadBarcode(batch.batchId)"
               title="Download Batch"
-              class="p-1 bg-black text-white font-semibold rounded-md w-fit"
+              class="w-fit rounded-md bg-black p-1 font-semibold text-white"
             >
               <span class="sr-only">Download</span> <Download :size="18" />
             </button>
-            <button
-              @click="deleteBatch(batch.$id)"
-              title="Delete Batch"
-              class="text-red-500 p-1 border-2 border-red-500 rounded-md hover:bg-red-500 hover:text-white transition"
-            >
-              <span class="sr-only">Delete Batch</span><Trash :size="16" />
-            </button>
+            <InventoryDeleteBatch
+              :batch-id="batch.$id"
+              v-model:model-value="batches"
+            />
           </div>
         </TableCell>
       </TableRow>
@@ -57,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-import { Trash, Download } from "lucide-vue-next";
+import { Download } from "lucide-vue-next";
 import {
   Table,
   TableBody,
@@ -69,7 +66,6 @@ import {
 } from "@/components/ui/table";
 import JsBarcode from "jsbarcode";
 import { getInventory } from "~/appwrite/inventory/get-inventory";
-import { deleteBatchFromInventory } from "~/appwrite/inventory/delete-batch";
 import type { Models } from "appwrite";
 
 const batches = ref<Models.Document[]>([]);
@@ -82,18 +78,6 @@ const fetchBatches = async () => {
     batches.value = documents;
   } catch (error) {
     console.error("Error fetching inventory:", error);
-  }
-};
-
-const deleteBatch = async (id: string) => {
-  if (!confirm("Are you sure you want to delete the batch?")) return;
-  try {
-    await deleteBatchFromInventory(id);
-    alert("Successfully deleted the batch!");
-    const index = batches.value.findIndex((batch) => batch.$id === id);
-    if (index !== -1) batches.value.splice(index, 1);
-  } catch (error: any) {
-    alert(error.message);
   }
 };
 
@@ -141,7 +125,7 @@ watch(
   () => {
     nextTick(() => generateBarcodes());
   },
-  { deep: true, immediate: true }
+  { deep: true, immediate: true },
 );
 
 useHead({

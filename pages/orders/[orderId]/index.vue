@@ -141,18 +141,18 @@
           </h3>
           <div class="mb-4">
             <p class="text-lg font-medium text-gray-800">
-              Name: {{ order.customer.displayName }}
+              Name: {{ order.customer?.displayName || "" }}
             </p>
             <p class="text-gray-600">
               Email:
               <a
-                :href="`mailto:${order.customer.email}`"
+                :href="`mailto:${order.customer?.email || ''}`"
                 class="text-blue-500 hover:underline"
-                >{{ order.customer.email }}</a
+                >{{ order.customer?.email || "" }}</a
               >
             </p>
             <p class="text-gray-600">
-              Phone: {{ order.customer.phone || "N/A" }}
+              Phone: {{ order.customer?.phone || "N/A" }}
             </p>
           </div>
         </div>
@@ -174,6 +174,7 @@
         >
           Confirmed
         </p>
+        <OrdersInvoiceDownloader :order-data="order" />
       </div>
     </div>
   </div>

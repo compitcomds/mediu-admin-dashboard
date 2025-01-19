@@ -5,6 +5,7 @@ query getOrderByIdQuery($id: ID!) {
   order(id: $id) {
     id: legacyResourceId
     createdAt
+    processedAt
     billingAddress {
       firstName
       lastName
@@ -110,7 +111,7 @@ export default async function getOrderById(id: string) {
   const lineItems = order.lineItems.nodes.map((node: any) => ({
     ...node,
     id: node.product?.id,
-    variantId: node.variant.id,
+    variantId: node.variant?.id,
     gstApplied: parseFloat(node.product?.gstApplied?.value || "0"),
     originalTotal: convertShopifAmountToFloat(
       node.originalTotal.presentmentMoney,

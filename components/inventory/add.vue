@@ -23,12 +23,15 @@ const form = ref<{
   batchId: "",
 });
 
+const isSubmitting = ref(false);
+
 const handleSubmit = async () => {
   const { date, quantity, batchId } = form.value;
   if (!date || !quantity || !batchId) {
     alert("All the fields are required. Please enter the values for all.");
     return;
   }
+  isSubmitting.value = true;
   try {
     const createdBatch = await createVariantInventory({
       batchId,
@@ -42,6 +45,8 @@ const handleSubmit = async () => {
     alert("Successfully created the batch.");
   } catch (error: any) {
     alert(error.message);
+  } finally {
+    isSubmitting.value = false;
   }
 };
 </script>
@@ -49,7 +54,7 @@ const handleSubmit = async () => {
 <template>
   <Dialog v-model:open="open">
     <DialogTrigger
-      class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
+      class="rounded-md bg-black px-2 py-1.5 text-white md:px-3 lg:ml-4"
       >Add Batch</DialogTrigger
     >
     <DialogContent>
@@ -64,7 +69,7 @@ const handleSubmit = async () => {
             id="variant-id"
             :value="props.variantId"
             disabled
-            class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none disabled:bg-gray-200 disabled:cursor-not-allowed"
+            class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none disabled:cursor-not-allowed disabled:bg-gray-200"
           />
         </div>
         <div>
@@ -99,9 +104,13 @@ const handleSubmit = async () => {
         </div>
         <button
           type="submit"
-          class="bg-black text-white px-2 md:px-3 py-1.5 rounded-md"
+          :disabled="isSubmitting"
+          class="rounded-md bg-black px-2 py-1.5 text-white md:px-3"
         >
-          Submit
+          <span v-if="!isSubmitting">Submit</span>
+          <span v-else class="flex items-center justify-center gap-2"
+            >Submitting <Loader
+          /></span>
         </button>
       </form>
     </DialogContent>

@@ -1,7 +1,7 @@
 <template>
   <Dialog v-model:open="open">
     <DialogTrigger
-      class="w-full rounded-md bg-black px-1 py-2 text-xl font-semibold text-white disabled:animate-pulse disabled:cursor-not-allowed"
+      class="w-full rounded-md bg-black px-6 py-2 text-sm font-semibold text-white disabled:animate-pulse disabled:cursor-not-allowed"
     >
       Confirm Order
     </DialogTrigger>
