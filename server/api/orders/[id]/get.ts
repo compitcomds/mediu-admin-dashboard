@@ -41,14 +41,14 @@ query getOrderByIdQuery($id: ID!) {
           }
         }
         sku
-        image {
-          url
-          altText
-        }
         product {
           id: legacyResourceId
           gstApplied: metafield(key: "gst_applied", namespace: "custom") {
             value
+          }
+          featuredImage{
+            url
+            altText
           }
         }
         variant {
@@ -120,6 +120,7 @@ export default async function getOrderById(id: string) {
       node.discountedTotal.presentmentMoney,
     ),
     unitPrice: convertShopifAmountToFloat(node.unitPrice.presentmentMoney),
+    image: node.product?.featuredImage,
   }));
   return {
     ...order,

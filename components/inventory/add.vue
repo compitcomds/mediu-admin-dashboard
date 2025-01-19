@@ -54,7 +54,7 @@ const handleSubmit = async () => {
 <template>
   <Dialog v-model:open="open">
     <DialogTrigger
-      class="rounded-md bg-black px-2 py-1.5 text-white md:px-3 lg:ml-4"
+      class="rounded-md bg-black px-2 py-1.5 text-xs text-white sm:text-base md:px-3 lg:ml-4"
       >Add Batch</DialogTrigger
     >
     <DialogContent>

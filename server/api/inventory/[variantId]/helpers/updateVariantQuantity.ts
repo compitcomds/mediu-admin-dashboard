@@ -1,5 +1,5 @@
 import shopifyClient from "~/server/helpers/shopify-graphql-client";
-import getVariantInventoryDetails from "./getVariantDetails";
+import getVariantInventoryDetails from "./getVariantInventoryDetails";
 
 const inventoryAdjustmentMutation = `
 mutation inventoryAdjustmentMutation($delta: Int!, $inventoryItemId: ID!, $locationId: ID!, $reason: String!) {
@@ -33,12 +33,12 @@ export default async function updateVariantInventoryQuantity(
   if (!delta && !absolute)
     throw new Error("Neither delta nor absolute provided.");
 
-  let change = delta || (absolute as number) - inventory.quantity;
+  let change = !!delta ? delta : (absolute as number) - inventory.quantity;
 
   const { data } = await shopifyClient.request({
     query: inventoryAdjustmentMutation,
     variables: {
-      delta,
+      delta: change,
       inventoryItemId,
       locationId: inventory.location,
       reason: getInventoryUpdateReason(change),

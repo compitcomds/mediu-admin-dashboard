@@ -1,12 +1,20 @@
 <template>
-  <div
-    class="mb-4 flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0"
-  >
-    <h1 class="text-xl font-semibold md:text-2xl">
+  <div class="mb-4 flex items-center justify-between">
+    <h1 class="font-semibold sm:text-xl md:text-2xl">
       Product #{{ inventoryId }}
     </h1>
-    <InventoryAdd :variant-id="inventoryId" v-model:model-value="batches" />
+    <div class="flex items-center gap-2">
+      <InventorySyncInventory
+        :batches="batches"
+        :inventoryQuantity="variantBasicDetails?.inventoryQuantity"
+        :variant-id="inventoryId"
+        @update-inventory="updateInventoryHandler"
+      />
+      <InventoryAdd :variant-id="inventoryId" v-model:model-value="batches" />
+    </div>
   </div>
+  <InventoryVariantDetails :variant="variantBasicDetails" />
+
   <Table>
     <TableCaption>A list of all batches of {{ inventoryId }}.</TableCaption>
     <TableHeader>
@@ -67,10 +75,22 @@ import {
 import JsBarcode from "jsbarcode";
 import { getInventory } from "~/appwrite/inventory/get-inventory";
 import type { Models } from "appwrite";
+import axios from "axios";
 
 const batches = ref<Models.Document[]>([]);
 const route = useRoute();
 const inventoryId = route.params.inventoryId as string;
+
+const variantBasicDetails = ref<any>(null);
+
+const fetchInventoryVariant = async () => {
+  try {
+    const { data } = await axios.get(`/api/inventory/${inventoryId}`);
+    variantBasicDetails.value = data;
+  } catch (error: any) {
+    console.error(error);
+  }
+};
 
 const fetchBatches = async () => {
   try {
@@ -93,6 +113,10 @@ const generateBarcodes = () => {
       });
     }
   });
+};
+
+const updateInventoryHandler = (newQuantity: number) => {
+  variantBasicDetails.value.inventoryQuantity = newQuantity;
 };
 
 const downloadBarcode = (batchId: string) => {
@@ -118,6 +142,7 @@ const downloadBarcode = (batchId: string) => {
 onMounted(async () => {
   await fetchBatches();
   generateBarcodes();
+  fetchInventoryVariant();
 });
 
 watch(

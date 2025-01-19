@@ -2,25 +2,25 @@ import shopifyClient from "~/server/helpers/shopify-graphql-client";
 
 const DEFAULT_LOCATION_ID = "gid://shopify/Location/69352587337";
 const productVariantInventoryQuery = `
-query productVariantInventoryQuery($id: ID!) {
-  productVariant(id: $id) {
-    id
-    inventoryQuantity
-    inventoryItem {
+  query productVariantInventoryQuery($id: ID!) {
+    productVariant(id: $id) {
       id
-      inventoryLevels(first: 1) {
-        nodes {
-          location {
-            id
-          }
-          quantities(names: "available") {
-            quantity
+      inventoryQuantity
+      inventoryItem {
+        id
+        inventoryLevels(first: 1) {
+          nodes {
+            location {
+              id
+            }
+            quantities(names: "available") {
+              quantity
+            }
           }
         }
       }
     }
-  }
-}`;
+  }`;
 
 export default async function getVariantInventoryDetails(variantId: string) {
   const { data } = await shopifyClient.request({

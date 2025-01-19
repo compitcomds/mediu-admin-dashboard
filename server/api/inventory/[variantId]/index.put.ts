@@ -1,4 +1,4 @@
-import updateVariantInventoryQuantity from "./updateVariantQuantity";
+import updateVariantInventoryQuantity from "./helpers/updateVariantQuantity";
 
 export default defineEventHandler(async (event) => {
   const variantId = event.context.params?.variantId;
