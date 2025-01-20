@@ -70,6 +70,12 @@ query getOrderByIdQuery($id: ID!) {
         currencyCode
       }
     }
+    cartDiscountAmountSet {
+      presentmentMoney {
+        amount
+        currencyCode
+      }
+    }
     shippingAddress {
       name
       address1
@@ -122,6 +128,7 @@ export default async function getOrderById(id: string) {
     unitPrice: convertShopifAmountToFloat(node.unitPrice.presentmentMoney),
     image: node.product?.featuredImage,
   }));
+
   return {
     ...order,
     lineItems,
@@ -130,6 +137,9 @@ export default async function getOrderById(id: string) {
     ),
     discountedTotalPriceSet: convertShopifAmountToFloat(
       order.discountedTotalPriceSet.presentmentMoney,
+    ),
+    cartDiscountAmountSet: convertShopifAmountToFloat(
+      order.cartDiscountAmountSet.presentmentMoney,
     ),
   };
 }

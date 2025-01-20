@@ -29,9 +29,8 @@ export function calculateGSTApplied(item: {
       ? parseFloat(item.cost.amount)
       : item.cost.amount;
 
-  const taxAmountPerItem =
-    (costAmount * item.gstApplied) / (100 + item.gstApplied);
-  const taxForQuantity = taxAmountPerItem * item.quantity;
+  const basePrice = costAmount / (1 + item.gstApplied / 100);
+  const gstAmount = costAmount - basePrice;
 
-  return taxForQuantity.toFixed(2);
+  return gstAmount.toFixed(2);
 }

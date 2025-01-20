@@ -6,6 +6,7 @@ const props = defineProps<{
   discountCodes: string[];
   originalTotalAmount: any;
   discountedAmount: any;
+  cartDiscountedAmount: any;
 }>();
 
 const orderDocument = ref<any>();
@@ -29,6 +30,11 @@ onMounted(() => {
       <p>
         <span class="text-gray-600">Wallet Amount Used: </span> ₹{{
           orderDocument?.walletAmountUsed || 0
+        }}
+      </p>
+      <p v-if="props.cartDiscountedAmount.amount > 0">
+        <span class="text-gray-600">Discount Applied: </span> ₹{{
+          props.cartDiscountedAmount.amount
         }}
       </p>
       <p>
