@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="hidden">
     <div
       id="invoice"
       class="invoice-container max-w-[90%] bg-white p-5 text-black"
