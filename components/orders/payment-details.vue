@@ -2,7 +2,7 @@
 import getAppwriteOrderById from "~/appwrite/order/get-appwrite-order";
 
 const props = defineProps<{
-  appwriteOrderId: string;
+  appwriteOrderId: string | null;
   discountCodes: string[];
   originalTotalAmount: any;
   discountedAmount: any;
@@ -12,7 +12,8 @@ const props = defineProps<{
 const orderDocument = ref<any>();
 
 const fetchOrderDocument = async () => {
-  orderDocument.value = await getAppwriteOrderById(props.appwriteOrderId);
+  if (props.appwriteOrderId)
+    orderDocument.value = await getAppwriteOrderById(props.appwriteOrderId);
 };
 
 onMounted(() => {

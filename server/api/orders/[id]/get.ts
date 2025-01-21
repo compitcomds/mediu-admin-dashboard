@@ -6,6 +6,9 @@ query getOrderByIdQuery($id: ID!) {
     id: legacyResourceId
     createdAt
     processedAt
+    displayFulfillmentStatus
+    discountCodes
+    displayFinancialStatus
     billingAddress {
       firstName
       lastName
@@ -56,8 +59,6 @@ query getOrderByIdQuery($id: ID!) {
         }
       }
     }
-    createdAt
-    discountCodes
     originalTotalPriceSet {
       presentmentMoney {
         amount
@@ -95,11 +96,13 @@ query getOrderByIdQuery($id: ID!) {
       firstName
       lastName
     }
-    displayFulfillmentStatus
     appwriteOrderId: metafield(key: "appwriteOrderId", namespace: "custom") {
       value
     }
     prescriptionUrl: metafield(key: "prescriptionUrl", namespace: "custom") {
+      value
+    }
+    walletAmountUsed: metafield(key: "walletAmountUsed", namespace: "custom") {
       value
     }
   }
@@ -132,6 +135,9 @@ export default async function getOrderById(id: string) {
   return {
     ...order,
     lineItems,
+    walletAmountUsed: order.walletAmountUsed?.value || "0",
+    appwriteOrderId: order.appwriteOrderId?.value,
+    prescriptionUrl: order.prescriptionUrl?.value,
     originalTotalPriceSet: convertShopifAmountToFloat(
       order.originalTotalPriceSet.presentmentMoney,
     ),

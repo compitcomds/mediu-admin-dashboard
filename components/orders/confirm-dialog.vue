@@ -6,9 +6,9 @@
       Confirm Order
     </DialogTrigger>
     <DialogContent
-      class="max-h-[90vh] min-w-[70vw] overflow-y-auto overflow-x-clip p-0 pb-4"
+      class="max-h-[90vh] min-w-[70vw] overflow-y-auto overflow-x-clip p-6 pb-4"
     >
-      <DialogHeader class="p-6 pb-0">
+      <DialogHeader class="px- pb-0">
         <DialogTitle>Confirm the order</DialogTitle>
       </DialogHeader>
       <div

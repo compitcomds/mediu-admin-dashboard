@@ -157,7 +157,7 @@
           </div>
         </div>
         <OrdersPaymentDetails
-          :appwriteOrderId="order.appwriteOrderId?.value"
+          :appwriteOrderId="order.appwriteOrderId"
           :discountCodes="order.discountCodes"
           :originalTotalAmount="order.originalTotalPriceSet"
           :discountedAmount="order.discountedTotalPriceSet"
@@ -200,11 +200,10 @@ const fulfillmentStatus = ref<string>("");
 const fetchOrder = async () => {
   try {
     const { data } = await axios.get(`/api/orders/${orderId}`);
-
     if (!data) throw new Error("Error fetching the order.");
     order.value = data;
     fulfillmentStatus.value = data.displayFulfillmentStatus;
-    prescriptionImage.value = data.prescriptionUrl?.value;
+    prescriptionImage.value = data.prescriptionUrl;
   } catch (err) {
     error.value.push("Error fetching the order.");
   } finally {

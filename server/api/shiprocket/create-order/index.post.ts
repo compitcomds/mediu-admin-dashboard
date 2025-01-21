@@ -21,6 +21,12 @@ async function createShiprocketOrder(
   },
   retry: number = 0,
 ) {
+  const paymentMethod =
+    orderData.displayFinancialStatus.toLowerCase() === "paid"
+      ? "Prepaid"
+      : "COD";
+  const walletAmountUsed = parseFloat(orderData.walletAmountUsed || "0");
+
   const url = `${SHIPROCKET_API}/orders/create/adhoc`;
   const shiprocketOrder = {
     order_id: orderData.id,
@@ -63,10 +69,10 @@ async function createShiprocketOrder(
       name: item.name,
       sku: item.sku,
       units: item.quantity,
-      selling_price: item.discountedTotal.amount,
+      selling_price: item.unitPrice.amount,
     })),
-    payment_method: "Prepaid",
-    sub_total: orderData.discountedTotalPriceSet.amount,
+    payment_method: paymentMethod,
+    sub_total: orderData.discountedTotalPriceSet.amount - walletAmountUsed,
     length: dimensions.length,
     breadth: dimensions.breadth,
     height: dimensions.height,

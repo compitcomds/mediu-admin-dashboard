@@ -19,10 +19,12 @@
     <TableCaption>A list of all batches of {{ inventoryId }}.</TableCaption>
     <TableHeader>
       <TableRow>
-        <TableHead class="w-[300px] lg:w-[500px]">BarCode</TableHead>
-        <TableHead>Created Date</TableHead>
-        <TableHead>Expiry Date</TableHead>
+        <TableHead class="w-[300px] lg:w-[400px]">BarCode</TableHead>
+        <TableHead>Batch Id</TableHead>
         <TableHead>Quantity</TableHead>
+        <TableHead>Initial Quantity</TableHead>
+        <TableHead>Expiry Date</TableHead>
+        <TableHead>Created Date</TableHead>
         <TableHead>Action</TableHead>
       </TableRow>
     </TableHeader>
@@ -34,13 +36,15 @@
             class="barcode max-w-full"
           ></svg>
         </TableCell>
-        <TableCell>{{
-          new Date(batch.$createdAt).toLocaleDateString()
-        }}</TableCell>
+        <TableCell>{{ batch.batchId }}</TableCell>
+        <TableCell>{{ batch.quantity }}</TableCell>
+        <TableCell>{{ batch.initialQuantity }}</TableCell>
         <TableCell>
           {{ new Date(batch.expiryDate).toLocaleDateString() }}</TableCell
         >
-        <TableCell>{{ batch.quantity }}</TableCell>
+        <TableCell>{{
+          new Date(batch.$createdAt).toLocaleDateString()
+        }}</TableCell>
         <TableCell>
           <div class="flex items-center gap-2 pt-1">
             <button
