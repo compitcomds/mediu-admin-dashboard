@@ -35,6 +35,7 @@ export default defineEventHandler(async (event) => {
         inventoryPolicy: "DENY",
       })),
     };
+
     const updatedProduct = await setProduct(productId, product);
 
     await bulkpdateProductVariants(

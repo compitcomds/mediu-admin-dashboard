@@ -8,6 +8,7 @@ const setProductMutation = `
 mutation setProductMutation($input: ProductSetInput!) {
   productSet(input: $input, synchronous: true) {
     product {
+      title
       options {
         name
         values
@@ -41,7 +42,7 @@ export default async function setProduct(
       type: string;
     }>;
     descriptionHtml: string;
-    productOptions: Array<{
+    productOptions?: Array<{
       name: string;
       position?: number;
       values: Array<{ name: string }>;
@@ -59,7 +60,7 @@ export default async function setProduct(
         optionId?: string;
       }>;
     }>;
-  }
+  },
 ) {
   const { data } = await axios.post(
     SHOPIFY_GRAPHQL_API,
@@ -74,8 +75,10 @@ export default async function setProduct(
         "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
         "Content-Type": "application/json",
       },
-    }
+    },
   );
+
+  console.log(data.data.productSet.userErrors);
 
   const updatedProduct = data.data?.productSet?.product as {
     options: Array<{ name: string; values: string[] }>;
