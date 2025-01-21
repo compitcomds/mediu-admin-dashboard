@@ -17,6 +17,8 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const header = getHeader(event, "x-api-key");
 
+  setResponseStatus(event, 200);
+
   if (header !== SHIPROCKET_CONFIRM_COD_TOKEN) return;
 
   console.log(body.current_status);
@@ -27,4 +29,6 @@ export default defineEventHandler(async (event) => {
     query: orderMarkAsPaidMutation,
     variables: { orderId: `gid://shopify/Order/${orderId}` },
   });
+
+  return;
 });
