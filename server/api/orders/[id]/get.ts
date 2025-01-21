@@ -138,9 +138,9 @@ export default async function getOrderById(id: string) {
     discountedTotalPriceSet: convertShopifAmountToFloat(
       order.discountedTotalPriceSet.presentmentMoney,
     ),
-    cartDiscountAmountSet: convertShopifAmountToFloat(
-      order.cartDiscountAmountSet.presentmentMoney,
-    ),
+    cartDiscountAmountSet: !!order.cartDiscountAmountSet?.presentmentMoney
+      ? convertShopifAmountToFloat(order.cartDiscountAmountSet.presentmentMoney)
+      : { amount: 0 },
   };
 }
 
