@@ -17,11 +17,10 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const header = getHeader(event, "x-api-key");
 
-  setResponseStatus(event, 200);
+  if (header !== SHIPROCKET_CONFIRM_COD_TOKEN) return "Invalid Access";
 
-  if (header !== SHIPROCKET_CONFIRM_COD_TOKEN) return;
-
-  if (body.current_status.toLowerCase() !== "delivered") return;
+  if (body.current_status.toLowerCase() !== "delivered")
+    return "Invalid Status";
 
   try {
     const orderId = body.channel_order_id;
@@ -33,5 +32,5 @@ export default defineEventHandler(async (event) => {
     console.error(error);
   }
 
-  return;
+  return "Executed Successfully";
 });
