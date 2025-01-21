@@ -21,14 +21,17 @@ export default defineEventHandler(async (event) => {
 
   if (header !== SHIPROCKET_CONFIRM_COD_TOKEN) return;
 
-  console.log(body.current_status);
-  console.log(body);
   if (body.current_status.toLowerCase() !== "delivered") return;
-  const orderId = body.channel_order_id;
-  shopifyClient.request({
-    query: orderMarkAsPaidMutation,
-    variables: { orderId: `gid://shopify/Order/${orderId}` },
-  });
+
+  try {
+    const orderId = body.channel_order_id;
+    await shopifyClient.request({
+      query: orderMarkAsPaidMutation,
+      variables: { orderId: `gid://shopify/Order/${orderId}` },
+    });
+  } catch (error) {
+    console.error(error);
+  }
 
   return;
 });
