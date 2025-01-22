@@ -17,10 +17,15 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const header = getHeader(event, "x-api-key");
 
-  if (header !== SHIPROCKET_CONFIRM_COD_TOKEN) return "Invalid Access";
+  if (header !== SHIPROCKET_CONFIRM_COD_TOKEN) {
+    console.log("COD CONFIRM: Invalid access");
+    return "Invalid Access";
+  }
 
-  if (body.current_status.toLowerCase() !== "delivered")
+  if (body.current_status.toLowerCase() !== "delivered") {
+    console.log("COD CONFIRM: Invalid status");
     return "Invalid Status";
+  }
 
   try {
     const orderId = body.channel_order_id;
@@ -28,9 +33,10 @@ export default defineEventHandler(async (event) => {
       query: orderMarkAsPaidMutation,
       variables: { orderId: `gid://shopify/Order/${orderId}` },
     });
+    console.log(`Marked as paid: ${orderId}`);
+    return `Marked as paid: ${orderId}`;
   } catch (error) {
     console.error(error);
   }
-
-  return "Executed Successfully";
+  return "Executed with error!!";
 });

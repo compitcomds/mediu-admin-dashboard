@@ -65,12 +65,7 @@ async function createShiprocketOrder(
       orderData.billingAddress.phone || orderData.shippingAddress?.phone || "",
     billing_email: orderData.customer.email,
     shipping_is_billing: true,
-    order_items: orderData.lineItems.map((item: any) => ({
-      name: item.name,
-      sku: item.sku,
-      units: item.quantity,
-      selling_price: item.unitPrice.amount,
-    })),
+    order_items: formatLineItems(orderData.lineItems),
     payment_method: paymentMethod,
     sub_total: orderData.discountedTotalPriceSet.amount - walletAmountUsed,
     length: dimensions.length,
@@ -80,14 +75,12 @@ async function createShiprocketOrder(
   };
 
   try {
-    const createdOrder = await axios.post(url, shiprocketOrder, {
+    await axios.post(url, shiprocketOrder, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
       },
     });
-
-    console.log(createdOrder);
 
     return { accessToken };
   } catch (error: any) {
@@ -105,6 +98,21 @@ async function createShiprocketOrder(
       "Unable to pass the order for shipment right now. Please try again later.",
     );
   }
+}
+
+function formatLineItems(items: any[]) {
+  const lineItems = [];
+  for (const item of items) {
+    let i: Record<string, any> = {
+      name: item.name,
+      sku: item.sku,
+      units: item.quantity,
+      selling_price: item.unitPrice.amount,
+    };
+    if (item.hsnCode) i["hsn"] = item.hsnCode;
+    lineItems.push(i);
+  }
+  return lineItems;
 }
 
 async function getNewAcessToken() {

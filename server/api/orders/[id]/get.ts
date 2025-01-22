@@ -56,6 +56,9 @@ query getOrderByIdQuery($id: ID!) {
         }
         variant {
           id: legacyResourceId
+          inventoryItem {
+            harmonizedSystemCode
+          }
         }
       }
     }
@@ -121,6 +124,7 @@ export default async function getOrderById(id: string) {
     ...node,
     id: node.product?.id,
     variantId: node.variant?.id,
+    hsnCode: node.variant?.inventoryItem?.harmonizedSystemCode,
     gstApplied: parseFloat(node.product?.gstApplied?.value || "0"),
     originalTotal: convertShopifAmountToFloat(
       node.originalTotal.presentmentMoney,
