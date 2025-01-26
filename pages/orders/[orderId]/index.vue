@@ -4,14 +4,20 @@
       <h1 class="text-2xl font-semibold">
         Order #{{ orderId }}
         <span
-          class="w-fit rounded-md p-2 text-xs font-bold capitalize text-white"
-          :class="{
-            'bg-[#28574e]': fulfillmentStatus === 'FULFILLED',
-            'bg-red-500': fulfillmentStatus !== 'FULFILLED',
-          }"
+          v-if="fulfillmentStatus === 'FULFILLED'"
+          class="w-fit rounded-md bg-[#28574e] p-2 text-xs font-bold capitalize text-white"
+          >Fulfilled</span
         >
-          {{ fulfillmentStatus.toLowerCase() }}
-        </span>
+        <span
+          v-else-if="!!order.cancelledAt"
+          class="w-fit rounded-md bg-red-500 p-2 text-xs font-bold capitalize text-white"
+          >Cancelled</span
+        >
+        <span
+          v-else
+          class="w-fit rounded-md bg-red-500 p-2 text-xs font-bold capitalize text-white"
+          >Unfulfilled</span
+        >
       </h1>
     </div>
     <div class="items-top h-fit w-full gap-5 md:flex">
@@ -162,19 +168,25 @@
           :originalTotalAmount="order.originalTotalPriceSet"
           :discountedAmount="order.discountedTotalPriceSet"
           :cart-discounted-amount="order.cartDiscountAmountSet"
+          :cancelled-at="order.cancelledAt"
         />
         <OrdersConfirmDialog
-          v-if="fulfillmentStatus !== 'FULFILLED'"
+          v-if="fulfillmentStatus !== 'FULFILLED' && !order.cancelledAt"
           :order-data="order"
           :orderId="orderId"
           v-on:orderFulfilled="fulfillmentStatus = 'FULFILLED'"
         />
         <p
-          v-else
+          v-if="fulfillmentStatus === 'FULFILLED'"
           class="sticky w-full rounded-md bg-[#28574e] p-1 text-center text-xl font-semibold text-white"
         >
           Confirmed
         </p>
+        <OrdersCancelOrder
+          v-if="fulfillmentStatus !== 'FULFILLED' && !order.cancelledAt"
+          :id="orderId"
+          v-on:orderCancelled="orderCancelled"
+        />
         <OrdersInvoiceDownloader :order-data="order" />
       </div>
     </div>
@@ -209,6 +221,11 @@ const fetchOrder = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const orderCancelled = () => {
+  order.value.cancelledAt = new Date().toISOString();
+  fulfillmentStatus.value = "UNFULFILLED";
 };
 
 onMounted(() => {

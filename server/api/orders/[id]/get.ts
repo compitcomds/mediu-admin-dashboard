@@ -9,6 +9,7 @@ query getOrderByIdQuery($id: ID!) {
     displayFulfillmentStatus
     discountCodes
     displayFinancialStatus
+    cancelledAt
     billingAddress {
       firstName
       lastName
@@ -135,7 +136,6 @@ export default async function getOrderById(id: string) {
     unitPrice: convertShopifAmountToFloat(node.unitPrice.presentmentMoney),
     image: node.product?.featuredImage,
   }));
-
   return {
     ...order,
     lineItems,

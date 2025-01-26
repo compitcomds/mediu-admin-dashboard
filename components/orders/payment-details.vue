@@ -7,6 +7,7 @@ const props = defineProps<{
   originalTotalAmount: any;
   discountedAmount: any;
   cartDiscountedAmount: any;
+  cancelledAt: string | null;
 }>();
 
 const orderDocument = ref<any>();
@@ -60,6 +61,10 @@ onMounted(() => {
           class="rounded-l-full rounded-r-full bg-gray-800 px-4 py-1 text-xs text-white"
           >{{ code }}</span
         >
+      </p>
+      <p v-if="props.cancelledAt">
+        <span class="text-gray-600">Cancelled At: </span>
+        {{ new Date(props.cancelledAt).toLocaleString() }}
       </p>
     </div>
   </div>
