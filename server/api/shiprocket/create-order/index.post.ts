@@ -84,7 +84,10 @@ async function createShiprocketOrder(
 
     return { accessToken };
   } catch (error: any) {
+    console.error("ERROR OCCURED WHILE CREATING ORDER");
+    console.error(error.response.data);
     console.log(error.response.data.errors);
+    console.log("END OF ERROR");
     if (error.status === 401 && retry < 3) {
       const newAccessToken = await getNewAcessToken();
       return await createShiprocketOrder(
