@@ -25,12 +25,20 @@ export const columns: ColumnDef<CustomerInterface>[] = [
           class:
             "bg-transparent text-black shadow-none text-inherit hover:bg-white/40",
         },
-        () => ["Customer Name", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+        () => ["Customer Name", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })],
       );
     },
     cell: ({ row }) => {
       const name: string = row.getValue("displayName");
-      return h("p", {}, name);
+      const id: string = row.getValue("id");
+      return h(
+        DataTableLink,
+        {
+          to: `/customers/${id}`,
+          class: "hover:text-green-700",
+        },
+        name,
+      );
     },
   },
   {
@@ -43,7 +51,7 @@ export const columns: ColumnDef<CustomerInterface>[] = [
           class:
             "bg-transparent text-black shadow-none text-inherit hover:bg-white/40",
         },
-        () => ["Customer Email", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+        () => ["Customer Email", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })],
       );
     },
     cell: ({ row }) => {
@@ -64,7 +72,7 @@ export const columns: ColumnDef<CustomerInterface>[] = [
         "p",
         !!location
           ? `${location.city} ${location.province}, ${location.country}`
-          : ""
+          : "",
       );
     },
   },
@@ -78,7 +86,7 @@ export const columns: ColumnDef<CustomerInterface>[] = [
           class:
             "bg-transparent text-black shadow-none text-inherit hover:bg-white/40",
         },
-        () => ["Customer Orders", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+        () => ["Customer Orders", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })],
       );
     },
     cell: ({ row }) => {
@@ -96,7 +104,7 @@ export const columns: ColumnDef<CustomerInterface>[] = [
           class:
             "bg-transparent text-black shadow-none text-inherit hover:bg-white/40",
         },
-        () => ["Amount Spent", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+        () => ["Amount Spent", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })],
       );
     },
     sortingFn: (rowA, rowB) => {
@@ -121,7 +129,7 @@ export const columns: ColumnDef<CustomerInterface>[] = [
           class:
             "bg-transparent text-black shadow-none text-inherit hover:bg-white/40",
         },
-        () => ["Created At", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+        () => ["Created At", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })],
       );
     },
     sortingFn: (rowA, rowB) => {
@@ -135,13 +143,34 @@ export const columns: ColumnDef<CustomerInterface>[] = [
       return h("p", {}, formatDate(createdAt));
     },
   },
+  {
+    accessorKey: "id",
+    header: () => h("div", { class: "min-w-[100px]" }, "Action"),
+    cell: ({ row }) => {
+      const id: string = row.getValue("id");
+      return h(
+        DataTableLink,
+        {
+          to: `/customers/${id}`,
+          class: "hover:bg-black/80 px-6 py-2 bg-black text-white",
+        },
+        "View",
+      );
+    },
+  },
 ];
 
 const formatDate = (dateString: string): string => {
-  const options: Intl.DateTimeFormatOptions = {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  };
-  return new Intl.DateTimeFormat("en-US", options).format(new Date(dateString));
+  try {
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    };
+    return new Intl.DateTimeFormat("en-US", options).format(
+      new Date(dateString),
+    );
+  } catch (error) {
+    return "";
+  }
 };

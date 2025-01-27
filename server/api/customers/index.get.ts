@@ -1,8 +1,8 @@
 import shopifyClient from "~/server/helpers/shopify-graphql-client";
 
 const customersAfterQuery = `
-query customersAfterQuery($after: String = "") {
-  customers(first: 30, after: $after) {
+query customersAfterQuery($after: String, $query: String) {
+  customers(first: 30, query: $query, after: $after, sortKey: CREATED_AT, reverse: true) {
     nodes {
       id: legacyResourceId
       displayName
@@ -29,12 +29,13 @@ query customersAfterQuery($after: String = "") {
 }`;
 
 const customersBeforeQuery = `
-query customersQuery($before: String = "") {
-  customers(last: 30, before: $before) {
+query customersQuery($before: String, $query: String) {
+  customers(last: 30, before: $before, query: $query, sortKey: CREATED_AT, reverse: true) {
     nodes {
       id: legacyResourceId
       displayName
       email
+      createdAt
       numberOfOrders
       amountSpent {
         amount
@@ -63,6 +64,7 @@ export default defineEventHandler(async (event) => {
     variables: {
       after: query.after || null,
       before: query.before || null,
+      query: !!query.query ? `${query.query}` : null,
     },
   });
   const customers = data.data.customers;
