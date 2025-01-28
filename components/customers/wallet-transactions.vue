@@ -78,23 +78,16 @@
   </div>
 </template>
 <script setup lang="ts">
-import axios from "axios";
-
-interface Transaction {
-  type: "USED" | "RECEIVED";
-  transactionId?: string;
-  amount: number;
-  appwriteOrderId?: string;
-  $createdAt: string;
-  appwriteOrderType: string;
-}
+import {
+  WalletTransaction,
+  getCustomerWalletTransactions,
+} from "~/appwrite/customer/wallet-transactions";
 
 const props = defineProps<{
-  customerId: string;
-  email: string;
+  appwriteUserId?: string;
 }>();
 
-const transactions = ref<Transaction[]>([]);
+const transactions = ref<WalletTransaction[]>([]);
 
 // Format date helper function
 const formatDate = (dateString: string) => {
@@ -108,13 +101,10 @@ const formatDate = (dateString: string) => {
 };
 
 const fetchTransactions = async () => {
-  try {
-    const { data } = await axios.post(
-      `/api/customers/${props.customerId}/wallet-transactions`,
-      { email: props.email },
-    );
-    transactions.value = data;
-  } catch (error) {}
+  if (!props.appwriteUserId) return;
+  transactions.value = await getCustomerWalletTransactions(
+    props.appwriteUserId,
+  );
 };
 
 onMounted(async () => {

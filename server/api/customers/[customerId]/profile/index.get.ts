@@ -1,4 +1,6 @@
 import shopifyClient from "~/server/helpers/shopify-graphql-client";
+import getUserAppwriteId from "./get-user-appwrite-id";
+import attachUserAppwriteId from "./attach-user-appwrite-id";
 
 const query = `
 query getCustomerProfile($id: ID!) {
@@ -18,6 +20,9 @@ query getCustomerProfile($id: ID!) {
       province
       zip
       country
+    }
+    appwriteUserId: metafield(key:"appwriteUserId", namespace:"custom"){
+      value
     }
   }
 }
@@ -44,5 +49,31 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return customer;
+  if (customer.appwriteUserId?.value) {
+    return {
+      ...customer,
+      appwriteUserId: customer.appwriteUserId.value,
+    };
+  }
+
+  const appwriteUserId = await getUserAppwriteId(customer.email);
+
+  if (!appwriteUserId) {
+    console.error("Customer not found in Appwrite but present in Shopify");
+  } else {
+    const successfullyAttached = await attachUserAppwriteId(
+      customerId,
+      appwriteUserId,
+    );
+    if (!successfullyAttached) {
+      console.error(
+        `Error: Attaching appwrite<${appwriteUserId}> to shopfiy<${customerId}>`,
+      );
+    }
+  }
+
+  return {
+    ...customer,
+    appwriteUserId,
+  };
 });

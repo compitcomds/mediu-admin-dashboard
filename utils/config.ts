@@ -17,6 +17,8 @@ const config = {
   appwriteHelpAndSupportBucketId: import.meta.env
     .VITE_APPWRITE_HELP_AND_SUPPORT_BUCKET_ID,
   appwriteOrdersId: import.meta.env.VITE_APPWRITE_ORDERS_ID,
+  appwriteCustomerWalletTransactionsCollectionId: import.meta.env
+    .VITE_APPWRITE_WALLET_TRANSACTIONS_COLLECTION_ID,
 };
 
 export default config;

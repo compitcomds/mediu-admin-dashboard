@@ -2,10 +2,7 @@
   <div v-if="profile" class="container mx-auto px-4 py-8">
     <CustomersProfile :profile="profile" />
     <CustomersOrderHistory :customer-id="customerId" />
-    <CustomersWalletTransactions
-      :email="profile.email"
-      :customer-id="customerId"
-    />
+    <CustomersWalletTransactions :appwrite-user-id="profile.appwriteUserId" />
   </div>
 </template>
 
