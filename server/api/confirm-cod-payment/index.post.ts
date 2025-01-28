@@ -28,7 +28,8 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const orderId = body.channel_order_id;
+    const orderId = body.order_id;
+    if (!orderId) console.log(body);
     await shopifyClient.request({
       query: orderMarkAsPaidMutation,
       variables: { orderId: `gid://shopify/Order/${orderId}` },
