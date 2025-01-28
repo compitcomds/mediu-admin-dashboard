@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="flex justify-between items-center mb-1">
+    <div class="mb-1 flex items-center justify-between">
       <h1 class="text-2xl font-semibold">Orders: All locations</h1>
       <div class="flex space-x-4"></div>
     </div>
@@ -8,12 +8,12 @@
       <p class="text-xs">Total Orders: {{ orders.length }}</p>
     </div>
 
-    <div class="flex items-center bg-white shadow rounded p-2 mb-4">
+    <div class="mb-4 flex items-center rounded bg-white p-2 shadow">
       <div class="flex space-x-4">
         <template v-for="filter in availableFilterList">
           <button
             @click="setFilter(filter)"
-            class="py-2 px-4 capitalize hover:border-b-2 hover:border-gray-300"
+            class="px-4 py-2 capitalize hover:border-b-2 hover:border-gray-300"
             :class="{
               'border-b-2 border-b-gray-700 hover:border-gray-700':
                 filter === activeFilter,
@@ -25,65 +25,65 @@
       </div>
     </div>
 
-    <div class="bg-white rounded shadow overflow-x-auto">
+    <div class="overflow-x-auto rounded bg-white shadow">
       <table class="min-w-full text-left">
         <thead class="bg-gray-50">
           <tr>
-            <th class="px-4 py-3 border-b border-gray-200">
+            <th class="border-b border-gray-200 px-4 py-3">
               <input type="checkbox" class="form-checkbox" />
             </th>
-            <th class="px-4 py-3 border-b border-gray-200">Order</th>
-            <th class="px-4 py-3 border-b border-gray-200">Date</th>
-            <th class="px-4 py-3 border-b border-gray-200">Customer</th>
-            <th class="px-4 py-3 border-b border-gray-200">Total</th>
-            <th class="px-4 py-3 border-b border-gray-200">Payment status</th>
-            <th class="px-4 py-3 border-b border-gray-200">
+            <th class="border-b border-gray-200 px-4 py-3">Order</th>
+            <th class="border-b border-gray-200 px-4 py-3">Date</th>
+            <th class="border-b border-gray-200 px-4 py-3">Customer</th>
+            <th class="border-b border-gray-200 px-4 py-3">Total</th>
+            <th class="border-b border-gray-200 px-4 py-3">Payment status</th>
+            <th class="border-b border-gray-200 px-4 py-3">
               Fulfillment status
             </th>
-            <th class="px-4 py-3 border-b border-gray-200">Items</th>
-            <th class="px-4 py-3 border-b border-gray-200">.</th>
+            <th class="border-b border-gray-200 px-4 py-3">Items</th>
+            <th class="border-b border-gray-200 px-4 py-3">.</th>
           </tr>
         </thead>
         <tbody>
           <template v-for="order in orders" :key="order.id">
             <tr v-if="checkOrder(order)" class="hover:bg-gray-50">
-              <td class="px-4 py-3 border-b border-gray-200">
+              <td class="border-b border-gray-200 px-4 py-3">
                 <input type="checkbox" class="form-checkbox" />
               </td>
-              <td class="px-4 py-3 border-b border-gray-200 text-blue-600">
+              <td class="border-b border-gray-200 px-4 py-3 text-blue-600">
                 <nuxt-link :to="`/orders/${order.id}`"
                   >{{ order.id }}
                 </nuxt-link>
               </td>
-              <td class="px-4 py-3 border-b border-gray-200">
+              <td class="border-b border-gray-200 px-4 py-3">
                 {{ formatDateTime(order.created_at) }}
               </td>
-              <td class="px-4 py-3 border-b border-gray-200">
+              <td class="border-b border-gray-200 px-4 py-3">
                 {{ order.customer?.first_name }}
                 {{ order.customer?.last_name }}
               </td>
-              <td class="px-4 py-3 border-b border-gray-200">
+              <td class="border-b border-gray-200 px-4 py-3">
                 {{ order.total_price }}
               </td>
-              <td class="px-4 py-3 border-b border-gray-200">
+              <td class="border-b border-gray-200 px-4 py-3">
                 <span
                   class="inline-flex items-center px-2 py-1 text-xs font-semibold leading-none"
                   :class="
                     order.financial_status === 'paid'
-                      ? 'text-gray-700 bg-gray-200 p-1 rounded-full'
-                      : 'text-red-700 bg-red-100 p-1 rounded-full '
+                      ? 'rounded-full bg-gray-200 p-1 text-gray-700'
+                      : 'rounded-full bg-red-100 p-1 text-red-700'
                   "
                 >
                   {{ order.financial_status }}
                 </span>
               </td>
-              <td class="px-4 py-3 border-b border-gray-200">
+              <td class="border-b border-gray-200 px-4 py-3">
                 <span
                   class="inline-flex items-center px-2 py-1 text-xs font-semibold leading-none"
                   :class="
                     order.fulfillment_status !== null
-                      ? 'text-yellow-800 bg-yellow-100 p-1 rounded-full'
-                      : 'text-red-600 bg-red-100 p-1 rounded-full'
+                      ? 'rounded-full bg-yellow-100 p-1 text-yellow-800'
+                      : 'rounded-full bg-red-100 p-1 text-red-600'
                   "
                 >
                   {{
@@ -93,13 +93,13 @@
                   }}
                 </span>
               </td>
-              <td class="px-4 py-3 border-b border-gray-200">
+              <td class="border-b border-gray-200 px-4 py-3">
                 {{ order.line_items.length }}
               </td>
-              <td class="px-4 py-3 border-b border-gray-200">
+              <td class="border-b border-gray-200 px-4 py-3">
                 <nuxt-link
                   :to="`/orders/${order.id}`"
-                  class="bg-black text-white font-semibold px-2 py-1 rounded-md shadow-gray-800"
+                  class="rounded-md bg-black px-2 py-1 font-semibold text-white shadow-gray-800"
                   >View</nuxt-link
                 >
               </td>

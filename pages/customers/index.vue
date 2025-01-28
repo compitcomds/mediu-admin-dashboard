@@ -8,7 +8,7 @@
     <p class="text-sm text-gray-500">
       Total Customers: <span class="text-black">{{ totalCustomers }}</span>
     </p>
-    <CustomersSearch />
+    <Search id="customer-search" placeholder="Searching all customers" />
   </div>
 
   <CustomersViewTable :customers="customers" />

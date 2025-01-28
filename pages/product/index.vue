@@ -1,14 +1,14 @@
 <template>
-  <div class="flex justify-between items-center mb-4">
-    <h1 class="text-xl md:text-2xl font-semibold">Products</h1>
-    <div class="flex flex-wrap gap-x-2">
-      <ProductSearch />
+  <div class="mb-4 flex items-center justify-between">
+    <h1 class="text-xl font-semibold md:text-2xl">Products</h1>
+    <div class="flex flex-wrap items-center gap-x-2">
+      <Search id="product-search" placeholder="Searching all products" />
       <div>
         <nuxt-link
-          class="flex items-center gap-2 hover:bg-black/70 bg-black text-white px-2 md:px-3 py-1.5 rounded-md lg:ml-4"
+          class="flex items-center gap-2 rounded-md bg-black px-2 py-1.5 text-white hover:bg-black/70 md:px-3 lg:ml-4"
           to="/product/add"
         >
-          <span class="md:block hidden">Add New Product</span>
+          <span class="hidden md:block">Add New Product</span>
           <span class=""><PlusCircle /></span>
         </nuxt-link>
       </div>
@@ -19,7 +19,7 @@
     <div
       v-for="(product, index) in products"
       :key="product.id"
-      class="bg-white p-4 rounded-lg shadow-md space-y-2"
+      class="space-y-2 rounded-lg bg-white p-4 shadow-md"
     >
       <div class="flex items-center justify-between">
         <div class="flex items-center">
@@ -27,7 +27,7 @@
             v-if="product.featuredImage"
             :src="product.featuredImage.url"
             :alt="product.featuredImage.altText || product.title"
-            class="w-16 h-16 mr-4 rounded"
+            class="mr-4 h-16 w-16 rounded"
           />
           <div>
             <nuxt-link
@@ -40,7 +40,7 @@
           </div>
         </div>
       </div>
-      <div class="text-sm text-gray-700 space-y-1">
+      <div class="space-y-1 text-sm text-gray-700">
         <p>
           <strong>Inventory:</strong>
           {{ product.totalInventory }}
@@ -55,53 +55,13 @@
   <div class="hidden lg:block">
     <ProductViewTable :products="products" />
   </div>
-  <div class="flex items-center gap-5 my-5 justify-center">
-    <nuxt-link
-      v-if="pageInfo.hasPreviousPage"
-      :to="{
-        path: '/product',
-        query: {
-          ...route.query,
-          before: pageInfo.startCursor || '',
-          after: undefined,
-        },
-      }"
-      class="py-3 px-8 rounded-lg hover:bg-gray-200"
-      >Previous</nuxt-link
-    >
-    <button
-      v-else
-      class="py-3 px-8 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
-      disabled
-    >
-      Previous
-    </button>
-    <nuxt-link
-      class="py-3 px-8 rounded-lg hover:bg-gray-200"
-      v-if="pageInfo.hasNextPage"
-      :to="{
-        path: '/product',
-        query: {
-          ...route.query,
-          before: undefined,
-          after: pageInfo.endCursor || '',
-        },
-      }"
-      >Next</nuxt-link
-    >
-    <button
-      v-else
-      class="py-3 px-8 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
-      disabled
-    >
-      Next
-    </button>
-  </div>
+  <PaginationButtons :pageInfo="pageInfo" />
 </template>
 
 <script setup lang="ts">
 import { PlusCircle } from "lucide-vue-next";
 import axios from "axios";
+
 const route = useRoute();
 
 const products = ref<any[]>([]);
@@ -130,7 +90,7 @@ const fetchProducts = async ({
     const { data } = await axios.get(
       `/api/products?after=${after || ""}&before=${before || ""}&query=${
         query || ""
-      }`
+      }`,
     );
     products.value = data.products;
     pageInfo.value = data.pageInfo;
@@ -151,7 +111,7 @@ watch(
   {
     deep: true,
     immediate: true,
-  }
+  },
 );
 
 useHead({

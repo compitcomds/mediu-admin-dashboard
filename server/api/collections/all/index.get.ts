@@ -1,12 +1,37 @@
-import axios from "axios";
-import config from "~/utils/config";
+import shopifyClient from "~/server/helpers/shopify-graphql-client";
 
-const SHOPIFY_GRAPHQL_API = `https://${config.shopifyDomain}/admin/api/2024-10/graphql.json`;
-const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
+const getAllCollectionsAfterQuery = `
+query getAllCollectionsQuery($query: String, $after: String) {
+  collections(first: 20, query: $query, after: $after) {
+    nodes {
+      id
+      handle
+      title
+      isBrandCollection: metafield(key: "isBrandCollection", namespace: "custom") {
+        value
+      }
+      productsCount {
+        count
+      }
+      description(truncateAt: 50)
+      image {
+        url
+        altText
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+  }
+}
+`;
 
-const getAllCollectionsQuery = `
-query getAllCollectionsQuery {
-  collections(first: 250) {
+const getAllCollectionsBeforeQuery = `
+query getAllCollectionsQuery($query: String, $before: String) {
+  collections(last: 20, query: $query, before: $before) {
     nodes {
       id
       handle
@@ -34,18 +59,17 @@ query getAllCollectionsQuery {
 `;
 
 export default defineEventHandler(async (event) => {
-  const { data } = await axios.post(
-    SHOPIFY_GRAPHQL_API,
-    {
-      query: getAllCollectionsQuery,
+  const query = getQuery(event);
+  const { data } = await shopifyClient.request({
+    query: !!query.before
+      ? getAllCollectionsBeforeQuery
+      : getAllCollectionsAfterQuery,
+    variables: {
+      query: !!query.query ? query.query : null,
+      after: query.after || null,
+      before: query.before || null,
     },
-    {
-      headers: {
-        "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+  });
 
   const collections = data?.data?.collections;
   return {

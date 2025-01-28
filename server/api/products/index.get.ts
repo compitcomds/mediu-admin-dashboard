@@ -1,8 +1,4 @@
-import axios from "axios";
-import config from "~/utils/config";
-
-const SHOPIFY_GRAPHQL_API = `https://${config.shopifyDomain}/admin/api/2024-10/graphql.json`;
-const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
+import shopifyClient from "~/server/helpers/shopify-graphql-client";
 
 const getAllProductsAfterQuery = `
 query getAllProductsQuery($query: String, $after: String) {
@@ -75,25 +71,16 @@ query getAllProductsQuery($query: String, $before: String) {
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   try {
-    const { data } = await axios.post(
-      SHOPIFY_GRAPHQL_API,
-      {
-        query: !!query.before
-          ? getAllProductsBeforeQuery
-          : getAllProductsAfterQuery,
-        variables: {
-          query: !!query.query ? `title:*${query.query}*` : null,
-          after: query.after || null,
-          before: query.before || null,
-        },
+    const { data } = await shopifyClient.request({
+      query: !!query.before
+        ? getAllProductsBeforeQuery
+        : getAllProductsAfterQuery,
+      variables: {
+        query: !!query.query ? `title:*${query.query}*` : null,
+        after: query.after || null,
+        before: query.before || null,
       },
-      {
-        headers: {
-          "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    });
     const products = data.data.products;
     return {
       products: products.nodes.map((prod: any) => ({

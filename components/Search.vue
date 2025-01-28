@@ -7,9 +7,9 @@
       <div class="relative">
         <input
           v-model="searchQuery"
-          id="customer-search"
+          :id="searchid"
           type="text"
-          placeholder="Searching all customer"
+          :placeholder="placeholder || 'Search'"
           class="w-24 border bg-white px-4 py-2 pl-7 text-sm focus:outline md:w-48 lg:w-64"
           @input="performSearch"
         />
@@ -39,11 +39,16 @@ import { Search, X } from "lucide-vue-next";
 
 const props = defineProps<{
   pathToRedirect?: string;
+  placeholder?: string;
+  id?: string;
 }>();
 
 const route = useRoute();
 const searchVisible = ref(false);
 const searchQuery = ref(route.query.query || "");
+
+const searchid =
+  props.id || `search-input-${Math.random().toString(36).substring(2, 15)}`;
 
 const toggleSearch = () => {
   searchVisible.value = !searchVisible.value;
@@ -53,14 +58,14 @@ const toggleSearch = () => {
 
   nextTick(() => {
     if (searchVisible.value) {
-      document.getElementById("customer-search")?.focus();
+      document.getElementById(searchid)?.focus();
     }
   });
 };
 
 const performSearch = useDebounceFn(async () => {
   await navigateTo({
-    path: props.pathToRedirect || "/customers",
+    path: props.pathToRedirect || route.path,
     query: { query: searchQuery.value || undefined },
   });
 }, 1000);
@@ -70,9 +75,3 @@ const clearSearch = async () => {
   searchVisible.value = false;
 };
 </script>
-
-<style scoped>
-.tab {
-  transition: all 0.3s ease-in-out;
-}
-</style>
