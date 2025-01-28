@@ -19,6 +19,9 @@ const config = {
   appwriteOrdersId: import.meta.env.VITE_APPWRITE_ORDERS_ID,
   appwriteCustomerWalletTransactionsCollectionId: import.meta.env
     .VITE_APPWRITE_WALLET_TRANSACTIONS_COLLECTION_ID,
+  appwriteRolesCollectionId: import.meta.env.VITE_APPWRITE_ROLES_COLLECTION_ID,
+  appwriteWalletCollectionId: import.meta.env
+    .VITE_APPWRITE_WALLET_COLLECTION_ID,
 };
 
 export default config;
