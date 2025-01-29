@@ -84,12 +84,20 @@
           </nuxt-link>
         </li>
         <li class="mb-4">
+          <nuxt-link
+            to="/customers"
+            class="flex items-center rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
+          >
+            <i class="fas fa-users mr-3 text-xl"></i> Users
+          </nuxt-link>
+        </li>
+        <!-- <li class="mb-4">
           <div
             @click="toggleDropdown('customers')"
             class="flex cursor-pointer items-center justify-between rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
           >
             <span class="flex items-center">
-              <i class="fas fa-users mr-3 text-xl"></i> User
+              <i class="fas fa-users mr-3 text-xl"></i> Users
             </span>
             <span
               :class="{ 'rotate-180': dropdowns.customers }"
@@ -126,7 +134,7 @@
               >
             </li>
           </ul>
-        </li>
+        </li> -->
         <li class="mb-4">
           <button
             @click="toggleDropdown('consultancy')"

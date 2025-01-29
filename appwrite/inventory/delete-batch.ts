@@ -12,10 +12,12 @@ export async function deleteBatchFromInventory(documentId: string) {
   await axios.put(`/api/inventory/${document.variantId}`, {
     delta: -document.quantity,
   });
+
   const deletedDocument = await database.deleteDocument(
     config.appwriteDatabaseId,
     config.appwriteInventoryCollectionId,
     documentId,
   );
+
   return deletedDocument;
 }

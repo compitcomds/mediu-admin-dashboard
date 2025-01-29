@@ -28,7 +28,9 @@ const deleteBatch = async () => {
     );
     if (index !== -1) batches.value.splice(index, 1);
   } catch (error: any) {
-    alert(error.message);
+    alert(
+      error.response?.data?.message || error.message || "Something went wrong!",
+    );
   } finally {
     isDeleting.value = false;
   }

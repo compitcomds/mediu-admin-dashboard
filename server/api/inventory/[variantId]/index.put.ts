@@ -6,16 +6,31 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const delta = body.delta;
   const absolute = body.absolute;
-  if (!delta && !absolute)
-    throw new Error(
-      "Please provide either a change in value (delta) or an absolute value (absolute).",
-    );
 
-  if (!!delta && typeof delta !== "number")
-    throw new Error("The provided value of delta is not number.");
+  const inValidDelta =
+    delta === undefined || delta === null || typeof delta !== "number";
 
-  if (!!absolute && typeof absolute !== "number")
-    throw new Error("The provided value of absolute is not a number.");
+  const inValidAbsolute =
+    absolute === undefined || absolute === null || typeof absolute !== "number";
+
+  if (inValidDelta && inValidAbsolute)
+    throw createError({
+      statusCode: 400,
+      statusMessage:
+        "Please provide either a change in value (delta) or an absolute value (absolute).",
+    });
+
+  if (!!delta && inValidDelta)
+    throw createError({
+      statusCode: 400,
+      statusMessage: "The provided value of delta is not number.",
+    });
+
+  if (!!absolute && inValidAbsolute)
+    throw createError({
+      statusCode: 400,
+      statusMessage: "The provided value of absolute is not a number.",
+    });
 
   try {
     await updateVariantInventoryQuantity(variantId, delta, absolute);

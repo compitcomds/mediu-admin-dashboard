@@ -30,10 +30,17 @@ export default async function updateVariantInventoryQuantity(
   const { inventoryItemId, inventory } =
     await getVariantInventoryDetails(variantId);
 
-  if (!delta && !absolute)
+  const invalidDelta = delta === undefined || delta === null;
+  const invalidAbsolute = absolute === undefined || absolute === null;
+
+  if (invalidDelta && invalidAbsolute)
     throw new Error("Neither delta nor absolute provided.");
 
-  let change = !!delta ? delta : (absolute as number) - inventory.quantity;
+  let change = !invalidDelta
+    ? delta
+    : (absolute as number) - inventory.quantity;
+
+  if (change === 0) return;
 
   const { data } = await shopifyClient.request({
     query: inventoryAdjustmentMutation,
@@ -44,6 +51,7 @@ export default async function updateVariantInventoryQuantity(
       reason: getInventoryUpdateReason(change),
     },
   });
+
   if (data.data?.inventoryAdjustQuantities?.inventoryAdjustmentGroup?.id)
     return;
   const errors: string = data.errors.map((err: any) => err.message).join(", ");
