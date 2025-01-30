@@ -1,7 +1,10 @@
 <template>
-  <div class="mb-8">
+  <div class="mb-8 lg:mb-16">
     <h2 class="mb-6 text-2xl font-bold">Orders History</h2>
-    <div class="overflow-hidden rounded-lg bg-white shadow">
+    <div
+      v-if="orders?.length > 0"
+      class="overflow-hidden rounded-lg bg-white shadow"
+    >
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
@@ -89,6 +92,9 @@
           </tbody>
         </table>
       </div>
+    </div>
+    <div v-else>
+      <p class="text-gray-500">No orders found</p>
     </div>
   </div>
 </template>

@@ -18,6 +18,12 @@
             >
             <p class="mt-1">{{ profile.phone }}</p>
           </div>
+          <div>
+            <label class="text-sm font-medium text-gray-700"
+              >Wallet Amount</label
+            >
+            <p class="mt-1">{{ props.walletAmount }}</p>
+          </div>
         </div>
         <div class="space-y-4 md:col-span-2">
           <div>
@@ -53,5 +59,6 @@
 <script setup lang="ts">
 const props = defineProps<{
   profile: any;
+  walletAmount: number;
 }>();
 </script>

@@ -88,7 +88,7 @@
             to="/customers"
             class="flex items-center rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
           >
-            <i class="fas fa-users mr-3 text-xl"></i> Users
+            <i class="fas fa-users mr-3 text-xl"></i> Customers
           </nuxt-link>
         </li>
         <!-- <li class="mb-4">

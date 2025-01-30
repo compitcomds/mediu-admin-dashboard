@@ -4,10 +4,10 @@ import { database } from "../config";
 export interface WalletTransaction extends Models.Document {
   userId: string;
   amount: number;
-  type: "USED" | "RECEIVED";
+  type: "USED" | "RECEIVED" | "ADMIN_REDUCED" | "ADMIN_ADDED";
   transactionId: string;
   appwriteOrderId: string;
-  appwriteOrderType: "CONSULTANCY" | "ORDER";
+  appwriteOrderType: "CONSULTANCY" | "ORDER" | "ADMIN_UPDATE";
 }
 
 export async function getCustomerWalletTransactions(customerId: string) {

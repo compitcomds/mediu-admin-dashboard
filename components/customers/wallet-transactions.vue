@@ -1,6 +1,17 @@
 <template>
   <div>
-    <h2 class="mb-6 text-2xl font-bold">Wallet Transactions</h2>
+    <div class="flex items-start justify-between gap-2">
+      <div>
+        <h2 class="mb-2 text-2xl font-bold">Wallet Transactions</h2>
+        <p class="mb-6">
+          Total Amount: {{ props.customerWallet?.amount || 0 }}
+        </p>
+      </div>
+      <CustomersUpdateCustomerWallet
+        :customer-wallet="customerWallet"
+        @update:customer-wallet="updateCustomerWallet"
+      />
+    </div>
     <div class="overflow-hidden rounded-lg bg-white shadow">
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
@@ -42,8 +53,9 @@
                 :class="{
                   'rounded px-2 py-1 text-xs font-semibold': true,
                   'bg-green-100 text-green-800':
-                    transaction.type === 'RECEIVED',
-                  'bg-red-100 text-red-800': transaction.type === 'USED',
+                    isTransactionPositive(transaction),
+                  'bg-red-100 text-red-800':
+                    !isTransactionPositive(transaction),
                 }"
               >
                 {{ transaction.type }}
@@ -56,11 +68,11 @@
               <span
                 :class="{
                   'font-medium': true,
-                  'text-green-600': transaction.type === 'RECEIVED',
-                  'text-red-600': transaction.type === 'USED',
+                  'text-green-600': isTransactionPositive(transaction),
+                  'text-red-600': !isTransactionPositive(transaction),
                 }"
               >
-                {{ transaction.type === "RECEIVED" ? "+" : "-" }}₹{{
+                {{ isTransactionPositive(transaction) ? "+" : "-" }}₹{{
                   transaction.amount
                 }}
               </span>
@@ -79,17 +91,20 @@
 </template>
 <script setup lang="ts">
 import {
-  WalletTransaction,
+  type WalletTransaction,
   getCustomerWalletTransactions,
 } from "~/appwrite/customer/wallet-transactions";
+import { type WalletType } from "~/appwrite/customer/get-wallet-amount";
 
 const props = defineProps<{
   appwriteUserId?: string;
+  customerWallet: WalletType | null;
 }>();
 
 const transactions = ref<WalletTransaction[]>([]);
 
-// Format date helper function
+const emit = defineEmits(["update:walletAmount"]);
+
 const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString("en-IN", {
     year: "numeric",
@@ -106,6 +121,18 @@ const fetchTransactions = async () => {
     props.appwriteUserId,
   );
 };
+
+const updateCustomerWallet = (updateDetails: {
+  updatedWallet: WalletType;
+  transaction: WalletTransaction;
+}) => {
+  transactions.value = [updateDetails.transaction, ...transactions.value];
+  emit("update:walletAmount", updateDetails.updatedWallet.amount);
+};
+
+function isTransactionPositive(transaction: WalletTransaction) {
+  return transaction.type === "RECEIVED" || transaction.type === "ADMIN_ADDED";
+}
 
 onMounted(async () => {
   await fetchTransactions();
