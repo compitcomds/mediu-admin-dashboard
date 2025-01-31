@@ -85,16 +85,19 @@ async function createShiprocketOrder(
     return { accessToken };
   } catch (error: any) {
     console.error("ERROR OCCURED WHILE CREATING ORDER");
-    console.error(error.response);
-    console.log("END OF ERROR");
+    console.error(`Status Code: ${error.status}`);
     if ((error.status === 401 || error.status === 403) && retry < 3) {
+      console.error("RETRYING...");
       const newAccessToken = await getNewAcessToken();
-      return await createShiprocketOrder(
-        newAccessToken,
-        orderData,
-        dimensions,
-        retry + 1,
-      );
+      if (newAccessToken) {
+        console.log(`New Access Token: ${newAccessToken}`);
+        return await createShiprocketOrder(
+          newAccessToken,
+          orderData,
+          dimensions,
+          retry + 1,
+        );
+      }
     }
     throw new Error(
       "Unable to pass the order for shipment right now. Please try again later.",
@@ -118,8 +121,14 @@ function formatLineItems(items: any[]) {
 }
 
 async function getNewAcessToken() {
-  const { data } = await axios.get(
-    `${PRODUCTION_API}/api/shiprocket/access-token`,
-  );
-  return data.token as string;
+  try {
+    const { data } = await axios.get(
+      `${PRODUCTION_API}/api/shiprocket/access-token`,
+    );
+    return data.token as string;
+  } catch (error) {
+    console.error("ERROR OCCURRED WHILE FETCHING Access Token.");
+    console.error(error);
+    return null;
+  }
 }

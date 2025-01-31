@@ -152,7 +152,8 @@ export const columns: ColumnDef<CustomerInterface>[] = [
         DataTableLink,
         {
           to: `/customers/${id}`,
-          class: "hover:bg-black/80 px-6 py-2 bg-black text-white",
+          class:
+            "hover:bg-black/80 px-6 py-2 my-1 block max-w-fit text-center bg-black text-white",
         },
         "View",
       );
