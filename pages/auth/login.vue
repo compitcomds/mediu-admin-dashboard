@@ -55,11 +55,17 @@ const email = ref("");
 const password = ref("");
 const isLoading = ref(false);
 
+const route = useRoute();
+const router = useRouter();
+
 const handleSubmit = async () => {
   isLoading.value = true;
   try {
+    const back = route.query?.back;
     await loginAdminUser(email.value, password.value);
-    window.location.href = "/";
+    reloadNuxtApp();
+    if (back) router.replace(`${back}`);
+    else router.replace("/");
   } catch (error) {
     alert(error.message);
   }
