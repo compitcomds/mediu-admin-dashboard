@@ -85,9 +85,8 @@ async function createShiprocketOrder(
     return { accessToken };
   } catch (error: any) {
     console.error("ERROR OCCURED WHILE CREATING ORDER");
-    console.error(`Status Code: ${error.status}`);
+    console.error(`Status Code: ${error.status}, Retry: ${retry}`);
     if ((error.status === 401 || error.status === 403) && retry < 3) {
-      console.error("RETRYING...");
       const newAccessToken = await getNewAcessToken();
       if (newAccessToken) {
         console.log(`New Access Token: ${newAccessToken}`);
@@ -127,7 +126,7 @@ async function getNewAcessToken() {
     );
     return data.token as string;
   } catch (error) {
-    console.error("ERROR OCCURRED WHILE FETCHING Access Token.");
+    console.error("ERROR OCCURRED WHILE FETCHING ACCESS TOKEN.");
     console.error(error);
     return null;
   }
