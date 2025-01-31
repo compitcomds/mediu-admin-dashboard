@@ -63,6 +63,14 @@
             </td>
             <td class="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
               {{ transaction.transactionId }}
+              <span
+                v-if="
+                  !transaction.transactionId &&
+                  transaction.appwriteOrderType === 'ORDER'
+                "
+                class="rounded bg-gray-200 px-2 py-1 text-xs font-semibold"
+                >COD</span
+              >
             </td>
             <td class="whitespace-nowrap px-6 py-4 text-sm">
               <span
