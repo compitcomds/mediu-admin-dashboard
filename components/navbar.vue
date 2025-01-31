@@ -29,7 +29,6 @@
 </template>
 
 <script setup lang="ts">
-import { SquareArrowOutUpRight } from "lucide-vue-next";
 import axios from "axios";
 import { logout } from "~/appwrite/login-admin";
 import { getUser } from "~/appwrite/login-admin";

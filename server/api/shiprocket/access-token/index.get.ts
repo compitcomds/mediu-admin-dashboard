@@ -6,6 +6,9 @@ const SHIPROCKET_PASSWORD = process.env.SHIPROCKET_PASSWORD;
 
 export default defineEventHandler(async (event) => {
   try {
+    console.log(SHIPROCKET_API_URL);
+    console.log(SHIPROCKET_PASSWORD);
+    throw new Error("Let's see this time what is the passor.");
     const url = `${SHIPROCKET_API_URL}/auth/login`;
     const { data } = await axios.post(
       url,
