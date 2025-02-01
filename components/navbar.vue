@@ -42,8 +42,7 @@ const orders = ref({
 const handleLogout = async () => {
   await logout();
   localStorage.clear();
-  reloadNuxtApp();
-  window.location.href = "/auth/login";
+  window.location.reload();
 };
 
 const checkUser = async () => {
