@@ -34,48 +34,66 @@
         />
       </CollapsibleTrigger>
       <CollapsibleContent class="pt-4">
-        <div class="grid gap-6 md:grid-cols-2">
-          <!-- Read Permissions -->
-          <div class="space-y-3">
-            <h4 class="text-sm font-medium text-gray-900">Read Permissions</h4>
-            <ul class="space-y-2">
-              <li
-                v-for="permission in availablePermissions"
-                :key="`read-${permission.value}`"
-                class="flex items-center gap-2"
-              >
-                <Check
-                  v-if="role.read.includes(permission.value)"
-                  class="h-4 w-4 text-green-500"
-                />
-                <X v-else class="h-4 w-4 text-gray-300" />
-                <span class="text-sm text-gray-600">{{
-                  permission.title
-                }}</span>
-              </li>
-            </ul>
-          </div>
+        <div class="space-y-6">
+          <template
+            v-for="section in availablePermissions"
+            :key="section.section"
+          >
+            <div class="space-y-4">
+              <h4 class="font-medium text-gray-900">{{ section.section }}</h4>
+              <div class="grid gap-6 md:grid-cols-2">
+                <!-- Read Permissions -->
+                <div class="space-y-3">
+                  <h5 class="text-sm font-medium text-gray-700">Read Access</h5>
+                  <ul class="space-y-2">
+                    <template
+                      v-for="permission in section.children"
+                      :key="permission.read"
+                    >
+                      <li
+                        class="flex items-center gap-2"
+                        v-if="permission.read"
+                      >
+                        <Check
+                          v-if="role.read.includes(permission.read)"
+                          class="h-4 w-4 text-green-500"
+                        />
+                        <X v-else class="h-4 w-4 text-gray-300" />
+                        <span class="text-sm text-gray-600">{{
+                          permission.title
+                        }}</span>
+                      </li>
+                    </template>
+                  </ul>
+                </div>
 
-          <!-- Edit Permissions -->
-          <div class="space-y-3">
-            <h4 class="text-sm font-medium text-gray-900">Edit Permissions</h4>
-            <ul class="space-y-2">
-              <li
-                v-for="permission in availablePermissions"
-                :key="`edit-${permission.value}`"
-                class="flex items-center gap-2"
-              >
-                <Check
-                  v-if="role.edit.includes(permission.value)"
-                  class="h-4 w-4 text-green-500"
-                />
-                <X v-else class="h-4 w-4 text-gray-300" />
-                <span class="text-sm text-gray-600">{{
-                  permission.title
-                }}</span>
-              </li>
-            </ul>
-          </div>
+                <!-- Edit Permissions -->
+                <div class="space-y-3">
+                  <h5 class="text-sm font-medium text-gray-700">Edit Access</h5>
+                  <ul class="space-y-2">
+                    <template
+                      v-for="permission in section.children"
+                      :key="permission.edit"
+                    >
+                      <li
+                        class="flex items-center gap-2"
+                        v-if="permission.edit"
+                      >
+                        <Check
+                          v-if="role.edit.includes(permission.edit)"
+                          class="h-4 w-4 text-green-500"
+                        />
+                        <X v-else class="h-4 w-4 text-gray-300" />
+                        <span class="text-sm text-gray-600">{{
+                          permission.title
+                        }}</span>
+                      </li>
+                    </template>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </template>
         </div>
       </CollapsibleContent>
     </Collapsible>
@@ -117,8 +135,8 @@ const deleteUserRole = async () => {
     isDeleting.value = true;
     await deleteRole(props.role.$id);
     emit("delete", props.role.$id);
-  } catch (error) {
-    alert("Error deleting role:", error);
+  } catch (error: any) {
+    alert(`Error deleting role: ${error.message}`);
   } finally {
     isDeleting.value = false;
   }

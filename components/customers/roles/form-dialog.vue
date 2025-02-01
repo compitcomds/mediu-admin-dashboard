@@ -5,7 +5,9 @@
     >
       {{ !!props.defaultData ? "Edit Role" : "Create New Role" }}</DialogTrigger
     >
-    <DialogContent>
+    <DialogContent
+      class="max-h-[90vh] max-w-[90vw] overflow-y-auto md:max-w-2xl"
+    >
       <DialogHeader>
         <DialogTitle>{{
           !!props.defaultData ? "Edit Role" : "Create New Role"
@@ -44,57 +46,40 @@
             required
           ></textarea>
         </div>
-
-        <!-- Read Permissions -->
-        <div class="space-y-4">
-          <h3 class="text-lg font-medium text-gray-900">Read Permissions</h3>
-          <div class="grid grid-cols-2 gap-4">
-            <div
-              v-for="permission in availablePermissions"
-              :key="`read-${permission.value}`"
-            >
-              <div class="flex items-center space-x-2">
-                <Checkbox
-                  :id="`read-${permission.value}`"
-                  :checked="formData.read.includes(permission.value)"
-                  @update:checked="togglePermission('read', permission.value)"
-                />
-                <label
-                  :for="`read-${permission.value}`"
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {{ permission.title }}
-                </label>
-              </div>
+        <div
+          class="space-y-4"
+          v-for="permission in availablePermissions"
+          :key="permission.section"
+        >
+          <h3 class="text-lg font-medium text-gray-900">
+            {{ permission.section }}
+          </h3>
+          <div
+            class="flex items-center gap-4"
+            v-for="child in permission.children"
+            :key="child.title"
+          >
+            <h4 class="w-[90px] text-sm font-medium text-gray-900 md:w-[130px]">
+              {{ child.title }}:
+            </h4>
+            <div v-if="child.read" class="flex items-center space-x-2">
+              <h6 class="text-sm font-medium text-gray-900">Read</h6>
+              <Checkbox
+                :id="`read-${child.read}`"
+                :checked="formData.read.includes(child.read)"
+                @update:checked="togglePermission('read', child.read)"
+              />
+            </div>
+            <div v-if="child.edit" class="flex items-center space-x-2">
+              <h6 class="text-sm font-medium text-gray-900">Edit</h6>
+              <Checkbox
+                :id="`edit-${child.edit}`"
+                :checked="formData.edit.includes(child.edit)"
+                @update:checked="togglePermission('edit', child.edit)"
+              />
             </div>
           </div>
         </div>
-
-        <!-- Edit Permissions -->
-        <div class="space-y-4">
-          <h3 class="text-lg font-medium text-gray-900">Edit Permissions</h3>
-          <div class="grid grid-cols-2 gap-4">
-            <div
-              v-for="permission in availablePermissions"
-              :key="`edit-${permission.value}`"
-            >
-              <div class="flex items-center space-x-2">
-                <Checkbox
-                  :id="`edit-${permission.value}`"
-                  :checked="formData.edit.includes(permission.value)"
-                  @update:checked="togglePermission('edit', permission.value)"
-                />
-                <label
-                  :for="`edit-${permission.value}`"
-                  class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  {{ permission.title }}
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <button
           type="submit"
           :disabled="isSubmitting"
@@ -117,7 +102,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,

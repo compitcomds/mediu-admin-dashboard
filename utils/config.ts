@@ -22,6 +22,9 @@ const config = {
   appwriteRolesCollectionId: import.meta.env.VITE_APPWRITE_ROLES_COLLECTION_ID,
   appwriteWalletCollectionId: import.meta.env
     .VITE_APPWRITE_WALLET_COLLECTION_ID,
+  appwriteManagementTeamId: import.meta.env.VITE_APPWRITE_MANAGEMENT_TEAM_ID,
+  appwriteManagementTeamName: import.meta.env
+    .VITE_APPWRITE_MANAGEMENT_TEAM_NAME,
 };
 
 export default config;

@@ -1,6 +1,21 @@
-export const availablePermissions = ref<{ title: string; value: string }[]>([
-  { title: "Users", value: "users" },
-  { title: "Products", value: "products" },
-  { title: "Orders", value: "orders" },
-  { title: "Settings", value: "settings" },
+type PermissionType = {
+  section: string;
+  children: Array<{ title: string; read?: string; edit?: string }>;
+};
+
+export const availablePermissions = ref<PermissionType[]>([
+  {
+    section: "Order Management",
+    children: [
+      {
+        title: "All orders",
+        read: "/orders",
+      },
+      {
+        title: "Order",
+        read: "/orders/:id",
+        edit: "/orders/:id",
+      },
+    ],
+  },
 ]);

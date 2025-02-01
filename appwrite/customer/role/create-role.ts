@@ -1,5 +1,7 @@
 import config from "@/utils/config";
 import { database } from "~/appwrite/config";
+import { Permission, Role } from "appwrite";
+import createTeam from "~/appwrite/customer/teams/create-team";
 
 export default async function createRole(role: {
   role: string;
@@ -14,11 +16,14 @@ export default async function createRole(role: {
   }
 
   const roleId = role.role.toLowerCase().replace(/\s+/g, "-");
+  const team = await createTeam(roleId, role.role);
+  console.log(team);
 
   return await database.createDocument(
     config.appwriteDatabaseId,
     config.appwriteRolesCollectionId,
     roleId,
-    { ...role, role: roleId },
+    { ...role, roleTitle: role.role, role: roleId },
+    [Permission.read(Role.team(team.$id))],
   );
 }

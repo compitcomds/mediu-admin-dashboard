@@ -8,7 +8,7 @@
     <div class="grid gap-6">
       <CustomersRolesCard
         v-for="role in roles"
-        :key="role.id"
+        :key="role.$id"
         :role="role"
         @delete="removeRole"
       />
@@ -20,7 +20,7 @@
 import getRoles from "~/appwrite/customer/role/get-roles";
 import createRole from "~/appwrite/customer/role/create-role";
 
-const roles = ref([]);
+const roles = ref<any[]>([]);
 
 const removeRole = (roleId: string) => {
   roles.value = roles.value.filter((role) => role.$id !== roleId);
