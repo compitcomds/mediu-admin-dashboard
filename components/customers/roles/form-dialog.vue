@@ -16,8 +16,8 @@
           Set the role name, description, and permissions here.
         </DialogDescription>
       </DialogHeader>
-      <form @submit.prevent="handleSubmit" class="max-w-2xl space-y-6">
-        <div class="space-y-2">
+      <form @submit.prevent="handleSubmit" class="max-w-2xl">
+        <div class="mb-6 space-y-2">
           <label for="role" class="text-sm font-medium text-gray-700"
             >Role Name</label
           >
@@ -33,7 +33,7 @@
         </div>
 
         <!-- Description -->
-        <div class="space-y-2">
+        <div class="mb-6 space-y-2">
           <label for="description" class="text-sm font-medium text-gray-700"
             >Description</label
           >
@@ -46,40 +46,49 @@
             required
           ></textarea>
         </div>
-        <div
-          class="space-y-4"
+        <Collapsible
+          class="mb-3"
           v-for="permission in availablePermissions"
           :key="permission.section"
         >
-          <h3 class="text-lg font-medium text-gray-900">
-            {{ permission.section }}
-          </h3>
-          <div
-            class="flex items-center gap-4"
-            v-for="child in permission.children"
-            :key="child.title"
+          <CollapsibleTrigger
+            class="flex w-full items-center justify-between rounded-md px-2 py-1 text-start text-lg font-medium text-gray-900 hover:bg-gray-100"
           >
-            <h4 class="w-[90px] text-sm font-medium text-gray-900 md:w-[130px]">
-              {{ child.title }}:
-            </h4>
-            <div v-if="child.read" class="flex items-center space-x-2">
-              <h6 class="text-sm font-medium text-gray-900">Read</h6>
-              <Checkbox
-                :id="`read-${child.read}`"
-                :checked="formData.read.includes(child.read)"
-                @update:checked="togglePermission('read', child.read)"
-              />
+            {{ permission.section }}
+            <ChevronsUpDown class="h-4 w-4" />
+          </CollapsibleTrigger>
+
+          <CollapsibleContent class="flex flex-col gap-y-2 px-2 pt-2">
+            <div
+              class="flex items-center gap-4"
+              v-for="child in permission.children"
+              :key="child.title"
+            >
+              <h4
+                class="w-[90px] text-sm font-medium text-gray-900 md:w-[130px]"
+              >
+                {{ child.title }}:
+              </h4>
+              <div v-if="child.read" class="flex items-center space-x-2">
+                <h6 class="text-sm font-medium text-gray-900">Read</h6>
+                <Checkbox
+                  :id="`read-${child.read}`"
+                  :checked="formData.read.includes(child.read)"
+                  @update:checked="togglePermission('read', child.read)"
+                />
+              </div>
+              <div v-if="child.edit" class="flex items-center space-x-2">
+                <h6 class="text-sm font-medium text-gray-900">Edit</h6>
+                <Checkbox
+                  :id="`edit-${child.edit}`"
+                  :checked="formData.edit.includes(child.edit)"
+                  @update:checked="togglePermission('edit', child.edit)"
+                />
+              </div>
             </div>
-            <div v-if="child.edit" class="flex items-center space-x-2">
-              <h6 class="text-sm font-medium text-gray-900">Edit</h6>
-              <Checkbox
-                :id="`edit-${child.edit}`"
-                :checked="formData.edit.includes(child.edit)"
-                @update:checked="togglePermission('edit', child.edit)"
-              />
-            </div>
-          </div>
-        </div>
+          </CollapsibleContent>
+        </Collapsible>
+
         <button
           type="submit"
           :disabled="isSubmitting"
@@ -98,6 +107,12 @@
 <script setup lang="ts">
 import { Checkbox } from "@/components/ui/checkbox";
 import { availablePermissions } from "~/components/customers/roles/type";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { ChevronsUpDown } from "lucide-vue-next";
 import {
   Dialog,
   DialogContent,

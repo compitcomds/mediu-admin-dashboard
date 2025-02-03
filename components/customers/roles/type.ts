@@ -18,4 +18,100 @@ export const availablePermissions = ref<PermissionType[]>([
       },
     ],
   },
+  {
+    section: "Product Management",
+    children: [
+      {
+        title: "All products",
+        read: "/products",
+      },
+      {
+        title: "Add Product",
+        edit: "/products/add",
+      },
+      {
+        title: "Product Page",
+        read: "/products/edit/:id",
+        edit: "/products/edit/:id",
+      },
+    ],
+  },
+  {
+    section: "Collection Management",
+    children: [
+      {
+        title: "All Collections",
+        read: "/collections",
+      },
+      {
+        title: "Add Collection",
+        edit: "/collections/create",
+      },
+      {
+        title: "Collection",
+        read: "/collections/edit/:id",
+        edit: "/collections/edit/:id",
+      },
+    ],
+  },
+
+  {
+    section: "Inventory Management",
+    children: [
+      {
+        title: "All Inventory",
+        read: "/inventory",
+      },
+      {
+        title: "Inventory - Batches",
+        read: "/inventory/:id",
+        edit: "/inventory/:id",
+      },
+    ],
+  },
+  {
+    section: "Consultancy Management",
+    children: [
+      {
+        title: "All Consutlancy Services",
+        read: "/consultancy/services",
+      },
+      {
+        title: "Add Consultancy Service",
+        edit: "/consultancy/services/create",
+      },
+      {
+        title: "Consultancy Service",
+        read: "/consultancy/services/s/:id",
+        edit: "/consultancy/services/s/:id",
+      },
+      {
+        title: "All Consultancy Bookings",
+        read: "/consultancy/bookings",
+      },
+      {
+        title: "Consultancy Booking",
+        read: "/consultancy/bookings/:id",
+        edit: "/consultancy/bookings/:id",
+      },
+    ],
+  },
+  {
+    section: "Customer Management",
+    children: [
+      {
+        title: "All Customers",
+        read: "/customers",
+      },
+      {
+        title: "Customer",
+        read: "/customers/:id",
+        edit: "/customers/:id",
+      },
+      {
+        title: "Alert Customers",
+        read: "/alert",
+      },
+    ],
+  },
 ]);

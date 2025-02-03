@@ -5,13 +5,13 @@
         variant="outline"
         role="combobox"
         :aria-expanded="open"
-        class="w-full uppercase justify-between text-ellipsis max-w-full overflow-x-clip relative"
+        class="relative w-full max-w-full justify-between overflow-x-clip text-ellipsis uppercase"
       >
         {{ tags.length > 0 ? tags.join(", ").slice(0, 44) : "Select tag..." }}
         <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
     </PopoverTrigger>
-    <PopoverContent align="start" class="lg:w-[500px] max-w-[82vw] p-0">
+    <PopoverContent align="start" class="max-w-[82vw] p-0 lg:w-[500px]">
       <Command
         v-model="tags"
         v-on:update:model-value="emitUpdatedTags"
@@ -31,7 +31,7 @@
                 :class="
                   cn(
                     'mr-2 h-4 w-4',
-                    tags.includes(tag.value) ? 'opacity-100' : 'opacity-0'
+                    tags.includes(tag.value) ? 'opacity-100' : 'opacity-0',
                   )
                 "
               />
@@ -42,7 +42,7 @@
         <Button
           v-if="!!searchTerm"
           @click="createNewTag"
-          class="w-[95%] mx-auto my-2 bg-gray-100 hover:bg-gray-300 shadow-none text-black"
+          class="mx-auto my-2 w-[95%] bg-gray-100 text-black shadow-none hover:bg-gray-300"
           >Create New Tag: {{ searchTerm }}</Button
         >
       </Command>
@@ -52,8 +52,8 @@
 
 <script setup>
 import axios from "axios";
-import { Check, ChevronsUpDown } from "lucide-vue-next";
 import Button from "~/components/ui/button/Button.vue";
+import { Check, ChevronsUpDown } from "lucide-vue-next";
 import {
   Command,
   CommandGroup,
@@ -86,7 +86,7 @@ watch(
   () => props.modelValue,
   (newVal) => {
     tags.value = [...newVal];
-  }
+  },
 );
 
 const emitUpdatedTags = () => {
@@ -97,7 +97,7 @@ const createNewTag = () => {
   if (searchTerm.value.length === 0) return;
   if (
     allProductTags.value.find(
-      (tag) => tag.value === searchTerm.value.toLowerCase()
+      (tag) => tag.value === searchTerm.value.toLowerCase(),
     )
   ) {
     alert("Tag already exists.");

@@ -3,8 +3,7 @@ import { account } from "./config";
 export async function getUser() {
   try {
     const user = await account.get();
-    if (user.labels.includes("admin")) return user;
-    return null;
+    return user;
   } catch (error) {
     return null;
   }
@@ -17,7 +16,7 @@ export async function loginAdminUser(email: string, password: string) {
   if (!user) {
     await account.deleteSession("current");
     throw new Error(
-      "Invalid admin user. User is not an admin. Please ask for admin access from the owner."
+      "Invalid admin user. User is not an admin. Please ask for admin access from the owner.",
     );
   }
 }
@@ -28,8 +27,6 @@ export async function deleteIfActiveSession() {
     await account.deleteSession("current");
   } catch (error) {}
 }
-
-
 
 export async function logout() {
   try {

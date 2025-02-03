@@ -8,7 +8,9 @@
 
   <NuxtLoadingIndicator />
   <NuxtLayout>
-    <AttachSidebar v-if="!route.path.includes('auth/login')">
+    <AttachSidebar
+      v-if="!route.path.includes('auth/login') && !!user && !isAuthLoading"
+    >
       <NuxtPage />
     </AttachSidebar>
     <NuxtPage v-else />
@@ -16,8 +18,11 @@
 </template>
 
 <script setup>
+import { getUser } from "~/appwrite/login-admin";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+const user = await getUser();
 const route = useRoute();
+const isAuthLoading = useState("isAuthLoading", () => true);
 </script>
 
 <style>

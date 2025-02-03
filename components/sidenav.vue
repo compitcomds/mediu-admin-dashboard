@@ -84,14 +84,6 @@
           </nuxt-link>
         </li>
         <li class="mb-4">
-          <nuxt-link
-            to="/customers"
-            class="flex items-center rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
-          >
-            <i class="fas fa-users mr-3 text-xl"></i> Customers
-          </nuxt-link>
-        </li>
-        <!-- <li class="mb-4">
           <div
             @click="toggleDropdown('customers')"
             class="flex cursor-pointer items-center justify-between rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
@@ -128,13 +120,20 @@
             </li>
             <li>
               <nuxt-link
+                to="/customers/dashboard-users"
+                class="block rounded px-2 py-1 transition-colors hover:bg-white hover:text-black"
+                >Dashboard Users</nuxt-link
+              >
+            </li>
+            <li>
+              <nuxt-link
                 to="/customers/roles"
                 class="block rounded px-2 py-1 transition-colors hover:bg-white hover:text-black"
                 >Roles</nuxt-link
               >
             </li>
           </ul>
-        </li> -->
+        </li>
         <li class="mb-4">
           <button
             @click="toggleDropdown('consultancy')"
