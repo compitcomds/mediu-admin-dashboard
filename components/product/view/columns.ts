@@ -26,7 +26,7 @@ export const columns: ColumnDef<ProductInterface>[] = [
 
       return h(
         DataTableLink,
-        { to: `/product/edit/${product.id}` },
+        { to: `/product/${product.id}` },
         h(
           "img",
           {
@@ -35,8 +35,8 @@ export const columns: ColumnDef<ProductInterface>[] = [
             class: "max-w-[200px]",
             title: image?.altText || title,
           },
-          {}
-        )
+          {},
+        ),
       );
     },
   },
@@ -51,7 +51,7 @@ export const columns: ColumnDef<ProductInterface>[] = [
           class:
             "bg-transparent text-black shadow-none text-inherit hover:bg-white/40",
         },
-        () => ["Product Title", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })]
+        () => ["Product Title", h(ArrowUpDown, { class: "ml-2 h-4 w-4" })],
       );
     },
     cell: ({ row }) => {
@@ -59,8 +59,8 @@ export const columns: ColumnDef<ProductInterface>[] = [
       const product = row.original;
       return h(
         DataTableLink,
-        { to: `/product/edit/${product.id}`, class: "hover:underline" },
-        title
+        { to: `/product/${product.id}`, class: "hover:underline" },
+        title,
       );
     },
   },
@@ -77,7 +77,7 @@ export const columns: ColumnDef<ProductInterface>[] = [
               ? "text-green-700 bg-green-50 max-w-fit px-4 rounded-r-full rounded-l-full py-1"
               : "text-amber-500 bg-amber-50 max-w-fit px-4 rounded-r-full rounded-l-full py-1",
         },
-        status
+        status,
       );
     },
   },
@@ -98,10 +98,10 @@ export const columns: ColumnDef<ProductInterface>[] = [
       return h(
         DataTableLink,
         {
-          to: `/product/edit/${id}`,
+          to: `/product/${id}`,
           class: "bg-black text-white px-4 py-1 rounded-md hover:bg-black/80",
         },
-        "View"
+        "View",
       );
     },
   },

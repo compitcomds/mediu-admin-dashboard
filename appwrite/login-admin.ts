@@ -1,4 +1,4 @@
-import { account } from "./config";
+import { account, avatars } from "./config";
 
 export async function getUser() {
   try {
@@ -31,8 +31,20 @@ export async function deleteIfActiveSession() {
 export async function logout() {
   try {
     await account.deleteSession("current");
+    localStorage.clear();
+    reloadNuxtApp();
+    window.location.reload();
     console.log("Logged out successfully");
   } catch (error) {
     console.error("Error logging out:", error);
   }
+}
+
+export async function getUserAvatar() {
+  const user = await account.get();
+  return {
+    avatar: avatars.getInitials(user.name).toString(),
+    name: user.name,
+    email: user.email,
+  };
 }

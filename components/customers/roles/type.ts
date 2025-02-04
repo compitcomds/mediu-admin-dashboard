@@ -23,16 +23,16 @@ export const availablePermissions = ref<PermissionType[]>([
     children: [
       {
         title: "All products",
-        read: "/products",
+        read: "/product",
       },
       {
         title: "Add Product",
-        edit: "/products/add",
+        edit: "/product/add",
       },
       {
         title: "Product Page",
-        read: "/products/edit/:id",
-        edit: "/products/edit/:id",
+        read: "/product/:id",
+        edit: "/product/:id",
       },
     ],
   },
@@ -49,8 +49,8 @@ export const availablePermissions = ref<PermissionType[]>([
       },
       {
         title: "Collection",
-        read: "/collections/edit/:id",
-        edit: "/collections/edit/:id",
+        read: "/collections/:id",
+        edit: "/collections/:id",
       },
     ],
   },

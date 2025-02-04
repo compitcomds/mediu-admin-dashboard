@@ -32,7 +32,7 @@
           <div>
             <nuxt-link
               class="text-lg font-semibold"
-              :to="`/product/edit/${product.id}`"
+              :to="`/product/${product.id}`"
             >
               {{ product.title }}
             </nuxt-link>

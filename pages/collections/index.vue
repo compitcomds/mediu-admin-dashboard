@@ -44,7 +44,7 @@
       <template v-for="collection in collections" :key="collection.id">
         <TableRow v-if="checkCollection(collection)">
           <TableCell>
-            <nuxt-link :to="`/collections/edit/${collection.handle}`">
+            <nuxt-link :to="`/collections/${collection.handle}`">
               <img
                 :src="
                   collection.image?.url ||
@@ -57,7 +57,7 @@
           </TableCell>
           <TableCell
             ><nuxt-link
-              :to="`/collections/edit/${collection.handle}`"
+              :to="`/collections/${collection.handle}`"
               class="hover:underline"
               >{{ collection.title }}</nuxt-link
             ></TableCell
@@ -65,7 +65,7 @@
           <TableCell>{{ collection.description }}</TableCell>
           <TableCell>
             <nuxt-link
-              :to="`/collections/edit/${collection.handle}`"
+              :to="`/collections/${collection.handle}`"
               class="rounded-lg bg-black px-4 py-2 text-white hover:bg-black/80"
               >Edit</nuxt-link
             >

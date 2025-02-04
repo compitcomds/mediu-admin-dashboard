@@ -1,8 +1,8 @@
 <template>
-  <h2 class="text-xl lg:text-3xl font-bold mb-4">Create Collection</h2>
+  <h2 class="mb-4 text-xl font-bold lg:text-3xl">Create Collection</h2>
   <form
     @submit.prevent="createCollection"
-    class="flex flex-col lg:flex-row gap-5"
+    class="flex flex-col gap-5 lg:flex-row"
   >
     <div class="flex-1">
       <div class="mb-4">
@@ -10,7 +10,7 @@
         <input
           type="text"
           v-model="newCollection.title"
-          class="w-full p-2 border rounded"
+          class="w-full rounded border p-2"
           required
         />
       </div>
@@ -18,7 +18,7 @@
         <label class="block text-gray-700">Description</label>
         <textarea
           v-model="newCollection.body_html"
-          class="w-full p-2 border rounded"
+          class="w-full rounded border p-2"
           required
         ></textarea>
       </div>
@@ -41,7 +41,7 @@
       <button
         type="submit"
         :disabled="isSubmitting"
-        class="bg-[#28574e] block w-full disabled:cursor-not-allowed disabled:opacity-70 text-white px-4 py-2 rounded-md"
+        class="block w-full rounded-md bg-[#28574e] px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-70"
       >
         <span v-if="isSubmitting" class="flex items-center justify-center gap-5"
           >Submitting <Loader
@@ -102,7 +102,7 @@ async function createCollection() {
     });
 
     alert("Successfully created the collection.");
-    router.replace(`/collections/edit/${data.handle}`);
+    router.replace(`/collections/${data.handle}`);
   } catch (error: any) {
     alert("Failed to create collection: " + (error.message || "Unknown error"));
   } finally {

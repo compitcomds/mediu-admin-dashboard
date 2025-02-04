@@ -170,23 +170,12 @@
           :cart-discounted-amount="order.cartDiscountAmountSet"
           :cancelled-at="order.cancelledAt"
         />
-        <OrdersConfirmDialog
-          v-if="fulfillmentStatus !== 'FULFILLED' && !order.cancelledAt"
-          :order-data="order"
-          :orderId="orderId"
-          v-on:orderFulfilled="fulfillmentStatus = 'FULFILLED'"
-        />
         <p
           v-if="fulfillmentStatus === 'FULFILLED'"
           class="sticky w-full rounded-md bg-[#28574e] p-1 text-center text-xl font-semibold text-white"
         >
           Confirmed
         </p>
-        <OrdersCancelOrder
-          v-if="fulfillmentStatus !== 'FULFILLED' && !order.cancelledAt"
-          :id="orderId"
-          v-on:orderCancelled="orderCancelled"
-        />
         <OrdersInvoiceDownloader :order-data="order" />
       </div>
     </div>

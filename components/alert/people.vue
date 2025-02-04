@@ -1,6 +1,6 @@
 <template>
   <Dialog>
-    <DialogTrigger class="bg-black text-white px-6 py-2 rounded-lg">
+    <DialogTrigger class="rounded-lg bg-black px-6 py-2 text-white">
       View Data
     </DialogTrigger>
     <DialogContent class="max-h-[90vh] overflow-y-auto">
@@ -10,7 +10,7 @@
           <p>Product Id: {{ productId }}</p>
           <p class="flex items-start gap-1">
             Product Title: {{ productTitle }}
-            <nuxt-link :to="`/product/edit/${productId}`" target="_blank"
+            <nuxt-link :to="`/product/${productId}`" target="_blank"
               ><ExternalLink :size="14"
             /></nuxt-link>
           </p>

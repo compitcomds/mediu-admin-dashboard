@@ -32,10 +32,15 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxtjs/color-mode",
     "@vueuse/nuxt",
+    "@pinia/nuxt",
   ],
 
   shadcn: {
     prefix: "",
     componentDir: "./components/ui",
+  },
+
+  experimental: {
+    payloadExtraction: true,
   },
 });

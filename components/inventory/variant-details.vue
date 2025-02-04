@@ -24,7 +24,7 @@
           <div>
             <h2 class="mb-3">
               <nuxt-link
-                :to="`/product/edit/${variant.productId}`"
+                :to="`/product/${variant.productId}`"
                 target="_blank"
                 class="flex items-center gap-2 text-xs font-semibold hover:underline md:text-lg"
               >

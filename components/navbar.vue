@@ -24,16 +24,18 @@
       >
         Logout
       </button>
+      <DashboardCustomersAvatar />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { Models } from "appwrite";
 import axios from "axios";
 import { logout } from "~/appwrite/login-admin";
 import { getUser } from "~/appwrite/login-admin";
 
-const user = ref<any>(null);
+const user = ref<Models.User<Models.Preferences> | null>(null);
 const orders = ref({
   total: 0,
   today: 0,
@@ -41,9 +43,6 @@ const orders = ref({
 
 const handleLogout = async () => {
   await logout();
-  localStorage.clear();
-  reloadNuxtApp();
-  window.location.reload();
 };
 
 const checkUser = async () => {

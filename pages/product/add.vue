@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-3xl font-bold mb-4">Add New Product</h1>
+  <h1 class="mb-4 text-3xl font-bold">Add New Product</h1>
   <ProductForm :on-submit="addProduct" />
 </template>
 
@@ -19,12 +19,12 @@ const addProduct = async (values: any) => {
 
   if (data.product?.id) {
     alert("Successfully created the product. Redirecting you to product...");
-    await router.replace(`/product/edit/${data.product.id}`);
+    await router.replace(`/product/${data.product.id}`);
     return;
   }
   throw new Error(
     data.error ||
-      "Unable to create the product at the time. Please try again later."
+      "Unable to create the product at the time. Please try again later.",
   );
 };
 

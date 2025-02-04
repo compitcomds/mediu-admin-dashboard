@@ -1,13 +1,13 @@
 <template>
-  <h2 class="text-xl lg:text-3xl font-bold mb-4">
+  <h2 class="mb-4 text-xl font-bold lg:text-3xl">
     Edit Collection #{{ collection?.id || handle }}
   </h2>
 
   <div v-if="error" class="text-center">
-    <p class="text-red-500 mb-2">{{ error }}</p>
+    <p class="mb-2 text-red-500">{{ error }}</p>
     <nuxt-link
       :to="'/collections'"
-      class="underline hover:no-underline text-[#28574e]"
+      class="text-[#28574e] underline hover:no-underline"
       >Go To All Collections</nuxt-link
     >
   </div>
@@ -16,15 +16,15 @@
     <form
       v-if="collection"
       @submit.prevent="updateCollection"
-      class="flex flex-col lg:flex-row gap-5"
+      class="flex flex-col gap-5 lg:flex-row"
     >
-      <div class="flex-1 flex flex-col gap-y-4">
+      <div class="flex flex-1 flex-col gap-y-4">
         <div>
           <label class="block text-gray-700">Title</label>
           <input
             type="text"
             v-model="collection.title"
-            class="w-full p-2 border rounded"
+            class="w-full rounded border p-2"
             required
           />
         </div>
@@ -32,7 +32,7 @@
           <label class="block text-gray-700">Description</label>
           <textarea
             v-model="collection.descriptionHtml"
-            class="w-full p-2 border rounded"
+            class="w-full rounded border p-2"
             required
             rows="10"
           ></textarea>
@@ -59,7 +59,7 @@
         <button
           type="submit"
           :disabled="isSubmitting"
-          class="bg-[#28574e] mb-4 block w-full disabled:cursor-not-allowed disabled:opacity-70 text-white px-4 py-2 rounded-md"
+          class="mb-4 block w-full rounded-md bg-[#28574e] px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-70"
         >
           <span
             v-if="isSubmitting"
@@ -72,7 +72,7 @@
           type="button"
           :disabled="isDeleting"
           @click="deleteCollection"
-          class="bg-red-500 block w-full disabled:cursor-not-allowed disabled:opacity-70 text-white px-4 py-2 rounded-md"
+          class="block w-full rounded-md bg-red-500 px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-70"
         >
           <span v-if="isDeleting" class="flex items-center justify-center gap-5"
             >Deleting <Loader
