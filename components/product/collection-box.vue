@@ -1,10 +1,14 @@
 <template>
   <div>
-    <h3 class="text-sm font-medium text-gray-700 mb-2">
+    <h3 class="mb-2 text-sm font-medium text-gray-700">
       Collections <span class="text-red-500">*</span>
     </h3>
-    <TagsInput class="px-0 gap-0 w-full" :model-value="modelValue">
-      <div class="flex gap-2 flex-wrap items-center px-3">
+    <TagsInput
+      class="w-full gap-0 px-0"
+      :model-value="modelValue"
+      :disabled="!!disabledForm"
+    >
+      <div class="flex flex-wrap items-center gap-2 px-3">
         <template v-for="item in modelValue" :key="item">
           <TagsInputItem
             v-if="!brandCollectionHandles.includes(item)"
@@ -23,7 +27,12 @@
         class="w-full"
       >
         <ComboboxAnchor as-child>
-          <ComboboxInput placeholder="Collection..." as-child>
+          <ComboboxInput
+            placeholder="Collection..."
+            :disabled="!!disabledForm"
+            class="disabled:cursor-not-allowed"
+            as-child
+          >
             <TagsInputInput
               class="w-full px-3"
               :class="modelValue.length > 0 ? 'mt-2' : ''"
@@ -37,7 +46,7 @@
           <ComboboxContent>
             <CommandList
               position="popper"
-              class="w-[--radix-popper-anchor-width] rounded-md mt-2 border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+              class="mt-2 w-[--radix-popper-anchor-width] rounded-md border bg-popover text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
             >
               <CommandEmpty />
               <CommandGroup>
@@ -91,8 +100,9 @@ import {
   ComboboxRoot,
 } from "radix-vue";
 
-const { fetchedCollections } = defineProps<{
+const { fetchedCollections, disabledForm } = defineProps<{
   fetchedCollections: any[];
+  disabledForm?: boolean;
 }>();
 
 const modelValue = defineModel<string[]>("modelValue", {
@@ -105,8 +115,8 @@ const searchTerm = ref("");
 
 const filteredCollections = computed(() =>
   fetchedCollections.filter(
-    (i) => !modelValue.value.includes(i.handle) && !i.isBrandCollection
-  )
+    (i) => !modelValue.value.includes(i.handle) && !i.isBrandCollection,
+  ),
 );
 
 const brandCollectionHandles = fetchedCollections

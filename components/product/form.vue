@@ -14,6 +14,7 @@
           v-model="form.title"
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           required
+          :disabled="!!disabledForm"
         />
       </div>
 
@@ -26,6 +27,7 @@
           id="subtitle"
           v-model="form.productSubtitle"
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+          :disabled="!!disabledForm"
         />
       </div>
 
@@ -39,6 +41,7 @@
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           rows="6"
           required
+          :disabled="!!disabledForm"
         ></textarea>
       </div>
 
@@ -49,12 +52,14 @@
         <ProductNewImagePicker
           v-if="!productId"
           v-model:model-value="form.images"
+          :disabled-form="disabledForm"
         />
         <ProductImages
           v-else
           :images="form.images"
           v-model:removed-images="removedImages"
           v-model:added-images="addedImages"
+          :disabled-form="disabledForm"
         />
       </div>
 
@@ -69,6 +74,7 @@
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           placeholder="0"
           required
+          :disabled="!!disabledForm"
         />
       </div>
 
@@ -76,6 +82,7 @@
         <ProductOptionInput
           :productId="productId"
           v-model:model-value="options"
+          :disabled-form="disabledForm"
         />
       </div>
 
@@ -84,6 +91,7 @@
           :options="options"
           v-model:model-value="variants"
           :default-variants="variants"
+          :disabled-form="disabledForm"
         />
       </div>
 
@@ -97,6 +105,7 @@
           v-model="variants[0].sku"
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           required
+          :disabled="!!disabledForm"
         />
       </div>
 
@@ -111,6 +120,7 @@
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           placeholder="0"
           required
+          :disabled="!!disabledForm"
         />
       </div>
 
@@ -126,6 +136,7 @@
           v-model="variants[0].compareAtPrice"
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           placeholder="0"
+          :disabled="!!disabledForm"
         />
       </div>
 
@@ -140,6 +151,7 @@
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           placeholder="0"
           required
+          :disabled="!!disabledForm"
         />
       </div>
 
@@ -154,6 +166,7 @@
           v-model="form.safetyInformationAndPrecaution"
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           rows="3"
+          :disabled="!!disabledForm"
         ></textarea>
       </div>
 
@@ -166,6 +179,7 @@
           v-model="form.howToUse"
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           rows="3"
+          :disabled="!!disabledForm"
         ></textarea>
       </div>
 
@@ -178,6 +192,7 @@
           v-model="form.keyBenefits"
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           rows="3"
+          :disabled="!!disabledForm"
         ></textarea>
       </div>
     </div>
@@ -186,19 +201,24 @@
         <ProductCollectionBox
           :fetched-collections="fetchedCollections.collections"
           v-model:model-value="form.collections"
+          :disabled-form="!!disabledForm"
         />
       </div>
       <div>
         <ProductBrands
           :fetched-collections="fetchedCollections.collections"
           v-model:model-value="form.collections"
+          :disabled-form="!!disabledForm"
         />
       </div>
       <div>
         <label for="tags" class="mb-2 block text-sm font-medium text-gray-700"
           >Tags</label
         >
-        <ProductTagInput v-model:model-value="form.tags" />
+        <ProductTagInput
+          v-model:model-value="form.tags"
+          :disabled-form="!!disabledForm"
+        />
       </div>
 
       <div>
@@ -207,7 +227,10 @@
           class="mb-2 block text-sm font-medium text-gray-700"
           >Concerns</label
         >
-        <ProductConcernInput v-model:model-value="form.tags" />
+        <ProductConcernInput
+          v-model:model-value="form.tags"
+          :disabled-form="!!disabledForm"
+        />
       </div>
 
       <div>
@@ -216,7 +239,10 @@
           class="mb-2 block text-sm font-medium text-gray-700"
           >Ingredients</label
         >
-        <ProductIngredientsInput v-model:model-value="form.tags" />
+        <ProductIngredientsInput
+          v-model:model-value="form.tags"
+          :disabled-form="!!disabledForm"
+        />
       </div>
 
       <div>
@@ -228,6 +254,7 @@
         <Switch
           :checked="form.requiresPrescription"
           @update:checked="toggleRequiresPrescription"
+          :disabled="!!disabledForm"
         />
       </div>
 
@@ -235,8 +262,12 @@
         <p class="mb-2 block text-sm font-medium text-gray-700">
           Product Status
         </p>
+
         <Select v-model:model-value="form.status">
-          <SelectTrigger class="bg-white py-1 font-medium">
+          <SelectTrigger
+            :disabled="!!disabledForm"
+            class="bg-white py-1 font-medium"
+          >
             <SelectValue placeholder="Select product status" />
           </SelectTrigger>
           <SelectContent>
@@ -250,6 +281,7 @@
 
       <div class="flex flex-col gap-4">
         <button
+          v-if="!!props.onSubmit"
           type="submit"
           :disabled="isSubmitting"
           class="w-full bg-[#28574e] px-4 py-2 font-semibold text-white hover:bg-[#1f4d42] disabled:cursor-not-allowed disabled:opacity-70"
@@ -270,7 +302,7 @@
           View Live
         </nuxt-link>
         <ProductDeleteButton
-          v-if="!!props.productId"
+          v-if="!!props.productId && !!props.onSubmit"
           :product-id="props.productId"
         />
 
@@ -292,24 +324,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const props = defineProps({
-  onSubmit: {
-    type: Function,
-    default: () => {},
-  },
-  defaultValues: {
-    type: Object,
-    default: {},
-  },
-  productId: {
-    type: String,
-    default: null,
-  },
-  handle: {
-    type: String,
-    default: null,
-  },
-});
+const props = defineProps<{
+  onSubmit?: (values: any) => Promise<void>;
+  defaultValues: any;
+  productId?: string;
+  handle: string | null;
+  disabledForm?: boolean;
+}>();
 
 const isSubmitting = ref(false);
 const removedImages = ref([]);
@@ -364,6 +385,7 @@ const toggleRequiresPrescription = () => {
 };
 
 const handleSubmit = async () => {
+  if (!props.onSubmit) return;
   isSubmitting.value = true;
   try {
     const images = [];

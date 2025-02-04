@@ -1,5 +1,5 @@
 <template>
-  <h3 class="block mb-3 text-sm font-medium text-gray-700">Variants</h3>
+  <h3 class="mb-3 block text-sm font-medium text-gray-700">Variants</h3>
   <Table>
     <TableHeader>
       <TableRow>
@@ -16,9 +16,6 @@
         <TableHead class="uppercase"
           >Compare at price (MRP) <span class="text-red-500">*</span></TableHead
         >
-        <!-- <TableHead class="uppercase"
-          >Quantity <span class="text-red-500">*</span></TableHead
-        > -->
         <TableHead class="uppercase"
           >SKU <span class="text-red-500">*</span></TableHead
         >
@@ -37,6 +34,7 @@
             class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
             placeholder="0"
             required
+            :disabled="!!disabledForm"
           />
         </TableCell>
         <TableCell>
@@ -46,17 +44,9 @@
             class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
             placeholder="0"
             required
+            :disabled="!!disabledForm"
           />
         </TableCell>
-        <!-- <TableCell>
-          <input
-            type="number"
-            v-model="variant.inventory_quantity"
-            class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
-            placeholder="0"
-            required
-          />
-        </TableCell> -->
         <TableCell>
           <input
             type="text"
@@ -64,6 +54,7 @@
             class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
             placeholder="0"
             required
+            :disabled="!!disabledForm"
           />
         </TableCell>
       </TableRow>
@@ -86,6 +77,7 @@ const { options, defaultVariants } = defineProps<{
   modelValue: Array<{ [key: string]: string }>;
   defaultPrice?: string | number;
   defaultVariants: any[];
+  disabledForm?: boolean;
 }>();
 const emit = defineEmits(["update:modelValue"]);
 
@@ -106,7 +98,7 @@ watch(
   (newVariants) => {
     emit("update:modelValue", newVariants);
   },
-  { deep: true, immediate: true }
+  { deep: true, immediate: true },
 );
 
 watch(
@@ -131,11 +123,11 @@ watch(
       variants.value.splice(newVariants.length);
     }
   },
-  { deep: true, immediate: true }
+  { deep: true, immediate: true },
 );
 
 function generateCombinations(
-  options: Array<{ name: string; values: { name: string }[] }>
+  options: Array<{ name: string; values: { name: string }[] }>,
 ) {
   const result: Array<{
     price: string;
@@ -146,7 +138,7 @@ function generateCombinations(
 
   function combine(
     index: number,
-    currentCombination: Array<{ name: string; optionName: string }>
+    currentCombination: Array<{ name: string; optionName: string }>,
   ) {
     if (index === options.length) {
       // Push the combination with price, compareAtPrice, and sku as strings

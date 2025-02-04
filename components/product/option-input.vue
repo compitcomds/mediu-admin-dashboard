@@ -7,13 +7,6 @@
 
   <div class="mt-3">
     <div v-for="(option, index) in options" class="mb-6 flex">
-      <!-- <button
-        class="flex h-fit px-2 hover:text-white hover:bg-red-500 transition border border-gray-400 border-r-0 py-2 text-red-500 text-sm items-center gap-2"
-        type="button"
-        @click="deleteOption(index)"
-      >
-        <Trash width="16" /> <span class="sr-only">Delete Option</span>
-      </button> -->
       <div class="mb-3 flex flex-1 flex-col gap-3 border border-gray-400 p-3">
         <div>
           <label class="mb-1 block" :for="`option-name-${index}`"
@@ -42,9 +35,10 @@
                 "
                 class="block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
                 required
+                :disabled="!!disabledForm"
               />
               <button
-                v-if="option.values.length > 1"
+                v-if="option.values.length > 1 && !disabledForm"
                 class="absolute right-1 top-1/2 flex h-fit max-h-[80%] -translate-y-1/2 items-center gap-2 bg-white px-2 py-2 text-sm text-red-500 hover:bg-red-500 hover:text-white"
                 type="button"
                 @click="deleteOptionValue(index, i - 1)"
@@ -55,6 +49,7 @@
           </template>
         </div>
         <button
+          v-if="!disabledForm"
           type="button"
           class="flex w-fit items-center gap-2 rounded-md bg-white px-5 py-2 text-sm"
           @click="addNewOptionValue(index)"
@@ -63,13 +58,6 @@
         </button>
       </div>
     </div>
-    <!-- <button
-      type="button"
-      class="flex px-5 py-2 rounded-md text-sm items-center gap-2 bg-white"
-      @click="addNewOption"
-    >
-      <PlusCircle width="20" /> Add Options
-    </button> -->
   </div>
 </template>
 
@@ -79,6 +67,7 @@ import { PlusCircle, Trash } from "lucide-vue-next";
 const props = defineProps<{
   modelValue: undefined | Array<{ name: string; values: { name: string }[] }>;
   productId?: string;
+  disabledForm?: boolean;
 }>();
 
 const emit = defineEmits(["update:modelValue"]);

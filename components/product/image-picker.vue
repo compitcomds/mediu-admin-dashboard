@@ -6,11 +6,18 @@
       accept="image/*"
       class="image-picker"
       multiple
+      :disabled="!!disabledForm"
     />
   </div>
 </template>
 
 <script setup>
+const props = defineProps({
+  disabledForm: {
+    type: Boolean,
+    default: false,
+  },
+});
 const emit = defineEmits(["imageAdded"]);
 
 // Method to handle file selection and emit the new image

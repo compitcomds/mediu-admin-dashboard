@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3 class="text-sm font-medium text-gray-700 mb-2">Brands</h3>
+    <h3 class="mb-2 text-sm font-medium text-gray-700">Brands</h3>
 
     <Popover v-model:open="open">
       <PopoverTrigger as-child>
@@ -9,6 +9,7 @@
           role="combobox"
           :aria-expanded="open"
           class="w-full justify-between"
+          :disabled="!!disabledForm"
         >
           {{ value || "Select Brand" }}
 
@@ -43,7 +44,7 @@
                         'mr-2 h-4 w-4',
                         value === collection.handle
                           ? 'opacity-100'
-                          : 'opacity-0'
+                          : 'opacity-0',
                       )
                     "
                   />
@@ -75,8 +76,9 @@ import {
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-vue-next";
 
-const { fetchedCollections } = defineProps<{
+const { fetchedCollections, disabledForm } = defineProps<{
   fetchedCollections: any[];
+  disabledForm?: boolean;
 }>();
 
 const modelValue = defineModel<string[]>("modelValue", {
@@ -91,7 +93,7 @@ const brandCollectionHandles = fetchedCollections
 const open = ref(false);
 const value = ref(
   modelValue.value.find((handle) => brandCollectionHandles.includes(handle)) ||
-    ""
+    "",
 );
 
 const updateValue = (newValue: string) => {

@@ -5,26 +5,28 @@
     >
     <input
       type="file"
-      multiple 
+      multiple
       accept="image/*"
       @change="handleFileChange"
       class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
+      :disabled="!!disabledForm"
     />
 
     <div class="flex flex-wrap space-x-2">
       <div
         v-for="(image, index) in images"
         :key="index"
-        class="relative w-24 h-24 border border-gray-300"
+        class="relative h-24 w-24 border border-gray-300"
       >
         <img
           :src="getImageUrl(image)"
           alt="Selected Image"
-          class="w-full h-full object-cover"
+          class="h-full w-full object-cover"
         />
         <button
+          v-if="!disabledForm"
           @click="removeImage(index)"
-          class="absolute top-1 right-1 bg-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-500 focus:outline-none"
+          class="absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full bg-white hover:bg-red-500 focus:outline-none"
           title="Remove Image"
           type="button"
         >
@@ -36,39 +38,37 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { X } from "lucide-vue-next";
 
-const props = defineProps({
-  modelValue: {
-    type: Array,
-    default: () => [],
-  },
-});
+const props = defineProps<{
+  modelValue: Array<File>;
+  disabledForm?: boolean;
+}>();
 
 const emit = defineEmits(["update:modelValue"]);
 
-const images = ref([...props.modelValue]);
+const images = ref<File[]>([...props.modelValue]);
 
 watch(
   () => props.modelValue,
   (newVal) => {
     images.value = [...newVal];
-  }
+  },
 );
 
-const handleFileChange = (event) => {
-  const selectedFiles = Array.from(event.target.files);
+const handleFileChange = (event: any) => {
+  const selectedFiles = Array.from(event.target.files) as File[];
   images.value.push(...selectedFiles);
   emit("update:modelValue", images.value);
 };
 
-const removeImage = (index) => {
+const removeImage = (index: number) => {
   images.value.splice(index, 1);
   emit("update:modelValue", images.value);
 };
 
-const getImageUrl = (image) => {
+const getImageUrl = (image: File) => {
   return URL.createObjectURL(image);
 };
 </script>

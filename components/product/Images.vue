@@ -1,6 +1,6 @@
 <template>
   <div class="image-gallery">
-    <h2 class="block text-sm sr-only font-medium text-gray-700">
+    <h2 class="sr-only block text-sm font-medium text-gray-700">
       Product Images
     </h2>
     <div class="image-list-container">
@@ -15,7 +15,12 @@
             :alt="image.alt || 'Product Image'"
             class="product-image"
           />
-          <button type="button" @click="removeImage(image)" class="remove-btn">
+          <button
+            v-if="!disabledForm"
+            type="button"
+            @click="removeImage(image)"
+            class="remove-btn"
+          >
             <X />
           </button>
         </div>
@@ -36,6 +41,7 @@
           class="product-image"
         />
         <button
+          v-if="!disabledForm"
           type="button"
           @click="removeAddedImage(index)"
           class="remove-btn"
@@ -45,7 +51,7 @@
       </div>
     </div>
 
-    <ProductImagePicker @imageAdded="addImage" />
+    <ProductImagePicker @imageAdded="addImage" :disabledForm="disabledForm" />
   </div>
 </template>
 
@@ -56,6 +62,10 @@ const props = defineProps({
   images: {
     type: Array,
     required: true,
+  },
+  disabledForm: {
+    type: Boolean,
+    default: false,
   },
 });
 

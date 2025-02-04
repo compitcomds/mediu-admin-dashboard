@@ -6,6 +6,7 @@
         role="combobox"
         :aria-expanded="open"
         class="relative w-full max-w-full justify-between overflow-x-clip text-ellipsis uppercase"
+        :disabled="!!disabledForm"
       >
         {{ tags.length > 0 ? tags.join(", ").slice(0, 44) : "Select tag..." }}
         <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -72,6 +73,10 @@ const props = defineProps({
   modelValue: {
     type: Array,
     default: () => [],
+  },
+  disabledForm: {
+    type: Boolean,
+    default: false,
   },
 });
 
