@@ -13,11 +13,7 @@
   </div>
 
   <div v-else>
-    <form
-      v-if="collection"
-      @submit.prevent="updateCollection"
-      class="flex flex-col gap-5 lg:flex-row"
-    >
+    <form v-if="collection" class="flex flex-col gap-5 lg:flex-row">
       <div class="flex flex-1 flex-col gap-y-4">
         <div>
           <label class="block text-gray-700">Title</label>
@@ -58,7 +54,7 @@
           <Switch
             :checked="collection.metafields.isBrandCollection"
             @update:checked="toggleBrandCollection"
-            :disabled="isSubmitting || !!disabledForm"
+            :disabled="!!disabledForm"
           />
         </div>
       </div>
@@ -76,10 +72,7 @@ import axios from "axios";
 const disabledForm = true;
 
 const route = useRoute();
-const router = useRouter();
 const handle = route.params.id;
-const isSubmitting = ref(false);
-const isDeleting = ref(false);
 const error = ref<string | null>(null); // Error state
 
 const collectionImage = ref<File | null>(null);
@@ -119,74 +112,6 @@ const fetchCollection = async () => {
     console.log(err);
     error.value = `Failed to fetch collection: ${err.message}`;
   }
-};
-
-const deleteCollection = async () => {
-  isDeleting.value = true;
-  try {
-    if (!collection.value?.id) throw new Error("Invalid collection.");
-    await axios.delete(`/api/collections/${collection.value.id}`);
-    alert("Collection deleted successfully!");
-    router.push("/collections");
-  } catch (err: any) {
-    alert(err.message);
-  } finally {
-    isDeleting.value = false;
-  }
-};
-
-const updateCollection = async () => {
-  if (!collection.value || !collection.value?.id) {
-    alert("Invalid collection");
-    return;
-  }
-
-  isSubmitting.value = true;
-  let image = null;
-  if (collectionImage.value) {
-    image = {
-      attachment: (await fileToBase64(collectionImage.value)).base64Image,
-    };
-  }
-
-  const updatedCollection = {
-    title: collection.value.title,
-    body_html: collection.value.descriptionHtml,
-    metafields: collection.value.metafields,
-    image,
-  };
-
-  const { addedIds, removedIds } = separateAddedAndRemovedCollections();
-  try {
-    await axios.put(`/api/collections/${collection.value.id}`, {
-      collection: updatedCollection,
-      addedProductIds: addedIds,
-      removedProductIds: removedIds,
-    });
-    alert("Collection updated successfully!");
-  } catch (err: any) {
-    alert(`Failed to update collection: ${err.message}`);
-  } finally {
-    isSubmitting.value = false;
-  }
-};
-
-const separateAddedAndRemovedCollections = () => {
-  const addedIds: string[] = [];
-  const removedIds: string[] = [];
-
-  const fetchedIds =
-    fetchedCollection.value?.products.map((prod) => prod.product_id) || [];
-  const updatedIds =
-    collection.value?.products.map((prod) => prod.product_id) || [];
-
-  for (const id of updatedIds) {
-    if (!fetchedIds.includes(id)) addedIds.push(id);
-  }
-  for (const id of fetchedIds) {
-    if (!updatedIds.includes(id)) removedIds.push(id);
-  }
-  return { addedIds, removedIds };
 };
 
 const toggleBrandCollection = () => {

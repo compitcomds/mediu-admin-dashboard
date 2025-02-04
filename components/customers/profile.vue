@@ -28,12 +28,13 @@
         <div class="space-y-4 md:col-span-2">
           <div>
             <label class="text-sm font-medium text-gray-700">Address</label>
-            <p class="mt-1">
-              {{ profile.defaultAddress.address1 }},
-              {{ profile.defaultAddress.province }},
-              {{ profile.defaultAddress.country }}
-              {{ profile.defaultAddress.zip }}
+            <p class="mt-1" v-if="!!profile.defaultAddress">
+              {{ profile.defaultAddress?.address1 }} ,
+              {{ profile.defaultAddress?.province }} ,
+              {{ profile.defaultAddress?.country }}
+              {{ profile.defaultAddress?.zip }}
             </p>
+            <p class="mt-1" v-else>No Address</p>
           </div>
           <div>
             <label class="text-sm font-medium text-gray-700"

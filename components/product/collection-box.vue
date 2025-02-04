@@ -15,7 +15,7 @@
             :value="item"
           >
             <TagsInputItemText />
-            <TagsInputItemDelete />
+            <TagsInputItemDelete v-if="!disabledForm" />
           </TagsInputItem>
         </template>
       </div>
@@ -34,10 +34,11 @@
             as-child
           >
             <TagsInputInput
-              class="w-full px-3"
+              class="w-full px-3 disabled:cursor-not-allowed"
               :class="modelValue.length > 0 ? 'mt-2' : ''"
               @keydown.enter.prevent
               :onfocus="() => (open = true)"
+              :disabled="!!disabledForm"
             />
           </ComboboxInput>
         </ComboboxAnchor>

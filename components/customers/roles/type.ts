@@ -87,13 +87,13 @@ export const availablePermissions = ref<PermissionType[]>([
       },
       {
         title: "All Consultancy Bookings",
-        read: "/consultancy/bookings",
+        edit: "/consultancy/bookings",
       },
-      {
-        title: "Consultancy Booking",
-        read: "/consultancy/bookings/:id",
-        edit: "/consultancy/bookings/:id",
-      },
+      // {
+      //   title: "Consultancy Booking",
+      //   read: "/consultancy/bookings/:id",
+      //   edit: "/consultancy/bookings/:id",
+      // },
     ],
   },
   {

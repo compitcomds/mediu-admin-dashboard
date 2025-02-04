@@ -10,6 +10,7 @@
       <CustomersUpdateCustomerWallet
         :customer-wallet="customerWallet"
         @update:customer-wallet="updateCustomerWallet"
+        v-if="!props.disabledForm"
       />
     </div>
     <div class="overflow-hidden rounded-lg bg-white shadow">
@@ -107,6 +108,7 @@ import { type WalletType } from "~/appwrite/customer/get-wallet-amount";
 const props = defineProps<{
   appwriteUserId?: string;
   customerWallet: WalletType | null;
+  disabledForm?: boolean;
 }>();
 
 const transactions = ref<WalletTransaction[]>([]);
