@@ -7,7 +7,7 @@
   </div>
 
   <div v-else>
-    <h1 class="mb-4 text-3xl font-bold">Edit Product #{{ productId }}</h1>
+    <h1 class="mb-4 text-3xl font-bold">View Product #{{ productId }}</h1>
 
     <ProductInventoryAlert :product-id="productId" />
 

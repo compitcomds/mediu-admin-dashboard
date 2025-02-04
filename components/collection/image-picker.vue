@@ -6,17 +6,21 @@
       type="file"
       @change="onImageSelected"
       accept="image/*"
+      :disabled="!!disabledForm"
     />
     <img
       v-if="collectionImage.preview"
       :src="collectionImage.preview"
-      class="mt-2 w-32 h-32 object-cover"
+      class="mt-2 h-32 w-32 object-cover"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ defaultPreview?: string | null }>();
+const props = defineProps<{
+  defaultPreview?: string | null;
+  disabledForm?: boolean;
+}>();
 
 const emit = defineEmits<{
   (event: "update:image", image: File): void;

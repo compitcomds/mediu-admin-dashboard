@@ -1,14 +1,15 @@
 <template>
-  <div class="flex mb-2 gap-3 items-center justify-between">
+  <div class="mb-2 flex items-center justify-between gap-3">
     <h2 class="block text-sm font-semibold text-gray-800">Select Products</h2>
-    <div v-if="!hideAllProductsList" class="flex gap-2 items-center">
-      <ProductSearch path-to-redirect="/collections/create" />
+    <div v-if="!hideAllProductsList" class="flex items-center gap-2">
+      <Search />
     </div>
   </div>
   <div class="mb-8">
     <CollectionSelectedProducts
       v-model:products="model"
       :hide-all-products-list="props.hideAllProductsList"
+      :disabled-form="!!props.disabledForm"
     />
   </div>
   <div v-if="!props.hideAllProductsList" class="flex flex-col gap-y-2">
@@ -21,18 +22,19 @@
           !props.isCollectionBrand ||
           !checkIfBrandedProduct(product.collections)
         "
-        class="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition duration-150 ease-in-out"
+        class="flex items-center rounded-lg border border-gray-200 p-3 transition duration-150 ease-in-out hover:bg-gray-50"
       >
         <input
           type="checkbox"
           :value="{ product_id: product.id, title: product.title }"
           v-model="model"
-          class="w-4 h-4 text-blue-600 disabled:cursor-not-allowed border-gray-300 rounded focus:ring-blue-500"
+          class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:cursor-not-allowed"
+          :disabled="!!props.disabledForm"
         />
         <span class="ml-3 text-gray-700">{{ product.title }}</span>
       </div>
     </template>
-    <div class="flex items-center gap-5 my-5 justify-center">
+    <div class="my-5 flex items-center justify-center gap-5">
       <nuxt-link
         v-if="pageInfo.hasPreviousPage"
         :to="{
@@ -42,18 +44,18 @@
             after: undefined,
           },
         }"
-        class="py-3 px-8 rounded-lg hover:bg-gray-200"
+        class="rounded-lg px-8 py-3 hover:bg-gray-200"
         >Previous</nuxt-link
       >
       <button
         v-else
-        class="py-3 px-8 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
+        class="rounded-lg px-8 py-3 disabled:cursor-not-allowed disabled:opacity-60"
         disabled
       >
         Previous
       </button>
       <nuxt-link
-        class="py-3 px-8 rounded-lg hover:bg-gray-200"
+        class="rounded-lg px-8 py-3 hover:bg-gray-200"
         v-if="pageInfo.hasNextPage"
         :to="{
           query: {
@@ -66,7 +68,7 @@
       >
       <button
         v-else
-        class="py-3 px-8 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
+        class="rounded-lg px-8 py-3 disabled:cursor-not-allowed disabled:opacity-60"
         disabled
       >
         Next
@@ -81,6 +83,7 @@ import axios from "axios";
 const props = defineProps<{
   hideAllProductsList?: boolean;
   isCollectionBrand?: boolean;
+  disabledForm?: boolean;
 }>();
 const products = ref<any[]>([]);
 const model = defineModel<any[]>("products");
@@ -113,7 +116,7 @@ const fetchProducts = async ({
     const { data } = await axios.get(
       `/api/collections/products?after=${after || ""}&before=${
         before || ""
-      }&query=${query || ""}`
+      }&query=${query || ""}`,
     );
     console.log(data);
     products.value = data.products;
@@ -148,7 +151,7 @@ watch(
   {
     deep: true,
     immediate: true,
-  }
+  },
 );
 
 function checkIfBrandedProduct(productCollections: any[]) {
