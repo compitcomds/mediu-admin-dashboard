@@ -31,6 +31,14 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return;
   }
 
+  isAuthLoading.value = true;
+
+  const permissionsStore = usePermissionsStore();
+
+  const { edit, read } = await permissionsStore.fetchPermissions();
+
+  isAuthLoading.value = false;
+
   if (publicAuthenticatedRoutes.some((route) => route.test(to.path))) {
     return;
   }
@@ -42,14 +50,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (backRoute) return navigateTo(backRoute);
     return;
   }
-
-  isAuthLoading.value = true;
-
-  const permissionsStore = usePermissionsStore();
-
-  const { edit, read } = await permissionsStore.fetchPermissions();
-
-  isAuthLoading.value = false;
 
   if (read.length === 0 && edit.length === 0) {
     await logout();

@@ -214,6 +214,43 @@ const dropdowns = ref({
 function toggleDropdown(dropdown: keyof typeof dropdowns.value) {
   dropdowns.value[dropdown] = !dropdowns.value[dropdown];
 }
+
+const routes = [
+  { to: "/", label: "Home", icon: "fas fa-home" },
+  { to: "/orders", label: "Orders", icon: "fas fa-boxes" },
+  {
+    to: "/products",
+    label: "Products",
+    icon: "fas fa-cogs",
+    children: [
+      { to: "/product", label: "All Products" },
+      { to: "/collections", label: "Collections" },
+      { to: "/inventory", label: "Inventory" },
+    ],
+  },
+  { to: "/alert", label: "Alert Users", icon: "fas fa-exclamation-circle" },
+  {
+    to: "/customers",
+    label: "Users",
+    icon: "fas fa-users",
+    children: [
+      { to: "/customers", label: "Customers" },
+      { to: "/customers/dashboard-users", label: "Dashboard Users" },
+      { to: "/customers/roles", label: "Roles" },
+    ],
+  },
+  {
+    to: "/consultancy",
+    label: "Consultancy",
+    icon: "fas fa-handshake",
+    children: [
+      { to: "/consultancy/services", label: "Services" },
+      { to: "/consultancy/bookings", label: "Bookings" },
+    ],
+  },
+  { to: "/guide", label: "Guide", icon: "fas fa-book" },
+  { to: "/help-and-support", label: "Help & Support", icon: "fas fa-headset" },
+];
 </script>
 
 <style scoped>
