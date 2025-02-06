@@ -32,7 +32,7 @@
           <div>
             <nuxt-link
               class="text-lg font-semibold"
-              :to="`/product/${product.id}`"
+              :to="`/product/p/${product.id}`"
             >
               {{ product.title }}
             </nuxt-link>
@@ -62,7 +62,7 @@
 import { PlusCircle } from "lucide-vue-next";
 import axios from "axios";
 
-const route = useRoute();
+const route = computed(() => useRoute());
 
 const products = ref<any[]>([]);
 const pageInfo = ref<{
@@ -100,7 +100,7 @@ const fetchProducts = async ({
 };
 
 watch(
-  () => route.query,
+  () => route.value.query,
   (newQuery) => {
     fetchProducts({
       after: newQuery.after?.toString(),

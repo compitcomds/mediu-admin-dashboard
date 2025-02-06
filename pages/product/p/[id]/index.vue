@@ -34,7 +34,6 @@ let product: any = null;
 try {
   const { data } = await axios.get(`/api/product/${productId}`);
   fetchedProduct = data;
-  console.log(data);
   product = {
     title: data.product.title,
     description: data.product.body_html,
@@ -62,8 +61,6 @@ try {
       })),
     })),
   };
-
-  console.log(data);
 } catch (error: any) {
   alert(error.message);
 }

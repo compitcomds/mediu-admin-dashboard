@@ -1,4 +1,5 @@
 import { teams } from "~/appwrite/config";
+import config from "~/utils/config";
 
 export default async function addUserToTeam(
   teamId: string,
@@ -14,7 +15,8 @@ export default async function addUserToTeam(
     userDetails.email,
     undefined,
     undefined,
-    "http://localhost:3001/accept-invitation",
+    config.appwriteAcceptInvitationUrl ||
+      "http://localhost:3001/accept-invitation",
     userDetails.name,
   );
 }

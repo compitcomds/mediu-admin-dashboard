@@ -24,9 +24,7 @@ export const columns: ColumnDef<ProductInterface>[] = [
       const title: string = row.getValue("title");
       const product = row.original;
 
-      return h(
-        DataTableLink,
-        { to: `/product/${product.id}` },
+      return h(DataTableLink, { to: `/product/p/${product.id}` }, () =>
         h(
           "img",
           {
@@ -59,8 +57,8 @@ export const columns: ColumnDef<ProductInterface>[] = [
       const product = row.original;
       return h(
         DataTableLink,
-        { to: `/product/${product.id}`, class: "hover:underline" },
-        title,
+        { to: `/product/p/${product.id}`, class: "hover:underline" },
+        () => title,
       );
     },
   },
@@ -98,10 +96,10 @@ export const columns: ColumnDef<ProductInterface>[] = [
       return h(
         DataTableLink,
         {
-          to: `/product/${id}`,
+          to: `/product/p/${id}`,
           class: "bg-black text-white px-4 py-1 rounded-md hover:bg-black/80",
         },
-        "View",
+        () => "View",
       );
     },
   },

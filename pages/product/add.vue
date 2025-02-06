@@ -19,7 +19,7 @@ const addProduct = async (values: any) => {
 
   if (data.product?.id) {
     alert("Successfully created the product. Redirecting you to product...");
-    await router.replace(`/product/${data.product.id}`);
+    await router.replace(`/product/p/${data.product.id}`);
     return;
   }
   throw new Error(

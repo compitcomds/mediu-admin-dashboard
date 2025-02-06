@@ -25,6 +25,8 @@ const config = {
   appwriteManagementTeamId: import.meta.env.VITE_APPWRITE_MANAGEMENT_TEAM_ID,
   appwriteManagementTeamName: import.meta.env
     .VITE_APPWRITE_MANAGEMENT_TEAM_NAME,
+  appwriteAcceptInvitationUrl: import.meta.env
+    .VITE_APPWRITE_ACCEPT_INVITATION_URL,
 };
 
 export default config;

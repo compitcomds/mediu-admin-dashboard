@@ -10,7 +10,7 @@
           <p>Product Id: {{ productId }}</p>
           <p class="flex items-start gap-1">
             Product Title: {{ productTitle }}
-            <nuxt-link :to="`/product/${productId}`" target="_blank"
+            <nuxt-link :to="`/product/p/${productId}`" target="_blank"
               ><ExternalLink :size="14"
             /></nuxt-link>
           </p>

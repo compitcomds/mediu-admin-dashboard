@@ -40,7 +40,6 @@ const fetchVariantDetails = async () => {
     const { data } = await axios.get(
       `/api/product/${props.productId}/variant-inventory`,
     );
-    console.log(data);
     if (data) variants.value = data;
   } catch (error) {
     console.error(error);

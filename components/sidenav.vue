@@ -194,6 +194,14 @@
             <i class="fas fa-headset mr-3 text-xl"></i> Help & Support
           </nuxt-link>
         </li>
+        <li class="mb-4">
+          <nuxt-link
+            to="/profile"
+            class="flex items-center rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
+          >
+            <i class="fas fa-user mr-3 text-xl"></i> Profile
+          </nuxt-link>
+        </li>
       </ul>
     </nav>
   </aside>
@@ -250,6 +258,7 @@ const routes = [
   },
   { to: "/guide", label: "Guide", icon: "fas fa-book" },
   { to: "/help-and-support", label: "Help & Support", icon: "fas fa-headset" },
+  { to: "/profile", label: "Profile", icon: "fas fa-user" },
 ];
 </script>
 

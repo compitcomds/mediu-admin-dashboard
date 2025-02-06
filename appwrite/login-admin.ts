@@ -46,5 +46,13 @@ export async function getUserAvatar() {
     avatar: avatars.getInitials(user.name).toString(),
     name: user.name,
     email: user.email,
+    phone: user.phone,
   };
+}
+
+export async function updateUserPassword(
+  newPassword: string,
+  currentPassword?: string,
+) {
+  await account.updatePassword(newPassword, currentPassword);
 }

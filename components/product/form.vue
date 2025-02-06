@@ -294,7 +294,7 @@
           <span v-else>Submit</span>
         </button>
         <nuxt-link
-          v-if="props.defaultValues.status === 'active' && !!props.handle"
+          v-if="props.defaultValues?.status === 'active' && !!props.handle"
           :to="`https://mediu.in/shop/product/${props.handle}`"
           target="_blank"
           class="flex w-full items-center justify-center border border-[#28574e] px-4 py-2 font-semibold hover:bg-[#1f4d42] hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
@@ -356,7 +356,7 @@ if (
 }
 
 const variants = ref<Array<{ [key: string]: string }>>(
-  props.defaultValues.variants || [],
+  props.defaultValues?.variants || [],
 );
 
 const form = ref({

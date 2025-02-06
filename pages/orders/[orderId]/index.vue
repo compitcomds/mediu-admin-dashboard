@@ -43,7 +43,7 @@
                   <h4 class="text-lg text-gray-800">
                     <nuxt-link
                       v-if="item.id"
-                      :to="`/product/${item.id}`"
+                      :to="`/product/p/${item.id}`"
                       class="hover:underline"
                       target="_blank"
                       >{{ item.name }}</nuxt-link

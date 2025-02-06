@@ -31,8 +31,8 @@ export const availablePermissions = ref<PermissionType[]>([
       },
       {
         title: "Product Page",
-        read: "/product/:id",
-        edit: "/product/:id",
+        read: "/product/p/:id",
+        edit: "/product/p/:id",
       },
     ],
   },

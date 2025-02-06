@@ -37,10 +37,11 @@ export const columns: ColumnDef<CustomerInterface>[] = [
           to: `/customers/${id}`,
           class: "hover:text-green-700",
         },
-        name,
+        () => name,
       );
     },
   },
+
   {
     accessorKey: "email",
     header: ({ column }) => {
@@ -155,7 +156,7 @@ export const columns: ColumnDef<CustomerInterface>[] = [
           class:
             "hover:bg-black/80 px-6 py-2 my-1 block max-w-fit text-center bg-black text-white",
         },
-        "View",
+        () => "View",
       );
     },
   },

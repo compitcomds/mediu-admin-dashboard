@@ -37,6 +37,7 @@ onMounted(async () => {
       route.query.secret as string,
     );
     success.value = true;
+    await reloadNuxtApp();
   } catch (e) {
     error.value = true;
   }

@@ -1,21 +1,36 @@
-import { getUser, logout } from "~/appwrite/login-admin";
-import getUserPermissions from "~/appwrite/customer/permissions";
+import type { Models } from "appwrite";
+import type { RouteLocationNormalizedGeneric } from "vue-router";
+import { logout } from "~/appwrite/login-admin";
 import { usePermissionsStore } from "~/stores/permission-store";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  if (import.meta.server) {
+  const permissionsStore = usePermissionsStore();
+
+  if (to.path === from.path && to.name === from.name) {
+    return;
+  }
+
+  if (import.meta.server && !permissionsStore.user) {
     useState("isAuthLoading", () => true);
     return;
   }
 
   const isAuthLoading = useState("isAuthLoading", () => true);
-  const user = await getUser();
-  const authenticated = !!user;
-
+  const user = await permissionsStore.fetchUser();
   isAuthLoading.value = false;
 
+  return await navigateUser(user, to);
+});
+
+async function navigateUser(
+  user: Models.User<Models.Preferences> | null,
+  to: RouteLocationNormalizedGeneric,
+) {
+  const permissionsStore = usePermissionsStore();
+  const isAuthLoading = useState("isAuthLoading", () => true);
+  const authenticated = !!user;
   const publicRoutes = [/^\/accept-invitation/, /^\/unauthorized/];
-  const publicAuthenticatedRoutes = [/^\/$/];
+  const publicAuthenticatedRoutes = [/^\/$/, /^\/profile/];
   const authRoutes = [/^\/auth\/login/];
 
   const isAuthRoute = authRoutes.some((route) => route.test(to.path));
@@ -31,17 +46,15 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return;
   }
 
-  isAuthLoading.value = true;
+  if (publicAuthenticatedRoutes.some((route) => route.test(to.path))) {
+    return;
+  }
 
-  const permissionsStore = usePermissionsStore();
+  isAuthLoading.value = true;
 
   const { edit, read } = await permissionsStore.fetchPermissions();
 
   isAuthLoading.value = false;
-
-  if (publicAuthenticatedRoutes.some((route) => route.test(to.path))) {
-    return;
-  }
 
   const isAdmin = user?.labels.includes("admin");
 
@@ -60,18 +73,27 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return;
   }
 
-  const readPermission =
-    read.find(
-      (route) =>
-        route.pattern.test(to.path) ||
-        route.pattern.test(to.path.replace("/view", "")),
-    ) || null;
+  const readPermission = read.find((route) => checkReadRoute(route, to.path));
 
-  if (readPermission) {
-    if (!readPermission.route.includes(":id") || to.path.includes("/view"))
-      return;
-    return navigateTo(`${to.path}/view`);
+  if (readPermission && !readPermission.route.includes(":id")) {
+    return;
   }
 
-  return navigateTo("/unauthorized");
-});
+  if (readPermission) {
+    if (!to.path.includes("/view")) return;
+    return navigateTo(`${to.path}/view`, { replace: true });
+  }
+
+  return navigateTo("/unauthorized", { replace: true });
+}
+
+function checkReadRoute(
+  route: { pattern: RegExp; route: string },
+  path: string,
+) {
+  return (
+    route.pattern.test(path) ||
+    (route.route.includes(":id") &&
+      route.pattern.test(path.replace("/view", "")))
+  );
+}

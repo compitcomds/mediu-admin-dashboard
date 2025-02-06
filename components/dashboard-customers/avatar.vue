@@ -14,12 +14,14 @@ const { avatar, name, email } = await getUserAvatar();
 <template>
   <TooltipProvider>
     <Tooltip>
-      <TooltipTrigger class="flex items-center justify-center"
-        ><Avatar>
-          <AvatarImage :src="avatar" alt="avatar" />
-          <AvatarFallback>{{ name }}</AvatarFallback>
-        </Avatar></TooltipTrigger
-      >
+      <TooltipTrigger class="flex items-center justify-center">
+        <nuxt-link to="/profile" class="flex items-center justify-center">
+          <Avatar>
+            <AvatarImage :src="avatar" alt="avatar" />
+            <AvatarFallback>{{ name }}</AvatarFallback>
+          </Avatar>
+        </nuxt-link>
+      </TooltipTrigger>
       <TooltipContent>
         <p>Hey! {{ email }}</p>
       </TooltipContent>

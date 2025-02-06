@@ -2,7 +2,7 @@
   <!-- {{ data }} -->
   <TableRow>
     <TableCell>
-      <nuxt-link :to="`/product/${product.id}`">
+      <nuxt-link :to="`/product/p/${product.id}`">
         <img
           :src="
             product.image?.src ||
@@ -13,10 +13,10 @@
       </nuxt-link>
     </TableCell>
     <TableCell class="font-medium">
-      <nuxt-link :to="`/product/${product.id}`">{{ productId }}</nuxt-link>
+      <nuxt-link :to="`/product/p/${product.id}`">{{ productId }}</nuxt-link>
     </TableCell>
     <TableCell
-      ><nuxt-link :to="`/product/${product.id}`">{{
+      ><nuxt-link :to="`/product/p/${product.id}`">{{
         product.title
       }}</nuxt-link></TableCell
     >

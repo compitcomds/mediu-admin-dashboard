@@ -63,9 +63,9 @@ const handleSubmit = async () => {
   try {
     const back = route.query?.back;
     await loginAdminUser(email.value, password.value);
-    reloadNuxtApp();
-    if (back) router.replace(`${back}`);
-    else router.replace("/");
+    await reloadNuxtApp({
+      path: back ? `${back}` : "/",
+    });
   } catch (error) {
     alert(error.message);
   }
