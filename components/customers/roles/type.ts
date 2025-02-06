@@ -49,8 +49,8 @@ export const availablePermissions = ref<PermissionType[]>([
       },
       {
         title: "Collection",
-        read: "/collections/:id",
-        edit: "/collections/:id",
+        read: "/collections/c/:id",
+        edit: "/collections/c/:id",
       },
     ],
   },

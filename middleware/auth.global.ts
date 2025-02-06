@@ -27,7 +27,6 @@ async function navigateUser(
   to: RouteLocationNormalizedGeneric,
 ) {
   const permissionsStore = usePermissionsStore();
-  const isAuthLoading = useState("isAuthLoading", () => true);
   const authenticated = !!user;
   const publicRoutes = [/^\/accept-invitation/, /^\/unauthorized/];
   const publicAuthenticatedRoutes = [/^\/$/, /^\/profile/];
@@ -50,12 +49,6 @@ async function navigateUser(
     return;
   }
 
-  isAuthLoading.value = true;
-
-  const { edit, read } = await permissionsStore.fetchPermissions();
-
-  isAuthLoading.value = false;
-
   const isAdmin = user?.labels.includes("admin");
 
   if (isAdmin) {
@@ -63,6 +56,8 @@ async function navigateUser(
     if (backRoute) return navigateTo(backRoute);
     return;
   }
+
+  const { edit, read } = await permissionsStore.fetchPermissions();
 
   if (read.length === 0 && edit.length === 0) {
     await logout();
@@ -79,8 +74,9 @@ async function navigateUser(
     return;
   }
 
+  if (readPermission && to.path.includes("/view")) return;
+
   if (readPermission) {
-    if (!to.path.includes("/view")) return;
     return navigateTo(`${to.path}/view`, { replace: true });
   }
 
