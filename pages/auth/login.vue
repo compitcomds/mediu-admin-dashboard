@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen items-center justify-center bg-gray-100">
+  <div class="flex h-full items-center justify-center bg-gray-100">
     <div class="w-96 rounded-lg bg-white p-8 shadow-md">
       <h1 class="text-center text-2xl font-semibold text-[#28574e]">Login</h1>
       <form @submit.prevent="handleSubmit">
@@ -40,7 +40,9 @@
       </form>
       <p class="mt-4 text-center text-sm text-gray-600">
         Don't have an account?
-        <a href="https://mediu.in/auth/register" class="text-[#28574e]"
+        <a
+          href="https://mediu.in/auth/register"
+          class="text-[#28574e] hover:underline"
           >Sign Up</a
         >
       </p>
@@ -56,7 +58,6 @@ const password = ref("");
 const isLoading = ref(false);
 
 const route = useRoute();
-const router = useRouter();
 
 const handleSubmit = async () => {
   isLoading.value = true;

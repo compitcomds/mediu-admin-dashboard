@@ -17,7 +17,6 @@
 
 <script setup lang="ts">
 import { MailCheck } from "lucide-vue-next";
-import { defineProps } from "vue";
 
 defineProps<{ roles: string[] }>();
 </script>

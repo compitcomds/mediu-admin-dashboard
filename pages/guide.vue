@@ -1,30 +1,30 @@
 <template>
   <div class="mx-auto">
-    <h1 class="text-4xl font-semibold text-center mb-12 text-gray-800">
+    <h1 class="mb-12 text-center text-4xl font-semibold text-gray-800">
       Video Guide
     </h1>
 
     <div
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 gap-8"
+      class="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4"
     >
       <template v-for="video in videos" :key="video.url">
         <Dialog>
           <DialogTrigger
-            class="relative group bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer hover:shadow-2xl transition-all"
+            class="group relative cursor-pointer overflow-hidden rounded-lg bg-white shadow-lg transition-all hover:shadow-2xl"
           >
             <div class="relative">
               <img
                 :src="video.thumbnail"
                 alt="Video Thumbnail"
-                class="inset-0 w-full h-44 object-cover filter brightness-75 group-hover:opacity-80 transition-all"
+                class="inset-0 h-44 w-full object-cover brightness-75 filter transition-all group-hover:opacity-80"
               />
               <h3
-                class="capitalize bg-[#28574e] py-2 absolute bottom-0 w-full font-semibold text-white text-center"
+                class="absolute bottom-0 w-full bg-[#28574e] py-2 text-center font-semibold capitalize text-white"
               >
                 {{ video.title }}
               </h3>
               <div
-                class="absolute inset-0 flex items-center justify-center group-hover:bg-black group-hover:bg-opacity-50 transition-all"
+                class="absolute inset-0 flex items-center justify-center transition-all group-hover:bg-black group-hover:bg-opacity-50"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@
                   stroke-width="1.75"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="feather feather-play group-hover:scale-110 transition-all duration-200 lucide lucide-play"
+                  class="feather feather-play lucide lucide-play transition-all duration-200 group-hover:scale-110"
                 >
                   <polygon points="6 3 20 12 6 21 6 3" />
                 </svg>
@@ -45,14 +45,14 @@
           </DialogTrigger>
           <DialogContent class="max-w-6xl pt-10">
             <div
-              class="relative w-full h-full flex items-center justify-center"
+              class="relative flex h-full w-full items-center justify-center"
             >
               <iframe
                 :src="video.url"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
-                class="w-full min-h-[500px] rounded-lg"
+                class="min-h-[500px] w-full rounded-lg"
               ></iframe>
             </div>
           </DialogContent>
@@ -98,7 +98,7 @@ const videos = [
   },
   {
     url: "https://www.youtube.com/embed/YedIr2hKbfw?si=1yScDtvC4fSqXreB",
-    title: "Product Options And Varients",
+    title: "Product Options And Variants",
     thumbnail: "https://img.youtube.com/vi/YedIr2hKbfw/hqdefault.jpg",
   },
   {

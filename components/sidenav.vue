@@ -6,200 +6,59 @@
       Admin Dashboard
     </h1>
     <div class="my-4 border-t border-white"></div>
-    <nav>
+    <nav v-if="!isLoading">
       <ul>
-        <li class="mb-4">
-          <nuxt-link
-            to="/"
-            class="flex items-center rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
-          >
-            <i class="fas fa-home mr-3 text-xl"></i> Home
-          </nuxt-link>
-        </li>
-        <li class="mb-4">
-          <nuxt-link
-            to="/orders"
-            class="flex items-center rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
-          >
-            <i class="fas fa-boxes mr-3 text-xl"></i> Orders
-          </nuxt-link>
-        </li>
-        <li class="mb-4">
-          <div
-            @click="toggleDropdown('products')"
-            class="flex cursor-pointer items-center justify-between rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
-          >
-            <span class="flex items-center">
-              <i class="fas fa-cogs mr-3 text-xl"></i> Products
-            </span>
-            <span
-              :class="{ 'rotate-180': dropdowns.products }"
-              class="transform transition-transform"
+        <li v-for="route in validatedRoutes" :key="route.to" class="mb-4">
+          <!-- For routes with children (dropdown menus) -->
+          <template v-if="route.children">
+            <div
+              @click="toggleDropdown(route.label.toLowerCase())"
+              class="flex cursor-pointer items-center justify-between rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-chevron-down"
+              <span class="flex items-center">
+                <i :class="[route.icon, 'mr-3 text-xl']"></i> {{ route.label }}
+              </span>
+              <span
+                :class="{ 'rotate-180': dropdowns[route.label.toLowerCase()] }"
+                class="transform transition-transform"
               >
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </span>
-          </div>
-          <ul v-if="dropdowns.products" class="ml-6 mt-2 space-y-2">
-            <li>
-              <nuxt-link
-                to="/product"
-                class="block rounded px-2 py-1 transition-colors hover:bg-white hover:text-black"
-                >All Products</nuxt-link
-              >
-            </li>
-            <li>
-              <nuxt-link
-                to="/collections"
-                class="block rounded px-2 py-1 transition-colors hover:bg-white hover:text-black"
-                >Collections</nuxt-link
-              >
-            </li>
-            <li>
-              <nuxt-link
-                to="/inventory"
-                class="block rounded px-2 py-1 transition-colors hover:bg-white hover:text-black"
-                >Inventory</nuxt-link
-              >
-            </li>
-          </ul>
-        </li>
-        <li class="mb-4">
-          <nuxt-link
-            to="/alert"
-            class="flex items-center rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
-          >
-            <i class="fas fa-exclamation-circle mr-3 text-xl"></i> Alert Users
-          </nuxt-link>
-        </li>
-        <li class="mb-4">
-          <div
-            @click="toggleDropdown('customers')"
-            class="flex cursor-pointer items-center justify-between rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
-          >
-            <span class="flex items-center">
-              <i class="fas fa-users mr-3 text-xl"></i> Users
-            </span>
-            <span
-              :class="{ 'rotate-180': dropdowns.customers }"
-              class="transform transition-transform"
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-chevron-down"
+                >
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </span>
+            </div>
+            <ul
+              v-if="dropdowns[route.label.toLowerCase()]"
+              class="ml-6 mt-2 space-y-2"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-chevron-down"
-              >
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </span>
-          </div>
-          <ul v-if="dropdowns.customers" class="ml-6 mt-2 space-y-2">
-            <li>
-              <nuxt-link
-                to="/customers"
-                class="block rounded px-2 py-1 transition-colors hover:bg-white hover:text-black"
-                >Customers</nuxt-link
-              >
-            </li>
-            <li>
-              <nuxt-link
-                to="/customers/dashboard-users"
-                class="block rounded px-2 py-1 transition-colors hover:bg-white hover:text-black"
-                >Dashboard Users</nuxt-link
-              >
-            </li>
-            <li>
-              <nuxt-link
-                to="/customers/roles"
-                class="block rounded px-2 py-1 transition-colors hover:bg-white hover:text-black"
-                >Roles</nuxt-link
-              >
-            </li>
-          </ul>
-        </li>
-        <li class="mb-4">
-          <button
-            @click="toggleDropdown('consultancy')"
-            class="flex w-full cursor-pointer items-center justify-between rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
-          >
-            <span class="flex items-center">
-              <i class="fas fa-handshake mr-3 text-xl"></i> Consultancy
-            </span>
-            <span
-              :class="{ 'rotate-180': dropdowns.consultancy }"
-              class="transform transition-transform"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-chevron-down"
-              >
-                <path d="m6 9 6 6 6-6" />
-              </svg>
-            </span>
-          </button>
-          <ul v-if="dropdowns.consultancy" class="ml-6 mt-2 space-y-2">
-            <li>
-              <nuxt-link
-                to="/consultancy/services"
-                class="block rounded px-2 py-1 transition-colors hover:bg-white hover:text-black"
-                >Services</nuxt-link
-              >
-            </li>
-            <li>
-              <nuxt-link
-                to="/consultancy/bookings"
-                class="block rounded px-2 py-1 transition-colors hover:bg-white hover:text-black"
-                >Bookings</nuxt-link
-              >
-            </li>
-          </ul>
-        </li>
-        <li class="mb-4">
+              <li v-for="child in route.children" :key="child.to">
+                <nuxt-link
+                  :to="child.to"
+                  class="block rounded px-2 py-1 transition-colors hover:bg-white hover:text-black"
+                >
+                  {{ child.label }}
+                </nuxt-link>
+              </li>
+            </ul>
+          </template>
+
+          <!-- For routes without children (regular links) -->
           <nuxt-link
-            to="/guide"
+            v-else
+            :to="route.to"
             class="flex items-center rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
           >
-            <i class="fas fa-book mr-3 text-xl"></i> Guide
-          </nuxt-link>
-        </li>
-        <li class="mb-4">
-          <nuxt-link
-            to="/help-and-support"
-            class="flex items-center rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
-          >
-            <i class="fas fa-headset mr-3 text-xl"></i> Help & Support
-          </nuxt-link>
-        </li>
-        <li class="mb-4">
-          <nuxt-link
-            to="/profile"
-            class="flex items-center rounded px-4 py-2 transition-colors hover:bg-white hover:text-black"
-          >
-            <i class="fas fa-user mr-3 text-xl"></i> Profile
+            <i :class="[route.icon, 'mr-3 text-xl']"></i> {{ route.label }}
           </nuxt-link>
         </li>
       </ul>
@@ -208,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-const dropdowns = ref({
+const dropdowns = ref<Record<string, boolean>>({
   orders: false,
   products: false,
   customers: false,
@@ -219,7 +78,7 @@ const dropdowns = ref({
   discounts: false,
 });
 
-function toggleDropdown(dropdown: keyof typeof dropdowns.value) {
+function toggleDropdown(dropdown: string) {
   dropdowns.value[dropdown] = !dropdowns.value[dropdown];
 }
 
@@ -260,6 +119,53 @@ const routes = [
   { to: "/help-and-support", label: "Help & Support", icon: "fas fa-headset" },
   { to: "/profile", label: "Profile", icon: "fas fa-user" },
 ];
+
+const validatedRoutes = ref<any[]>([]);
+const isLoading = ref(true);
+
+async function computeValidatedRoutes() {
+  isLoading.value = true;
+  try {
+    const validated = await Promise.all(
+      routes.map(async (route) => {
+        if (!route.children) {
+          const hasPermission = await validateRouteForAuthenticatedUsers(
+            route.to,
+          );
+          return hasPermission ? route : null;
+        }
+
+        const validChildren = await Promise.all(
+          route.children.map(async (child) => {
+            const hasPermission = await validateRouteForAuthenticatedUsers(
+              child.to,
+            );
+            return hasPermission ? child : null;
+          }),
+        );
+
+        const permittedChildren = validChildren.filter(Boolean);
+
+        if (permittedChildren.length > 0) {
+          return {
+            ...route,
+            children: permittedChildren,
+          };
+        }
+
+        return null;
+      }),
+    );
+
+    validatedRoutes.value = validated.filter(Boolean);
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+onMounted(() => {
+  computeValidatedRoutes();
+});
 </script>
 
 <style scoped>
