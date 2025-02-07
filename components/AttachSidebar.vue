@@ -1,9 +1,10 @@
 <template>
   <div class="flex min-h-screen">
     <Sidenav v-if="showSidebar" />
+
     <div
-      class="mt-10 flex-1 overflow-y-auto bg-gray-100 px-2 py-8 sm:px-8 lg:ml-64"
-      :class="{ 'lg:ml-0': !showSidebar }"
+      class="mt-10 flex-1 overflow-y-auto bg-gray-100 px-2 py-8 sm:px-8"
+      :class="{ 'lg:ml-0': !showSidebar, 'lg:ml-64': showSidebar }"
     >
       <NavigationButton v-if="showSidebar" />
       <slot />

@@ -3,6 +3,13 @@
     <h1 class="text-xl font-semibold md:text-2xl">Products</h1>
     <div class="flex flex-wrap items-center gap-x-2">
       <Search id="product-search" placeholder="Searching all products" />
+      <ExportButton
+        title="Export Products"
+        class="rounded-md bg-gray-200 px-6 py-2 hover:bg-gray-300"
+        api="/api/products"
+      >
+        Export Products
+      </ExportButton>
       <div>
         <nuxt-link
           class="flex items-center gap-2 rounded-md bg-black px-2 py-1.5 text-white hover:bg-black/70 md:px-3 lg:ml-4"
