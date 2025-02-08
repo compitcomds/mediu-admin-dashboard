@@ -148,9 +148,3 @@ useHead({
   title: "Mediu | Home",
 });
 </script>
-
-<style scoped>
-.bg-white {
-  background-color: #ffffff;
-}
-</style>

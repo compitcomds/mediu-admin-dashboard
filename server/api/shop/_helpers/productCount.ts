@@ -15,10 +15,16 @@ query productCountQuery {
 }`;
 
 export default async function fetchProductCount() {
-  const { data } = await shopifyClient.request({ query: productCountQuery });
-  const { data: collectionData } = await shopifyClient.request({
+  const productCountPromise = shopifyClient.request({
+    query: productCountQuery,
+  });
+  const collectionCountPromise = shopifyClient.request({
     query: collectionCountQuery,
   });
+  const [{ data }, { data: collectionData }] = await Promise.all([
+    productCountPromise,
+    collectionCountPromise,
+  ]);
   return {
     products: data.data.productsCount.count,
     collections: collectionData.data.collectionsCount.count,

@@ -18,7 +18,7 @@ async function fetchProductCollections(productId: string): Promise<any> {
           "Content-Type": "application/json",
           "X-Shopify-Access-Token": config.shopifyAccessToken,
         },
-      }
+      },
     );
 
     return data.custom_collections;
@@ -37,7 +37,7 @@ async function fetchProductCollects(productId: string): Promise<any> {
           "Content-Type": "application/json",
           "X-Shopify-Access-Token": config.shopifyAccessToken,
         },
-      }
+      },
     );
     return data.collects;
   } catch (error) {
@@ -84,7 +84,7 @@ export default defineEventHandler(async (event) => {
   const collections = await fetchProductCollections(productId);
   const collects = await fetchProductCollects(productId);
   const hsnCode = await fetchHSNCode(
-    data.product.variants[0].inventory_item_id
+    data.product.variants[0].inventory_item_id,
   );
 
   return { ...data, metafields, collections, collects, hsnCode };

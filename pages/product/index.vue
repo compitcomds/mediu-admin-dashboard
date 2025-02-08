@@ -6,7 +6,9 @@
       <ExportButton
         title="Export Products"
         class="rounded-md bg-gray-200 px-6 py-2 hover:bg-gray-300"
-        api="/api/products"
+        api="/api/products/export"
+        totalApi="/api/products/count"
+        :parser="exportProductParser"
       >
         Export Products
       </ExportButton>
@@ -68,6 +70,7 @@
 <script setup lang="ts">
 import { PlusCircle } from "lucide-vue-next";
 import axios from "axios";
+import exportProductParser from "~/utils/parsers/product";
 
 const route = computed(() => useRoute());
 
