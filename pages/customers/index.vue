@@ -8,7 +8,20 @@
     <p class="text-sm text-gray-500">
       Total Customers: <span class="text-black">{{ totalCustomers }}</span>
     </p>
-    <Search id="customer-search" placeholder="Searching all customers" />
+    <div class="flex items-center gap-2">
+      <Search id="customer-search" placeholder="Searching all customers" />
+      <ExportButton
+        v-if="totalCustomers > 0"
+        title="Export Customers"
+        class="rounded-md bg-gray-200 px-6 py-2 hover:bg-gray-300"
+        api="/api/customers/export"
+        file-name="mediu-customers.csv"
+        :total="totalCustomers"
+        :parser="exportCustomersParser"
+      >
+        Export Customers
+      </ExportButton>
+    </div>
   </div>
 
   <CustomersViewTable :customers="customers" />
@@ -17,6 +30,7 @@
 
 <script lang="ts" setup>
 import axios from "axios";
+import exportCustomersParser from "~/utils/parsers/customers";
 
 const route = useRoute();
 const totalCustomers = ref(0);

@@ -6,6 +6,8 @@ const serverConfig = {
     appwriteDatabaseId: process.env.VITE_APPWRITE_DATABASE_ID as string,
     appwriteWalletTransactionsCollectionId: process.env
       .VITE_APPWRITE_WALLET_TRANSACTIONS_COLLECTION_ID as string,
+    appwriteCustomerWalletId: process.env
+      .VITE_APPWRITE_WALLET_COLLECTION_ID as string,
   },
 };
 

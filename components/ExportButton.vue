@@ -17,6 +17,7 @@ const props = defineProps<{
   totalApi?: string;
   total?: number;
   parser: (items: any[]) => any[];
+  fileName: string;
 }>();
 
 const isLoading = ref<"fetching" | "exporting" | null | boolean>(false);
@@ -25,7 +26,7 @@ const totalItems = ref<number | null>(props.total || null);
 
 const fetchTotal = async () => {
   if (!props.totalApi) return;
-  const { data } = await axios.get("/api/products/count");
+  const { data } = await axios.get(props.totalApi);
   if (data.count) totalItems.value = data.count;
 };
 
@@ -51,8 +52,8 @@ const fetchAllItems = async () => {
   while (hasNextPage) {
     const { items, pageInfo } = await fetchItems({ after });
     fetchedItems.push(...items);
-    hasNextPage = pageInfo.hasNextPage;
-    if (pageInfo.hasNextPage) after = pageInfo.endCursor;
+    hasNextPage = !!pageInfo?.hasNextPage;
+    if (pageInfo?.hasNextPage) after = pageInfo.endCursor;
     if (totalItems.value)
       progress.value = (fetchedItems.length * 100) / totalItems.value;
   }
@@ -62,7 +63,7 @@ const fetchAllItems = async () => {
 const handleExport = async () => {
   const fetchedItems = await fetchAllItems();
   isLoading.value = "exporting";
-  exportToCSV(props.parser(fetchedItems), "mediu-products.csv");
+  exportToCSV(props.parser(fetchedItems), props.fileName);
   isLoading.value = false;
 };
 

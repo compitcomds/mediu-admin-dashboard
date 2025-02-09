@@ -8,6 +8,7 @@
         class="rounded-md bg-gray-200 px-6 py-2 hover:bg-gray-300"
         api="/api/products/export"
         totalApi="/api/products/count"
+        file-name="mediu-products.csv"
         :parser="exportProductParser"
       >
         Export Products
