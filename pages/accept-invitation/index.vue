@@ -24,7 +24,6 @@ import { MailCheck } from "lucide-vue-next";
 import acceptInvitation from "~/appwrite/customer/teams/accept-invitation";
 
 const route = useRoute();
-
 const success = ref(false);
 const error = ref(false);
 
@@ -37,7 +36,8 @@ onMounted(async () => {
       route.query.secret as string,
     );
     success.value = true;
-    await reloadNuxtApp();
+
+    window.location.href = "/";
   } catch (e) {
     error.value = true;
   }
