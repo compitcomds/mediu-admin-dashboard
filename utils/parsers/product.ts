@@ -47,7 +47,7 @@ export default function exportProductsParser(products: Product[]) {
     product.variants.nodes.forEach((variant, index) => {
       const row: Record<string, string> =
         index > 0
-          ? {}
+          ? { ID: `'${product.id}` }
           : {
               ID: `'${product.id}`,
               Handle: product.handle,

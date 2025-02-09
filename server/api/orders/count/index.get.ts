@@ -1,5 +1,9 @@
 import fetchOrderCount from "../../shop/_helpers/getOrdersCount";
 
 export default defineEventHandler(async () => {
-  return await fetchOrderCount();
+  const ordersCount = await fetchOrderCount();
+  return {
+    ...ordersCount,
+    count: ordersCount.total,
+  };
 });

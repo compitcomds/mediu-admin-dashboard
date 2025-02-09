@@ -1,8 +1,19 @@
 <template>
-  <div class="">
+  <div class="mt-8">
     <div class="mb-1 flex items-center justify-between">
       <h1 class="text-2xl font-semibold">Orders: All locations</h1>
-      <div class="flex space-x-4"></div>
+      <div class="flex items-center gap-x-2">
+        <ExportButton
+          title="Export Orders"
+          class="rounded-md bg-gray-200 px-6 py-2 hover:bg-gray-300"
+          api="/api/orders/export"
+          total-api="/api/orders/count"
+          file-name="mediu-orders.csv"
+          :parser="exportOrdersParser"
+        >
+          Export Orders
+        </ExportButton>
+      </div>
     </div>
     <div class="mb-4">
       <p class="text-xs">Total Orders: {{ orders.length }}</p>
@@ -117,6 +128,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
+import exportOrdersParser from "~/utils/parsers/orders";
 
 const availableFilterList = [
   "all",

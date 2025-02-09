@@ -1,3 +1,5 @@
+import formatDateTime from "../formatDateTime";
+
 export default function exportCustomersParser(customers: any[]) {
   const rows: string[][] = [];
   const headers = [
@@ -27,7 +29,7 @@ export default function exportCustomersParser(customers: any[]) {
       Phone: !!defaultAddress?.phone ? `'${defaultAddress.phone}` : "",
       "Number Of Orders": customer.numberOfOrders,
       "Amount Spent": customer.amountSpent?.amount || 0,
-      "Created At": customer.createdAt,
+      "Created At": formatDateTime(customer.createdAt),
       "Address 1": defaultAddress?.address1,
       "Address 2": defaultAddress?.address2,
       City: defaultAddress?.city,
