@@ -4,7 +4,7 @@
       <h2 class="text-2xl font-semibold text-gray-800">
         Dashboard User Management
       </h2>
-      <DashboardCustomersMembershipForm
+      <DashboardCustomersMembershipDialog
         :onSubmit="addUser"
         :showEmailMessage="true"
       />
