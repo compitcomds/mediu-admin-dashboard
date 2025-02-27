@@ -73,5 +73,9 @@ const performSearch = useDebounceFn(async () => {
 const clearSearch = async () => {
   searchQuery.value = "";
   searchVisible.value = false;
+  await navigateTo({
+    path: props.pathToRedirect || route.path,
+    query: { query: undefined },
+  });
 };
 </script>

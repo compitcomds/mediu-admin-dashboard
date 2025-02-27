@@ -2,7 +2,7 @@
   <div class="flex items-center">
     <div
       v-if="searchVisible || searchQuery"
-      class="flex items-center bg-gray-100 rounded-lg"
+      class="flex items-center rounded-lg bg-gray-100"
     >
       <div class="relative">
         <input
@@ -10,7 +10,7 @@
           id="product-search"
           type="text"
           placeholder="Searching all products"
-          class="bg-white px-4 pl-7 border focus:outline text-sm py-2 w-24 md:w-48 lg:w-64"
+          class="w-24 border bg-white px-4 py-2 pl-7 text-sm focus:outline md:w-48 lg:w-64"
           @input="performSearch"
         />
         <Search
@@ -18,7 +18,7 @@
         />
         <button
           @click="clearSearch"
-          class="ml-2 absolute top-1/2 -translate-y-1/2 right-2 text-gray-500 hover:text-black"
+          class="absolute right-2 top-1/2 ml-2 -translate-y-1/2 text-gray-500 hover:text-black"
         >
           <X class="w-5" />
         </button>
@@ -27,7 +27,7 @@
     <button
       v-else
       @click="toggleSearch"
-      class="text-gray-500 hover:text-black focus:outline-none bg-gray-200 p-2 rounded-lg"
+      class="rounded-lg bg-gray-200 p-2 text-gray-500 hover:text-black focus:outline-none"
     >
       <Search />
     </button>
@@ -41,6 +41,7 @@ const props = defineProps<{
   pathToRedirect?: string;
 }>();
 
+const router = useRouter();
 const route = useRoute();
 const searchVisible = ref(false);
 const searchQuery = ref(route.query.query || "");
