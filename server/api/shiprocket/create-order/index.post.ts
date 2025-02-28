@@ -1,9 +1,9 @@
 import axios from "axios";
 import formatDateForShiprocket from "~/utils/formatDateForShiprocket";
+import getAccessTokenFromShiprocket from "../_helpers/access-token";
 
 const SHIPROCKET_API = process.env.VITE_SHIPROCKET_API_URL;
 const SHIPROCKET_PICKUP_LOCATION = process.env.VITE_PICKUP_LOCATION;
-const PRODUCTION_API = process.env.VITE_PRODUCTION_API;
 
 export default defineEventHandler(async (event) => {
   const { accessToken, orderData, dimensions } = await readBody(event);
@@ -122,10 +122,8 @@ function formatLineItems(items: any[]) {
 
 async function getNewAcessToken() {
   try {
-    const { data } = await axios.get(
-      `${PRODUCTION_API}/api/shiprocket/access-token`,
-    );
-    return data.token as string;
+    const { token } = await getAccessTokenFromShiprocket();
+    return token;
   } catch (error) {
     console.error("ERROR OCCURRED WHILE FETCHING ACCESS TOKEN.");
     console.error(error);
