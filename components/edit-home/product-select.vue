@@ -25,7 +25,7 @@ const pageInfo = ref<{
   hasPreviousPage: false,
 });
 
-const selectedProducts = defineModel<Product[]>({
+const selectedProducts = defineModel<Record<string, Product>>({
   required: true,
 });
 
@@ -47,12 +47,13 @@ const toggleProduct = (productId: string, ogProduct?: Product) => {
     product.tags = product.tags.filter((t: any) => t !== tag);
   } else {
     product.tags.push(tag);
-    selectedProducts.value.push(product);
   }
+
+  selectedProducts.value[product.id] = product;
 };
 
 const getProductById = (id: string) => {
-  return selectedProducts.value.find((p) => p.id === id);
+  return selectedProducts.value[id] || null;
 };
 
 const fetchProducts = async ({
@@ -165,6 +166,6 @@ watch(
     :selected-products="Object.values(selectedProducts).flat()"
     :toggle-product="toggleProduct"
     :selected-section="selectedSection.name"
-    :selected-subcategory="selectedSubcategory.name"
+    :selected-subcategory="selectedSubcategory"
   />
 </template>

@@ -10,7 +10,7 @@
           :id="searchid"
           type="text"
           :placeholder="placeholder || 'Search'"
-          class="w-24 border bg-white px-4 py-2 pl-7 text-sm focus:outline md:w-48 lg:w-64"
+          class="w-24 border bg-white px-4 py-2 pl-7 pr-7 text-sm focus:outline md:w-48 lg:w-64"
           @input="performSearch"
         />
         <Search

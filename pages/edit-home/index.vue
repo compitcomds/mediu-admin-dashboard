@@ -4,9 +4,11 @@
     <div class="flex items-center gap-x-4">
       <button
         @click="saveChanges"
-        class="rounded-md bg-[#238878] px-4 py-2 font-medium text-white transition hover:bg-[#21413c]"
+        :disabled="isSaving"
+        class="rounded-md bg-[#238878] px-4 py-2 font-medium text-white transition hover:bg-[#21413c] disabled:animate-pulse disabled:opacity-80"
       >
-        Save Changes
+        <span v-if="!isSaving">Save Changes</span>
+        <span v-else>Saving...</span>
       </button>
     </div>
   </div>
@@ -31,7 +33,6 @@
       </div>
     </div>
 
-    <!-- Subcategory Tabs -->
     <div class="mb-6">
       <div class="border-b border-gray-200">
         <ul class="-mb-px flex flex-wrap">
@@ -59,7 +60,6 @@
     <EditHomeProductSelect
       :selected-section="selectedSection"
       :selected-subcategory="selectedSubcategory"
-      :available-tags="homePageTags"
       :model-value="selectedProducts"
     />
   </main>
@@ -78,36 +78,50 @@ const sections: Section[] = [
     id: 1,
     name: "Featured Products",
     subcategories: [
-      { id: 1, name: "Hair", tag: "featured-product-hair" },
-      { id: 2, name: "Skin", tag: "featured-product-skin" },
-      { id: 3, name: "Baby Care", tag: "featured-product-baby" },
+      { id: 1, name: "Hair", tag: "home-featured-product-hair" },
+      { id: 2, name: "Skin", tag: "home-featured-product-skin" },
+      { id: 3, name: "Baby Care", tag: "home-featured-product-baby" },
+      {
+        id: 101,
+        name: "Featured Hair",
+        tag: "featured-home-hair",
+      },
+      {
+        id: 102,
+        name: "Featured Skin",
+        tag: "featured-home-skin",
+      },
+      {
+        id: 103,
+        name: "Featured Baby Care",
+        tag: "featured-home-baby",
+      },
     ],
   },
   {
     id: 2,
     name: "Radiant Skin Secrets",
     subcategories: [
-      { id: 4, name: "Moisturizers", tag: "radiant-skin-moisturizer" },
-      { id: 5, name: "Sunscreen", tag: "radiant-skin-sunscreen" },
-      { id: 6, name: "Anti-Aging", tag: "radiant-skin-anti-aging" },
+      { id: 5, name: "Sunscreen", tag: "home-radiant-skin-sunscreen" },
+      { id: 4, name: "Moisturizers", tag: "home-radiant-skin-moisturizer" },
+      { id: 6, name: "Anti-Aging", tag: "home-radiant-skin-anti-aging" },
     ],
   },
   {
     id: 3,
     name: "Hair Care Must Haves",
     subcategories: [
-      { id: 7, name: "Shampoo", tag: "hair-care-shampoo" },
-      { id: 8, name: "Conditioner", tag: "hair-care-conditioner" },
-      { id: 9, name: "Treatments", tag: "hair-care-treatment" },
-      { id: 10, name: "Styling", tag: "hair-care-styling" },
-    ],
-  },
-  {
-    id: 4,
-    name: "Baby Care Essentials",
-    subcategories: [
-      { id: 11, name: "Bath", tag: "baby-care-bath" },
-      { id: 12, name: "Essentials", tag: "baby-care-essentials" },
+      {
+        id: 7,
+        name: "Hair Serum",
+        tag: "home-hair-care-must-haves-hair-serum",
+      },
+      {
+        id: 8,
+        name: "Shampoo & Conditioner",
+        tag: "home-hair-care-must-haves-Shampoo-and-conditioner",
+      },
+      { id: 9, name: "Minoxidil", tag: "home-hair-care-must-haves-minoxidil" },
     ],
   },
 ];
@@ -115,7 +129,8 @@ const sections: Section[] = [
 const selectedSection = ref<Section>(sections[0]);
 const selectedSubcategory = ref<Subcategory>(sections[0].subcategories[0]);
 
-const selectedProducts = ref<Product[]>([]);
+const selectedProducts = ref<Record<string, Product>>({});
+const fetchedProducts = ref<Record<string, Product>>({});
 const isSaving = ref(false);
 
 const homePageTags = sections
@@ -126,14 +141,15 @@ watch(selectedSection, (newSection) => {
   selectedSubcategory.value = newSection.subcategories[0];
 });
 
-const fetchByTag = async (tag: string) => {};
-
 const fetchSelectedProducts = async () => {
   try {
     const { data } = await axios.get(
       `/api/products/home?limit=100&query=${homePageTags.map((tag) => `(tag:${tag})`).join(" OR ")}`,
     );
-    selectedProducts.value = data.products || [];
+    for (const product of data.products || []) {
+      selectedProducts.value[product.id] = product;
+      fetchedProducts.value[product.id] = cloneProduct(product);
+    }
   } catch (e: any) {
     alert(e.message);
   }
@@ -145,24 +161,50 @@ const saveChanges = async () => {
     const products = Object.values(selectedProducts.value).flat();
     const promises: Promise<any>[] = [];
     for (const product of products) {
+      const fetchedProductsValue = fetchedProducts.value;
+      if (
+        Object.keys(fetchedProductsValue).includes(product.id) &&
+        haveSameElements(fetchedProductsValue[product.id].tags, product.tags)
+      )
+        continue;
       promises.push(
         axios.put(`/api/product/${product.id}/partial-update`, {
           tags: product.tags,
         }),
       );
-      if (promises.length === 5) {
+      fetchedProducts.value[product.id] = cloneProduct(product);
+      if (promises.length === 3) {
         await Promise.all(promises);
         promises.length = 0;
       }
     }
     if (promises.length > 0) await Promise.all(promises);
-    alert("Successfully updated the home page!");
+    alert(
+      "Successfully updated the home page! Please wait 1-2 minutes for the changes to be reflected. ",
+    );
   } catch (error: any) {
     alert(error.message);
   } finally {
     isSaving.value = false;
   }
 };
+
+function cloneProduct(product: Product) {
+  return {
+    ...product,
+    tags: [...product.tags],
+  } as Product;
+}
+
+function haveSameElements(arr1: string[], arr2: string[]) {
+  if (arr1.length !== arr2.length) return false;
+  const set1 = new Set(arr1);
+  const set2 = new Set(arr2);
+
+  if (set1.size !== set2.size) return false;
+
+  return Array.from(set1).every((item) => set2.has(item));
+}
 
 onMounted(() => {
   fetchSelectedProducts();
