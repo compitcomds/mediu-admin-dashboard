@@ -96,6 +96,7 @@ const routes = [
     ],
   },
   { to: "/alert", label: "Alert Users", icon: "fas fa-exclamation-circle" },
+  { to: "/edit-home", label: "Edit Home Page", icon: "fas fa-edit" },
   {
     to: "/customers",
     label: "Users",

@@ -114,4 +114,13 @@ export const availablePermissions = ref<PermissionType[]>([
       },
     ],
   },
+  {
+    section: "Homepage Management",
+    children: [
+      {
+        title: "Home Products",
+        edit: "/edit-home",
+      },
+    ],
+  },
 ]);
