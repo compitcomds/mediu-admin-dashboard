@@ -67,45 +67,44 @@
                 </nuxt-link>
               </td>
               <td class="border-b border-gray-200 px-4 py-3">
-                {{ formatDateTime(order.created_at) }}
+                {{ formatDateTime(order.createdAt) }}
               </td>
               <td class="border-b border-gray-200 px-4 py-3">
-                {{ order.customer?.first_name }}
-                {{ order.customer?.last_name }}
+                {{ order.customer?.displayName }}
               </td>
               <td class="border-b border-gray-200 px-4 py-3">
-                {{ order.total_price }}
+                {{ order.totalPriceSet.presentmentMoney.amount }}
               </td>
               <td class="border-b border-gray-200 px-4 py-3">
                 <span
                   class="inline-flex items-center px-2 py-1 text-xs font-semibold leading-none"
                   :class="
-                    order.financial_status === 'paid'
-                      ? 'rounded-full bg-gray-200 p-1 text-gray-700'
+                    order.displayFinancialStatus === 'PAID'
+                      ? 'rounded-full bg-green-200 p-1 text-gray-700'
                       : 'rounded-full bg-red-100 p-1 text-red-700'
                   "
                 >
-                  {{ order.financial_status }}
+                  {{ order.displayFinancialStatus.toLowerCase() }}
                 </span>
               </td>
               <td class="border-b border-gray-200 px-4 py-3">
                 <span
                   class="inline-flex items-center px-2 py-1 text-xs font-semibold leading-none"
                   :class="
-                    order.fulfillment_status !== null
+                    order.displayFulfillmentStatus !== 'UNFULFILLED'
                       ? 'rounded-full bg-yellow-100 p-1 text-yellow-800'
                       : 'rounded-full bg-red-100 p-1 text-red-600'
                   "
                 >
                   {{
-                    order.fulfillment_status !== null
-                      ? order.fulfillment_status
+                    order.displayFulfillmentStatus !== null
+                      ? order.displayFulfillmentStatus.toLowerCase()
                       : "unfulfilled"
                   }}
                 </span>
               </td>
               <td class="border-b border-gray-200 px-4 py-3">
-                {{ order.line_items.length }}
+                {{ order.lineItems.length }}
               </td>
               <td class="border-b border-gray-200 px-4 py-3">
                 <nuxt-link
@@ -120,15 +119,15 @@
       </table>
     </div>
 
-    <div class="mt-4 text-center text-gray-500">
-      Learn more about <a href="#" class="text-blue-600">orders</a> data --
-    </div>
+    <PaginationButtons :pageInfo="pageInfo" />
   </div>
 </template>
 
 <script setup lang="ts">
 import axios from "axios";
 import exportOrdersParser from "~/utils/parsers/orders";
+
+const route = computed(() => useRoute());
 
 const availableFilterList = [
   "all",
@@ -140,20 +139,51 @@ const availableFilterList = [
 
 const activeFilter = ref<(typeof availableFilterList)[number]>("all");
 const orders = ref<any[]>([]);
-const error = ref<string | null>(null);
+const pageInfo = ref<{
+  endCursor: string;
+  hasNextPage: boolean;
+  startCursor: string;
+  hasPreviousPage: boolean;
+}>({
+  endCursor: "",
+  startCursor: "",
+  hasNextPage: false,
+  hasPreviousPage: false,
+});
 
-const fetchOrders = async () => {
+const fetchOrders = async ({
+  after,
+  before,
+  query,
+}: {
+  after?: string;
+  before?: string;
+  query?: string;
+}) => {
   try {
-    const response = await axios.get("/api/orders");
-    orders.value = response.data.orders;
-  } catch (err: any) {
-    error.value = err.message;
-  }
+    const { data } = await axios.get(
+      `/api/orders?after=${after || ""}&before=${before || ""}&query=${query || ""}`,
+    );
+    console.log(data);
+    orders.value = data.orders;
+    pageInfo.value = data.pageInfo;
+  } catch (err: any) {}
 };
 
-onMounted(() => {
-  fetchOrders();
-});
+watch(
+  () => route.value.query,
+  (newQuery) => {
+    fetchOrders({
+      after: newQuery.after?.toString(),
+      before: newQuery.before?.toString(),
+      query: newQuery.query?.toString(),
+    });
+  },
+  {
+    deep: true,
+    immediate: true,
+  },
+);
 
 const setFilter = (newFilter: typeof activeFilter.value) => {
   activeFilter.value = newFilter;
@@ -162,12 +192,17 @@ const setFilter = (newFilter: typeof activeFilter.value) => {
 const checkOrder = (order: any): boolean => {
   const active = activeFilter.value;
   if (active === "all") return true;
-  if (active === "unfulfilled" && !order.fulfillment_status) return true;
-  if (active === "fulfilled" && order.fulfillment_status?.includes("fulfilled"))
+  if (
+    active === "unfulfilled" &&
+    order.displayFulfillmentStatus === "UNFULFILLED"
+  )
+    return true;
+  if (active === "fulfilled" && order.displayFulfillmentStatus === "FULFILLED")
     return true;
 
-  if (active === "unpaid" && order.financial_status !== "paid") return true;
-  if (active === "paid" && order.financial_status === "paid") return true;
+  if (active === "unpaid" && order.displayFinancialStatus !== "PAID")
+    return true;
+  if (active === "paid" && order.displayFinancialStatus === "PAID") return true;
   return false;
 };
 
