@@ -3,7 +3,7 @@ import shopifyClient from "~/server/helpers/shopify-graphql-client";
 
 const ordersAfterQuery = `
 query ordersAfterQuery($after: String, $query: String) {
-  orders(first: 30, after: $after, query: $query){
+  orders(first: 30, after: $after, query: $query, sortKey: CREATED_AT, reverse: true){
     nodes{
       id: legacyResourceId
       createdAt
@@ -36,7 +36,7 @@ query ordersAfterQuery($after: String, $query: String) {
 
 const ordersBeforeQuery = `
 query ordersBeforeQuery($before: String, $query: String) {
-  orders(last: 30, before: $before, query: $query){
+  orders(last: 30, before: $before, query: $query, sortKey: CREATED_AT, reverse: true){
     nodes{
       id: legacyResourceId
       createdAt
