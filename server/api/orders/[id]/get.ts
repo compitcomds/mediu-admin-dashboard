@@ -4,6 +4,8 @@ const getOrderByIdQuery = `
 query getOrderByIdQuery($id: ID!) {
   order(id: $id) {
     id: legacyResourceId
+    name
+    email
     createdAt
     processedAt
     displayFulfillmentStatus

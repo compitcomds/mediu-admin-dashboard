@@ -1,10 +1,14 @@
 import { defineEventHandler } from "h3";
 import axios from "axios";
 import config from "~/utils/config";
+import sendOrderConfirmationMail from "~/server/helpers/mail/order-confirmation-mail";
 
 export default defineEventHandler(async (event) => {
   const params = event.context.params as Record<string, string>;
   const id = params.id;
+  const body = await readBody(event);
+  const email = body.email;
+  const orderName = body?.orderName || "";
 
   if (!id) {
     return { error: "Order ID not provided" };
@@ -19,7 +23,7 @@ export default defineEventHandler(async (event) => {
           "Content-Type": "application/json",
           "X-Shopify-Access-Token": config.shopifyAccessToken,
         },
-      }
+      },
     );
 
     if (orderFulfillmentData.fulfillment_orders.length === 0)
@@ -44,13 +48,15 @@ export default defineEventHandler(async (event) => {
           "Content-Type": "application/json",
           "X-Shopify-Access-Token": config.shopifyAccessToken,
         },
-      }
+      },
     );
 
     const fulfillment = fulfillmentResponse.fulfillment;
     if (!fulfillment) {
       return { error: "Unable to fulfill order." };
     }
+
+    await sendOrderConfirmationMail(email, orderName);
 
     return fulfillment;
   } catch (error) {
