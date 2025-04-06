@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-cols-6 gap-3">
-    <h2 class="col-span-6 font-bold text-nowrap overflow-x-hidden">
+    <h2 class="col-span-6 overflow-x-hidden text-nowrap font-bold">
       Booking Details
     </h2>
     <div class="col-span-3">
@@ -53,16 +53,16 @@
       <input
         v-model="date"
         type="datetime-local"
-        class="block border p-2 px-4 mb-2"
+        class="mb-2 block border p-2 px-4"
       />
     </div>
     <div class="col-span-6">
       <button
         @click="onSubmit"
         :disabled="isSubmitting"
-        class="block ml-auto disabled:opacity-80 disabled:cursor-not-allowed bg-black text-white px-6 py-2 rounded-lg"
+        class="ml-auto block rounded-lg bg-black px-6 py-2 text-white disabled:cursor-not-allowed disabled:opacity-80"
       >
-        <span class="flex gap-2 items-center" v-if="isSubmitting"
+        <span class="flex items-center gap-2" v-if="isSubmitting"
           >Submitting <Loader
         /></span>
         <span v-else>Save</span>
@@ -73,6 +73,7 @@
 
 <script setup lang="ts">
 import type { Models } from "appwrite";
+import axios from "axios";
 import updateConsultancyBooking from "~/appwrite/consultancy/update-booking-time";
 
 const { document } = defineProps<{
@@ -91,6 +92,11 @@ const onSubmit = async () => {
   isSubmitting.value = true;
   try {
     await updateConsultancyBooking(document.$id, date.value);
+    await axios.post("/api/consultancy/confirmation", {
+      email: document.email,
+      alottedTime: date.value,
+      title: document.consultancy[0]?.title || "",
+    });
     alert("Successfully updated the booking time!");
     showingDate.value = date.value;
   } catch (error: any) {
