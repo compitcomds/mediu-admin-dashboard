@@ -37,7 +37,7 @@ onMounted(async () => {
     );
     success.value = true;
 
-    window.location.href = "/";
+    window.location.href = "/profile?from=invite";
   } catch (e) {
     error.value = true;
   }

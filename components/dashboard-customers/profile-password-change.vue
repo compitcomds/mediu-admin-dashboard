@@ -38,13 +38,6 @@
 </template>
 
 <script setup lang="ts">
-import { CircleHelp } from "lucide-vue-next";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { updateUserPassword } from "~/appwrite/login-admin";
 
 const passwordForm = ref({
