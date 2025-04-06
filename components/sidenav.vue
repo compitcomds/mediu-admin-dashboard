@@ -63,6 +63,9 @@
         </li>
       </ul>
     </nav>
+    <div class="flex items-center justify-center" v-else>
+      <Loader />
+    </div>
   </aside>
 </template>
 
