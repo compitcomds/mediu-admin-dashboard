@@ -65,7 +65,7 @@
 <script setup lang="ts">
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
-const videos = [
+const videos: Array<{ url: string; title: string; thumbnail?: string }> = [
   {
     url: "https://www.youtube.com/embed/yWEEgKjE6no?si=HatPTZTzv6oeSEX2",
     title: "Confirm a Order",
@@ -115,6 +115,21 @@ const videos = [
     url: "https://www.youtube.com/embed/zC4DXXGoFdI?si=IThv7NmUmnLKxqGx",
     title: "Multiple Orders",
     thumbnail: "https://img.youtube.com/vi/zC4DXXGoFdI/hqdefault.jpg",
+  },
+  {
+    url: "https://www.youtube.com/embed/gV56UunwIxQ?si=0usnN6hfbN0KKGoX",
+    title: "Create Role Management",
+    thumbnail: "https://img.youtube.com/vi/gV56UunwIxQ/hqdefault.jpg",
+  },
+  {
+    url: "https://www.youtube.com/embed/QbR3BGzqFIU?si=197QNdRQ6QSOJ-t8",
+    title: "Accept Role Management",
+    thumbnail: "https://img.youtube.com/vi/QbR3BGzqFIU/hqdefault.jpg",
+  },
+  {
+    url: "https://www.youtube.com/embed/Y4f3A5WSn88?si=40i11pwkEBj77i3N",
+    title: "Edit home page product",
+    thumbnail: "https://img.youtube.com/vi/Y4f3A5WSn88/hqdefault.jpg",
   },
 ];
 
