@@ -33,6 +33,7 @@ let product: any = null;
 
 try {
   const { data } = await axios.get(`/api/product/${productId}`);
+  console.log("Tags: ", data.product.tags);
   fetchedProduct = data;
   product = {
     title: data.product.title,

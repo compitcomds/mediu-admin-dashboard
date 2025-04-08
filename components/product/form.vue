@@ -20,7 +20,7 @@
 
       <div>
         <label for="subtitle" class="block text-sm font-medium text-gray-700"
-          >Subtitle</label
+          >Subtitle <span class="text-red-500">*</span></label
         >
         <input
           type="text"
@@ -28,6 +28,7 @@
           v-model="form.productSubtitle"
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           :disabled="!!disabledForm"
+          required
         />
       </div>
 
