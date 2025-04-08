@@ -1,14 +1,10 @@
-import axios from "axios";
-import config from "~/utils/config";
-
-const SHOPIFY_GRAPHQL_API = `https://${config.shopifyDomain}/admin/api/2024-10/graphql.json`;
-const SHOPIFY_ACCESS_TOKEN = config.shopifyAccessToken;
+import shopifyClient from "~/server/helpers/shopify-graphql-client";
 
 const fetchProductTagsQuery = `
 query fetchProductTagsQuery {
   shop {
-    productTags(first: 100) {
-      edges {
+    productTags(first: 250) {
+      edges{
         node
       }
       pageInfo {
@@ -24,19 +20,12 @@ query fetchProductTagsQuery {
 
 export default defineEventHandler(async (event) => {
   try {
-    const { data } = await axios.post(
-      SHOPIFY_GRAPHQL_API,
-      { query: fetchProductTagsQuery },
-      {
-        headers: {
-          "X-Shopify-Access-Token": SHOPIFY_ACCESS_TOKEN,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const { data } = await shopifyClient.request({
+      query: fetchProductTagsQuery,
+    });
     return data.data.shop.productTags;
   } catch (error: any) {
-    console.log(error.response.data);
+    console.log(error);
     return error;
   }
 });

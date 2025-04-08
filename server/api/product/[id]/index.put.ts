@@ -19,10 +19,13 @@ export default defineEventHandler(async (event) => {
           typeof body[key] !== "string" ? JSON.stringify(body[key]) : body[key],
       });
     }
+
+    const tags = body.tags?.map((tag: string) => tag.trim()) || [];
+
     const product = {
       title: body.title,
       descriptionHtml: body.description,
-      tags: body.tags,
+      tags,
       collections: body.collections.map(
         (collection: any) => `gid://shopify/Collection/${collection}`,
       ),

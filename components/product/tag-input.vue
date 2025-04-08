@@ -8,7 +8,9 @@
         class="relative w-full max-w-full justify-between overflow-x-clip text-ellipsis uppercase"
         :disabled="!!disabledForm"
       >
-        {{ tags.length > 0 ? tags.join(", ").slice(0, 44) : "Select tag..." }}
+        <span class="max-w-[95%] overflow-clip text-ellipsis">{{
+          tags.length > 0 ? tags.join(", ") : "Select tag..."
+        }}</span>
         <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
       </Button>
     </PopoverTrigger>
@@ -80,17 +82,21 @@ const props = defineProps({
   },
 });
 
+const formatTags = (values) => {
+  return values.map((value) => value.trim().toLowerCase());
+};
+
 const allProductTags = ref([]);
 const open = ref(false);
 const emit = defineEmits(["update:modelValue"]);
 
-const tags = ref(props.modelValue.map((value) => value.toLowerCase()));
+const tags = ref(formatTags(props.modelValue));
 const searchTerm = ref("");
 
 watch(
   () => props.modelValue,
   (newVal) => {
-    tags.value = [...newVal];
+    tags.value = formatTags(newVal);
   },
 );
 
