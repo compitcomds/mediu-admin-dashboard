@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mb-4 flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0"
+    class="mb-2 flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0"
   >
     <h1 class="text-xl font-semibold md:text-2xl">Collections</h1>
     <nuxt-link
@@ -8,6 +8,10 @@
       to="collections/create"
       >Create New Collection</nuxt-link
     >
+  </div>
+
+  <div class="mb-4">
+    <p class="text-sm">Total Collections: {{ collectionCountRef.count }}</p>
   </div>
 
   <div
@@ -90,6 +94,10 @@ import {
 } from "@/components/ui/table";
 
 const route = useRoute();
+
+const { data: collectionCountRef } = await useLazyFetch(
+  "/api/collections/count",
+);
 
 const collections = ref<
   {

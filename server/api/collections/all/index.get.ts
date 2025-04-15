@@ -2,7 +2,7 @@ import shopifyClient from "~/server/helpers/shopify-graphql-client";
 
 const getAllCollectionsAfterQuery = `
 query getAllCollectionsQuery($query: String, $after: String) {
-  collections(first: 20, query: $query, after: $after) {
+  collections(first: 150, query: $query, after: $after) {
     nodes {
       id
       handle
@@ -31,7 +31,7 @@ query getAllCollectionsQuery($query: String, $after: String) {
 
 const getAllCollectionsBeforeQuery = `
 query getAllCollectionsQuery($query: String, $before: String) {
-  collections(last: 20, query: $query, before: $before) {
+  collections(last: 150, query: $query, before: $before) {
     nodes {
       id
       handle
