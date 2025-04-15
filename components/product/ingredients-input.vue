@@ -82,6 +82,12 @@ const allIngredients = [
   { label: "Capixyl", value: "capixyl" },
   { label: "Peptide", value: "peptide" },
   { label: "Carnitine", value: "carnitine" },
+  { label: "Vitamin C", value: "vitaminc" },
+  { label: "BHA / Salicylic Acid", value: "bha-salicylic-acid" },
+  { label: "Retinoid / Retinol", value: "retinol" },
+  { label: "UV Filters", value: "uv-filters" },
+  { label: "Ceramide", value: "ceramide" },
+  { label: "Hyaluronic Acid", value: "hyaluronic-acid" },
 ];
 
 const allProductIngredientsFlatList = [
