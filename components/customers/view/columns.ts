@@ -3,6 +3,7 @@ import type { ColumnDef } from "@tanstack/vue-table";
 import DataTableLink from "~/components/ui/data-table-link.vue";
 import { ArrowUpDown } from "lucide-vue-next";
 import Button from "~/components/ui/button/Button.vue";
+import formatDateSimple from "~/utils/format-simple-date";
 
 export interface CustomerInterface {
   id: string;
@@ -141,7 +142,7 @@ export const columns: ColumnDef<CustomerInterface>[] = [
     },
     cell: ({ row }) => {
       const createdAt: string = row.getValue("createdAt");
-      return h("p", {}, formatDate(createdAt));
+      return h("p", {}, formatDateSimple(createdAt));
     },
   },
   {
@@ -161,18 +162,3 @@ export const columns: ColumnDef<CustomerInterface>[] = [
     },
   },
 ];
-
-const formatDate = (dateString: string): string => {
-  try {
-    const options: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    };
-    return new Intl.DateTimeFormat("en-US", options).format(
-      new Date(dateString),
-    );
-  } catch (error) {
-    return "";
-  }
-};
