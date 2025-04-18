@@ -1,6 +1,8 @@
 <template>
   <form @submit.prevent="saveForm">
-    <h2 class="mb-6 text-2xl font-bold text-gray-800">Create New Content</h2>
+    <h2 class="mb-6 text-2xl font-bold text-gray-800">
+      {{ title || "Create New Content" }}
+    </h2>
     <div class="grid gap-6 md:grid-cols-6 md:flex-row">
       <div class="flex-1 space-y-4 md:col-span-4">
         <div>
@@ -71,25 +73,24 @@
         <!-- Is Published -->
         <div>
           <label class="flex cursor-pointer items-center space-x-2">
-            <input
-              v-model="formData.isPublished"
-              type="checkbox"
-              class="h-5 w-5 rounded border-gray-300 text-emerald-700 focus:ring-emerald-700"
-            />
-            <span class="text-sm font-medium text-gray-700">Published</span>
+            <span class="text-sm font-medium text-gray-700">Publish</span>
           </label>
+          <Switch
+            :checked="formData.isPublished"
+            @update:checked="togglePublish"
+          />
         </div>
 
         <!-- Publish Date -->
-        <div>
+        <div v-if="!formData.isPublished">
           <label
             for="publishDate"
             class="mb-1 block text-sm font-medium text-gray-700"
-            >Publish Date</label
+            >Set Publish Date</label
           >
           <input
             v-model="formData.publishDate"
-            type="date"
+            type="datetime-local"
             id="publishDate"
             class="w-full rounded-md border-2 border-gray-300 bg-transparent px-4 py-2"
           />
@@ -151,7 +152,7 @@
           <button
             type="submit"
             :disabled="isSubmitting"
-            class="w-full bg-[#28574e] px-4 py-2 font-semibold text-white hover:bg-[#1f4d42] disabled:cursor-not-allowed disabled:opacity-70"
+            class="mb-4 w-full bg-[#28574e] px-4 py-2 font-semibold text-white hover:bg-[#1f4d42] disabled:cursor-not-allowed disabled:opacity-70"
           >
             <span
               v-if="isSubmitting"
@@ -159,6 +160,20 @@
               >Submitting <Loader
             /></span>
             <span v-else>Submit</span>
+          </button>
+          <button
+            v-if="!!props.onDelete"
+            type="button"
+            :disabled="isDeleting"
+            class="w-full rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
+            @click="handleDelete"
+          >
+            <span
+              v-if="isDeleting"
+              class="flex items-center justify-center gap-1"
+              >Deleting... <Loader
+            /></span>
+            <span v-else>Delete Article</span>
           </button>
         </div>
       </div>
@@ -171,22 +186,39 @@ import { X } from "lucide-vue-next";
 
 const props = defineProps<{
   onSubmit: (values: any) => Promise<void>;
+  defaultValues?: any;
+  onDelete?: () => Promise<void>;
+  title?: string;
 }>();
 
-const formData = ref({
-  title: "",
-  handle: "",
-  body: "",
-  summary: "",
-  isPublished: false,
-  publishDate: new Date().toISOString().split("T")[0],
-  tags: [] as string[],
-  author: {
-    name: "",
-  },
-});
+const formatPublishDateTime = (date: Date | string) => {
+  date = new Date(date);
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+};
+
+const formData = ref(
+  !!props.defaultValues
+    ? {
+        ...props.defaultValues,
+        publishDate: formatPublishDateTime(props.defaultValues.publishDate),
+      }
+    : {
+        title: "",
+        handle: "",
+        body: "",
+        summary: "",
+        isPublished: false,
+        publishDate: formatPublishDateTime(new Date()),
+        tags: [] as string[],
+        author: {
+          name: "",
+        },
+      },
+);
 
 const isSubmitting = ref(false);
+const isDeleting = ref(false);
 
 const newTag = ref("");
 
@@ -211,5 +243,21 @@ const saveForm = async () => {
   } finally {
     isSubmitting.value = false;
   }
+};
+
+const handleDelete = async () => {
+  isDeleting.value = true;
+  if (!props.onDelete) return;
+  try {
+    await props.onDelete();
+  } catch (error: any) {
+    alert(error.response?.statusText || error.message);
+  } finally {
+    isDeleting.value = false;
+  }
+};
+
+const togglePublish = () => {
+  formData.value.isPublished = !formData.value.isPublished;
 };
 </script>

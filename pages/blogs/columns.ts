@@ -7,7 +7,7 @@ import formatDateSimple from "~/utils/format-simple-date";
 
 export interface ArticleInterface {
   title: string;
-  handle: string;
+  id: string;
   isPublished: string;
   createdAt: string;
 }
@@ -31,7 +31,7 @@ export const columns: ColumnDef<ArticleInterface>[] = [
       const article = row.original;
       return h(
         DataTableLink,
-        { to: `/blogs/${article.handle}`, class: "hover:underline px-4" },
+        { to: `/blogs/${article.id}`, class: "hover:underline px-4" },
         () => title,
       );
     },
@@ -77,14 +77,14 @@ export const columns: ColumnDef<ArticleInterface>[] = [
     },
   },
   {
-    accessorKey: "handle",
+    accessorKey: "id",
     header: () => h("div", { class: "min-w-[100px]" }, "."),
     cell: ({ row }) => {
-      const handle: string = row.getValue("handle");
+      const id: string = row.getValue("id");
       return h(
         DataTableLink,
         {
-          to: `/blogs/${handle}`,
+          to: `/blogs/${id}`,
           class:
             "px-6 py-1 rounded-md text-white bg-black text-center hover:bg-black/80",
         },

@@ -1,36 +1,37 @@
 import shopifyClient from "~/server/helpers/shopify-graphql-client";
 
 const query = `
-mutation articleCreateMutation($article: ArticleCreateInput!) {
-  articleCreate(article: $article) {
-    article {
-      handle
-    }
+mutation updateArticleQuery($article: ArticleUpdateInput!, $id: ID!) {
+  articleUpdate(article: $article, id: $id) {
     userErrors {
       field
       message
     }
   }
-}
-`;
+}`;
 
 export default defineEventHandler(async (event) => {
+  const id = event.context.params?.id;
+  if (!id)
+    throw createError({ status: 400, statusMessage: "Blog Id not provided." });
+
+  const blogId = `gid://shopify/Article/${id}`;
   const body = await readBody(event);
+
   const article = body.article;
+
   if (article?.isPublished) article.publishDate = undefined;
 
   const { data } = await shopifyClient.request({
     query,
-    variables: {
-      article: { ...article, blogId: "gid://shopify/Blog/117122072649" },
-    },
+    variables: { id: blogId, article: article },
   });
 
-  const createdArticle = data.data?.articleCreate;
-  if (createdArticle?.userErrors?.length > 0) {
+  const updatedArticle = data.data?.articleUpdate;
+  if (updatedArticle?.userErrors?.length > 0) {
     throw createError({
       statusCode: 400,
-      statusMessage: createdArticle.userErrors
+      statusMessage: updatedArticle.userErrors
         .map((err: any) => `${err.field}: ${err.message}`)
         .join("\n"),
     });

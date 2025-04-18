@@ -2,7 +2,7 @@
   <div class="min-w-full border-2 p-4">
     <TiptapButtons :editor="editor" />
     <editor-content
-      class="prose prose-h1:mt-4 prose-h2:mt-3 prose-h3:mt-2 prose-h4:mt-2 prose-a:text-sky-600 min-w-full [&>div]:h-[500px] [&>div]:overflow-auto"
+      class="prose min-w-full prose-h1:mt-4 prose-h2:mt-3 prose-h3:mt-2 prose-h4:mt-2 prose-a:text-sky-600 [&>div]:h-[500px] [&>div]:overflow-auto"
       :editor="editor"
     />
   </div>
@@ -36,6 +36,7 @@ onMounted(() => {
     onUpdate: () => {
       model.value = editor.value.getHTML();
     },
+    content: model.value || "",
   });
 });
 

@@ -2,7 +2,7 @@ import shopifyClient from "~/server/helpers/shopify-graphql-client";
 
 const afterQuery = `
 query getArticlesQuery($query: String, $after: String) {
-  articles(first: 20, query: $query, after: $after) {
+  articles(first: 20, query: $query, after: $after, reverse: true) {
     pageInfo {
       endCursor
       hasNextPage
@@ -10,7 +10,7 @@ query getArticlesQuery($query: String, $after: String) {
       startCursor
     }
     nodes {
-      handle
+      id
       title
       createdAt
       isPublished
@@ -20,7 +20,7 @@ query getArticlesQuery($query: String, $after: String) {
 
 const beforeQuery = `
 query getArticlesQuery($query: String, $before: String) {
-  articles(last: 20, query: $query, before: $before) {
+  articles(last: 20, query: $query, before: $before, reverse: true) {
     pageInfo {
       endCursor
       hasNextPage
@@ -28,7 +28,7 @@ query getArticlesQuery($query: String, $before: String) {
       startCursor
     }
     nodes {
-      handle
+      id
       title
       createdAt
       isPublished
@@ -50,7 +50,10 @@ export default defineEventHandler(async (event) => {
     });
     const articles = data.data.articles;
     return {
-      articles: articles.nodes,
+      articles: articles.nodes.map((node: any) => ({
+        ...node,
+        id: node.id.replace("gid://shopify/Article/", ""),
+      })),
       pageInfo: articles.pageInfo,
     };
   } catch (error: any) {

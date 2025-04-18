@@ -83,7 +83,7 @@
         ]"
         title="Bullet List"
       >
-        •
+        <List :stroke-width="1" :size="24" />
       </button>
       <button
         @click="editor.chain().focus().toggleOrderedList().run()"
@@ -93,7 +93,7 @@
         ]"
         title="Ordered List"
       >
-        1.
+        <ListOrdered :stroke-width="1" :size="24" />
       </button>
     </div>
 
@@ -196,7 +196,14 @@
 
 <script setup lang="ts">
 import { type Editor } from "@tiptap/vue-3";
-import { AlignCenter, AlignLeft, AlignRight, Quote } from "lucide-vue-next";
+import {
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
+  Quote,
+  List,
+  ListOrdered,
+} from "lucide-vue-next";
 
 // Props
 const props = defineProps<{
