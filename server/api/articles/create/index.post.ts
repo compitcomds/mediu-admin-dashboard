@@ -5,6 +5,7 @@ mutation articleCreateMutation($article: ArticleCreateInput!) {
   articleCreate(article: $article) {
     article {
       handle
+      id
     }
     userErrors {
       field
@@ -35,4 +36,6 @@ export default defineEventHandler(async (event) => {
         .join("\n"),
     });
   }
+
+  return createdArticle.article.id.replace("gid://shopify/Article/", "");
 });

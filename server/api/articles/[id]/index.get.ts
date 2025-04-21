@@ -1,7 +1,7 @@
 import shopifyClient from "~/server/helpers/shopify-graphql-client";
 
 const query = `
-query getAritcleQuery($id: ID!) {
+query getArticleQuery($id: ID!) {
   article(id: $id) {
     title
     summary
@@ -13,6 +13,10 @@ query getAritcleQuery($id: ID!) {
     isPublished
     publishDate: publishedAt
     tags
+    image {
+      url
+      altText
+    }
   }
 }
 `;

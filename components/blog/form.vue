@@ -70,7 +70,23 @@
       </div>
 
       <div class="flex-1 space-y-4 md:col-span-2">
-        <!-- Is Published -->
+        <div>
+          <label for="image" class="block">Featured Image</label>
+          <div v-if="formData.image" class="relative mb-4">
+            <img :src="formData.image.url" />
+            <button
+              class="absolute right-2 top-1 rounded-full bg-red-500 p-1 text-white hover:bg-red-300"
+              @click="removeFeaturedImage"
+            >
+              <X />
+            </button>
+          </div>
+          <MediaUpload
+            v-else
+            :limit="1"
+            @upload-success="updateFeaturedImage"
+          />
+        </div>
         <div>
           <label class="flex cursor-pointer items-center space-x-2">
             <span class="text-sm font-medium text-gray-700">Publish</span>
@@ -205,6 +221,7 @@ const formData = ref(
       }
     : {
         title: "",
+        image: undefined,
         handle: "",
         body: "",
         summary: "",
@@ -231,6 +248,15 @@ const addTag = () => {
 
 const removeTag = (index: number) => {
   formData.value.tags.splice(index, 1);
+};
+
+const updateFeaturedImage = (image: any) => {
+  if (image?.length < 1) return;
+  formData.value.image = image[0];
+};
+
+const removeFeaturedImage = () => {
+  formData.value.image = null;
 };
 
 const saveForm = async () => {

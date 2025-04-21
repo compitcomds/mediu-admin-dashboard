@@ -327,9 +327,9 @@ import {
 
 const props = defineProps<{
   onSubmit?: (values: any) => Promise<void>;
-  defaultValues: any;
+  defaultValues?: any;
   productId?: string;
-  handle: string | null;
+  handle?: string | null;
   disabledForm?: boolean;
 }>();
 
