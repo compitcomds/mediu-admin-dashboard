@@ -4,6 +4,7 @@
     class="flex flex-wrap items-center gap-1 border-b border-gray-200 p-2"
   >
     <button
+      type="button"
       @click="editor.chain().focus().setParagraph().run()"
       :class="[
         'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -16,6 +17,7 @@
 
     <div class="mr-1 flex border-r border-gray-200 pr-1">
       <button
+        type="button"
         v-for="level in headingLevels"
         :key="`heading-${level}`"
         @click="editor.chain().focus().toggleHeading({ level }).run()"
@@ -32,6 +34,7 @@
     <!-- Text formatting -->
     <div class="mr-1 flex border-r border-gray-200 pr-1">
       <button
+        type="button"
         @click="editor.chain().focus().toggleBold().run()"
         :class="[
           'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -42,6 +45,7 @@
         <span class="font-bold">B</span>
       </button>
       <button
+        type="button"
         @click="editor.chain().focus().toggleItalic().run()"
         :class="[
           'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -52,6 +56,7 @@
         <span class="italic">I</span>
       </button>
       <button
+        type="button"
         @click="editor.chain().focus().toggleStrike().run()"
         :class="[
           'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -62,6 +67,7 @@
         <span class="line-through">S</span>
       </button>
       <button
+        type="button"
         @click="editor.chain().focus().toggleCode().run()"
         :class="[
           'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -76,6 +82,7 @@
     <!-- Lists -->
     <div class="mr-1 flex border-r border-gray-200 pr-1">
       <button
+        type="button"
         @click="editor.chain().focus().toggleBulletList().run()"
         :class="[
           'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -86,6 +93,7 @@
         <List :stroke-width="1" :size="24" />
       </button>
       <button
+        type="button"
         @click="editor.chain().focus().toggleOrderedList().run()"
         :class="[
           'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -100,6 +108,7 @@
     <!-- Alignment -->
     <div class="mr-1 flex border-r border-gray-200 pr-1">
       <button
+        type="button"
         @click="editor.chain().focus().setTextAlign('left').run()"
         :class="[
           'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -110,6 +119,7 @@
         <AlignLeft :stroke-width="1" :size="18" />
       </button>
       <button
+        type="button"
         @click="editor.chain().focus().setTextAlign('center').run()"
         :class="[
           'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -120,6 +130,7 @@
         <AlignCenter :stroke-width="1" :size="18" />
       </button>
       <button
+        type="button"
         @click="editor.chain().focus().setTextAlign('right').run()"
         :class="[
           'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -134,6 +145,7 @@
     <!-- Block elements -->
     <div class="mr-1 flex border-r border-gray-200 pr-1">
       <button
+        type="button"
         @click="editor.chain().focus().toggleBlockquote().run()"
         :class="[
           'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -144,6 +156,7 @@
         <Quote :size="18" :stroke-width="1" />
       </button>
       <button
+        type="button"
         @click="editor.chain().focus().setHorizontalRule().run()"
         class="rounded px-2 py-1 transition-colors hover:bg-gray-300"
         title="Horizontal Rule"
@@ -151,6 +164,7 @@
         —
       </button>
       <button
+        type="button"
         @click="editor.chain().focus().toggleCodeBlock().run()"
         :class="[
           'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -165,6 +179,7 @@
     <!-- Links -->
     <div class="flex">
       <button
+        type="button"
         @click="setLink"
         :class="[
           'rounded px-2 py-1 transition-colors hover:bg-gray-300',
@@ -175,6 +190,7 @@
         🔗
       </button>
       <button
+        type="button"
         @click="editor.chain().focus().undo().run()"
         class="rounded px-2 py-1 transition-colors hover:bg-gray-300"
         title="Undo"
@@ -183,6 +199,7 @@
         ↩
       </button>
       <button
+        type="button"
         @click="editor.chain().focus().redo().run()"
         class="rounded px-2 py-1 transition-colors hover:bg-gray-300"
         title="Redo"
