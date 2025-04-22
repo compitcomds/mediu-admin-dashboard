@@ -178,6 +178,19 @@
 
     <!-- Links -->
     <div class="flex">
+      <MediaUpload @upload-success="addImagesToEditor">
+        <button
+          type="button"
+          :class="[
+            'rounded px-2 py-1 transition-colors hover:bg-gray-300',
+            { 'bg-gray-200': editor.isActive('image') },
+          ]"
+          title="Image"
+        >
+          <Image :stroke-width="1" :size="18" />
+          <span class="sr-only">Add Image</span>
+        </button>
+      </MediaUpload>
       <button
         type="button"
         @click="setLink"
@@ -188,6 +201,18 @@
         title="Link"
       >
         🔗
+      </button>
+      <button
+        type="button"
+        @click="setVideo"
+        :class="[
+          'rounded px-2 py-1 transition-colors hover:bg-gray-300',
+          { 'bg-gray-200': editor.isActive('link') },
+        ]"
+        title="Youtube"
+      >
+        <Youtube :stroke-width="1" :size="18" />
+        <span class="sr-only">Add Youtube Embed</span>
       </button>
       <button
         type="button"
@@ -220,6 +245,8 @@ import {
   Quote,
   List,
   ListOrdered,
+  Image,
+  Youtube,
 } from "lucide-vue-next";
 
 // Props
@@ -247,5 +274,28 @@ const setLink = () => {
     .extendMarkRange("link")
     .setLink({ href: url })
     .run();
+};
+
+const addImagesToEditor = (images: { url: string; altText: string }[]) => {
+  for (const image of images)
+    props.editor
+      .chain()
+      .focus()
+      .setImage({ src: image.url, alt: image.altText || "" })
+      .run();
+};
+
+const setVideo = () => {
+  const url = prompt("Enter YouTube URL");
+  if (!url) {
+    alert("No url provided");
+    return;
+  }
+
+  props.editor.commands.setYoutubeVideo({
+    src: url,
+    width: 640,
+    height: 480,
+  });
 };
 </script>

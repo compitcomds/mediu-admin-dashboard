@@ -14,6 +14,8 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
 import Placeholder from "@tiptap/extension-placeholder";
+import Image from "@tiptap/extension-image";
+import Youtube from "@tiptap/extension-youtube";
 
 const editor = ref<any>(null);
 
@@ -31,6 +33,10 @@ onMounted(() => {
         placeholder: "Start typing here...",
         showOnlyWhenEditable: true,
         showOnlyCurrent: true,
+      }),
+      Image,
+      Youtube.configure({
+        nocookie: true,
       }),
     ],
     onUpdate: () => {

@@ -1,7 +1,11 @@
 <template>
   <Dialog>
-    <DialogTrigger class="rounded-md bg-black px-5 py-1 text-white">
-      Upload Media
+    <DialogTrigger :as-child="true">
+      <slot>
+        <button type="button" class="rounded-md bg-black px-5 py-1 text-white">
+          Upload Media
+        </button>
+      </slot>
     </DialogTrigger>
     <DialogContent>
       <DialogHeader>
