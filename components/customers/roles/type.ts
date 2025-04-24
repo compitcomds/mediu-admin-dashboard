@@ -115,6 +115,24 @@ export const availablePermissions = ref<PermissionType[]>([
     ],
   },
   {
+    section: "Blog Management",
+    children: [
+      {
+        title: "All Blogs",
+        read: "/blogs",
+      },
+      {
+        title: "All categories",
+        edit: "/blogs/category",
+      },
+      {
+        title: "Create Blog",
+        edit: "/blogs/add",
+      },
+      { title: "Edit Blog", edit: "/blogs/:id", read: "/blogs/:id" },
+    ],
+  },
+  {
     section: "Homepage Management",
     children: [
       {

@@ -2,13 +2,14 @@
   <div
     class="fixed z-50 flex w-full items-center justify-between border-b bg-[#238878] px-4 py-4 lg:px-10"
   >
-    <div class="flex max-w-16 items-center space-x-2">
-      <nuxt-link to="/"
+    <div class="flex items-center gap-4">
+      <nuxt-link to="/" class="block border-r border-white pr-4"
         ><img
           src="https://ccdstest.b-cdn.net/Medi%20u/logos/logo_white.png"
           alt="Mediu Logo"
-          class=""
+          class="max-w-16"
       /></nuxt-link>
+      <h2 class="font-medium text-white">Admin Dashboard</h2>
     </div>
 
     <div v-if="!!user" class="hidden items-center space-x-4 lg:flex">

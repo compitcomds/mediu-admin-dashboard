@@ -67,7 +67,11 @@
             >Body
           </label>
           <ClientOnly>
-            <TiptapEditor v-model="formData.body" id="body" />
+            <TiptapEditor
+              v-model="formData.body"
+              id="body"
+              :disabled="!!isDisabled"
+            />
           </ClientOnly>
         </div>
       </div>

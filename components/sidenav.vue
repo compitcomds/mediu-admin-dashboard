@@ -2,10 +2,6 @@
   <aside
     class="fixed inset-y-0 left-0 top-16 hidden w-64 overflow-y-auto bg-[#238878] p-6 text-white shadow-lg lg:block"
   >
-    <h1 class="my-4 text-center text-xl font-bold text-white">
-      Admin Dashboard
-    </h1>
-    <div class="my-4 border-t border-white"></div>
     <nav v-if="!isLoading">
       <ul>
         <li v-for="route in validatedRoutes" :key="route.to" class="mb-4">
@@ -117,6 +113,15 @@ const routes = [
     children: [
       { to: "/consultancy/services", label: "Services" },
       { to: "/consultancy/bookings", label: "Bookings" },
+    ],
+  },
+  {
+    to: "/blogs",
+    label: "Blogs",
+    icon: "fas fa-blog",
+    children: [
+      { to: "/blogs", label: "All Blogs" },
+      { to: "/blogs/category", label: "All Categories" },
     ],
   },
   { to: "/guide", label: "Guide", icon: "fas fa-book" },

@@ -1,6 +1,6 @@
 <template>
   <div class="min-w-full border-2 p-4">
-    <TiptapButtons :editor="editor" />
+    <TiptapButtons :editor="editor" :disabled="disabled" />
     <editor-content
       class="prose min-w-full prose-h1:mt-4 prose-h2:mt-3 prose-h3:mt-2 prose-h4:mt-2 prose-a:text-sky-600 [&>div]:h-[500px] [&>div]:overflow-auto"
       :editor="editor"
@@ -16,6 +16,10 @@ import TextAlign from "@tiptap/extension-text-align";
 import Placeholder from "@tiptap/extension-placeholder";
 import Image from "@tiptap/extension-image";
 import Youtube from "@tiptap/extension-youtube";
+
+defineProps<{
+  disabled?: boolean;
+}>();
 
 const editor = ref<any>(null);
 
