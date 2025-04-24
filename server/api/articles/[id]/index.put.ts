@@ -15,16 +15,21 @@ export default defineEventHandler(async (event) => {
   if (!id)
     throw createError({ status: 400, statusMessage: "Blog Id not provided." });
 
-  const blogId = `gid://shopify/Article/${id}`;
+  const articleId = `gid://shopify/Article/${id}`;
   const body = await readBody(event);
 
   const article = body.article;
 
   if (article?.isPublished) article.publishDate = undefined;
 
+  console.log({ ...article, blogId: `gid://shopify/Blog/${article.blogId}` });
+
   const { data } = await shopifyClient.request({
     query,
-    variables: { id: blogId, article: article },
+    variables: {
+      id: articleId,
+      article: { ...article, blogId: `gid://shopify/Blog/${article.blogId}` },
+    },
   });
 
   const updatedArticle = data.data?.articleUpdate;

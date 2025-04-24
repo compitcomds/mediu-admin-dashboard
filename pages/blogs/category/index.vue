@@ -58,9 +58,8 @@ const deleteCategory = async (id: string) => {
 
 const updateCategory = async (id: string, values: any) => {
   await axios.put(`/api/articles/categories/${id}`, values);
-  const index =
-    categories.value?.findIndex((category) => category.id === id) || -1;
-  if (index !== -1 && categories.value) {
+  const index = categories.value?.findIndex((category) => category.id === id);
+  if (index !== undefined && index !== -1 && categories.value) {
     categories.value[index] = { id, ...values };
   }
 };

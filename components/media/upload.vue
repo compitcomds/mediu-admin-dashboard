@@ -2,7 +2,11 @@
   <Dialog>
     <DialogTrigger :as-child="true">
       <slot>
-        <button type="button" class="rounded-md bg-black px-5 py-1 text-white">
+        <button
+          type="button"
+          :disabled="!!disabled"
+          class="rounded-md bg-black px-5 py-1 text-white"
+        >
           Upload Media
         </button>
       </slot>
@@ -53,6 +57,7 @@
         </div>
         <button
           type="button"
+          :disabled="!!disabled"
           @click="resetUploader"
           class="rounded bg-[#238878] px-4 py-2 font-medium text-white hover:bg-[#23887796] focus:outline-none focus:ring-2 focus:ring-[#238878]"
         >
@@ -134,7 +139,7 @@
         <button
           @click="uploadFiles"
           type="button"
-          :disabled="selectedFiles.length === 0 || isUploading"
+          :disabled="selectedFiles.length === 0 || isUploading || !!disabled"
           :class="[
             'w-full rounded px-4 py-2 font-medium focus:outline-none focus:ring-2 focus:ring-[#238878]',
             selectedFiles.length > 0
@@ -161,7 +166,10 @@ import {
 } from "@/components/ui/dialog";
 import axios from "axios";
 
-const { limit } = defineProps<{ limit?: number }>();
+const { limit, disabled } = defineProps<{
+  limit?: number;
+  disabled?: boolean;
+}>();
 
 const emit = defineEmits(["upload-success", "upload-error"]);
 

@@ -18,6 +18,7 @@
             class="w-full rounded-md border-2 bg-transparent px-4 py-2"
             placeholder="Enter title"
             required
+            :disabled="!!isDisabled"
           />
         </div>
 
@@ -38,6 +39,7 @@
             id="handle"
             class="w-full rounded-md border-2 bg-transparent px-4 py-2"
             placeholder="Enter handle"
+            :disabled="!!isDisabled"
             required
           />
         </div>
@@ -54,6 +56,7 @@
             id="summary"
             rows="3"
             class="w-full rounded-md border-2 bg-transparent px-4 py-2"
+            :disabled="isDisabled"
             placeholder="Enter summary"
           ></textarea>
         </div>
@@ -77,6 +80,7 @@
             <button
               class="absolute right-2 top-1 rounded-full bg-red-500 p-1 text-white hover:bg-red-300"
               @click="removeFeaturedImage"
+              :disabled="!!isDisabled"
             >
               <X />
             </button>
@@ -85,6 +89,7 @@
             v-else
             :limit="1"
             @upload-success="updateFeaturedImage"
+            :disabled="!!isDisabled"
           />
         </div>
         <div>
@@ -94,6 +99,7 @@
           <Switch
             :checked="formData.isPublished"
             @update:checked="togglePublish"
+            :disabled="!!isDisabled"
           />
         </div>
 
@@ -108,6 +114,7 @@
             v-model="formData.publishDate"
             type="datetime-local"
             id="publishDate"
+            :disabled="isDisabled"
             class="w-full rounded-md border-2 border-gray-300 bg-transparent px-4 py-2"
           />
         </div>
@@ -123,6 +130,7 @@
               type="button"
               @click.prevent="removeTag(index)"
               class="flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-sm hover:bg-gray-200"
+              :disabled="!!isDisabled"
             >
               {{ tag }}
               <X :size="15" class="hover:text-red-500" />
@@ -135,18 +143,31 @@
               class="flex-1 rounded-l-md border-2 border-gray-300 bg-transparent px-4 py-2"
               placeholder="Add a tag"
               @keydown.enter.prevent="addTag"
+              :disabled="!!isDisabled"
             />
             <button
               @click.prevent="addTag"
               type="button"
               class="rounded-r-md bg-gray-200 px-4 py-2 hover:bg-gray-300"
+              :disabled="!!isDisabled"
             >
               Add
             </button>
           </div>
         </div>
 
-        <!-- Author -->
+        <div>
+          <label
+            for="category"
+            class="mb-1 block text-sm font-medium text-gray-700"
+            >Category <span class="text-red-500">*</span></label
+          >
+          <BlogCategoryInput
+            v-model="formData.blogId"
+            :disabled="!!isDisabled"
+          />
+        </div>
+
         <div>
           <label
             for="authorName"
@@ -159,6 +180,7 @@
             id="authorName"
             class="w-full rounded-md border-2 border-gray-300 bg-transparent px-4 py-2"
             placeholder="Enter author name"
+            :disabled="!!isDisabled"
             required
           />
         </div>
@@ -166,8 +188,9 @@
         <!-- Save Button -->
         <div class="mt-6">
           <button
+            v-if="!isDisabled"
             type="submit"
-            :disabled="isSubmitting"
+            :disabled="isSubmitting || !!isDisabled"
             class="mb-4 w-full bg-[#28574e] px-4 py-2 font-semibold text-white hover:bg-[#1f4d42] disabled:cursor-not-allowed disabled:opacity-70"
           >
             <span
@@ -178,7 +201,7 @@
             <span v-else>Submit</span>
           </button>
           <button
-            v-if="!!props.onDelete"
+            v-if="!!props.onDelete && !isDisabled"
             type="button"
             :disabled="isDeleting"
             class="w-full rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-70"
@@ -205,6 +228,7 @@ const props = defineProps<{
   defaultValues?: any;
   onDelete?: () => Promise<void>;
   title?: string;
+  isDisabled?: boolean;
 }>();
 
 const formatPublishDateTime = (date: Date | string) => {
@@ -224,6 +248,7 @@ const formData = ref(
         image: undefined,
         handle: "",
         body: "",
+        blogId: "",
         summary: "",
         isPublished: false,
         publishDate: formatPublishDateTime(new Date()),
@@ -262,6 +287,8 @@ const removeFeaturedImage = () => {
 const saveForm = async () => {
   isSubmitting.value = true;
   try {
+    if (!formData.value.blogId)
+      throw new Error("Please select the blog category.");
     await props.onSubmit(formData.value);
     alert("Successfully submitted the article.");
   } catch (error: any) {

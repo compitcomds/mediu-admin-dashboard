@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
   const { data } = await shopifyClient.request({
     query,
     variables: {
-      article: { ...article, blogId: "gid://shopify/Blog/117122072649" },
+      article: { ...article, blogId: `gid://shopify/Blog/${article.blogId}` },
     },
   });
 
@@ -37,5 +37,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return createdArticle.article.id.replace("gid://shopify/Article/", "");
+  return {
+    id: createdArticle.article.id.replace("gid://shopify/Article/", ""),
+  };
 });
