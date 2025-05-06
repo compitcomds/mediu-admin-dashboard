@@ -226,6 +226,7 @@
 
 <script setup lang="ts">
 import { X } from "lucide-vue-next";
+import { toast } from "vue-sonner";
 
 const props = defineProps<{
   onSubmit: (values: any) => Promise<void>;
@@ -294,9 +295,11 @@ const saveForm = async () => {
     if (!formData.value.blogId)
       throw new Error("Please select the blog category.");
     await props.onSubmit(formData.value);
-    alert("Successfully submitted the article.");
+    toast.success("Successfully submitted the article.", { richColors: true });
   } catch (error: any) {
-    alert(error.response?.statusText || error.message);
+    toast.error(error.response?.statusText || error.message, {
+      richColors: true,
+    });
   } finally {
     isSubmitting.value = false;
   }
@@ -308,7 +311,9 @@ const handleDelete = async () => {
   try {
     await props.onDelete();
   } catch (error: any) {
-    alert(error.response?.statusText || error.message);
+    toast.error(error.response?.statusText || error.message, {
+      richColors: true,
+    });
   } finally {
     isDeleting.value = false;
   }

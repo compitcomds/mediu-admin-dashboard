@@ -70,6 +70,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { cn } from "~/lib/utils";
+import { toast } from "vue-sonner";
 
 const props = defineProps({
   modelValue: {
@@ -111,7 +112,7 @@ const createNewTag = () => {
       (tag) => tag.value === searchTerm.value.toLowerCase(),
     )
   ) {
-    alert("Tag already exists.");
+    toast.error("Tag already exists.", { richColors: true });
     return;
   }
   allProductTags.value.push({

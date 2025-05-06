@@ -10,6 +10,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
+import { toast } from "vue-sonner";
 const props = defineProps<{
   id: string;
 }>();
@@ -23,12 +24,13 @@ const isSubmitting = ref(false);
 const cancelOrder = async () => {
   isSubmitting.value = true;
   try {
-    const { data } = await axios.post(`/api/orders/${props.id}/cancel`);
+    await axios.post(`/api/orders/${props.id}/cancel`);
     emit("orderCancelled");
-    alert("Order cancelled successfully");
-  } catch (error) {
-    alert(
+    toast.success("Order cancelled successfully");
+  } catch (error: any) {
+    toast.error(
       error.message || error.response?.data?.message || "Something went wrong",
+      { richColors: true },
     );
   } finally {
     isSubmitting.value = false;

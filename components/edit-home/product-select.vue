@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import axios from "axios";
+import { toast } from "vue-sonner";
 import {
   type Section,
   type Subcategory,
@@ -74,7 +75,7 @@ const fetchProducts = async ({
     products.value = data.products;
     pageInfo.value = data.pageInfo;
   } catch (e: any) {
-    alert(e.message);
+    toast.error(e.message, { richColors: true });
   }
 };
 

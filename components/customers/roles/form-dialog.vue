@@ -121,6 +121,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from "vue-sonner";
 
 interface FormData {
   role: string;
@@ -178,10 +179,10 @@ const handleSubmit = async () => {
   }
   isSubmitting.value = true;
   try {
-    const createdRole = await props.onSubmit(formData.value);
+    await props.onSubmit(formData.value);
     closeAndReset();
   } catch (error: any) {
-    alert(error.message);
+    toast.error(error.message);
   } finally {
     isSubmitting.value = false;
   }

@@ -22,8 +22,6 @@ export default defineEventHandler(async (event) => {
 
   if (article?.isPublished) article.publishDate = undefined;
 
-  console.log({ ...article, blogId: `gid://shopify/Blog/${article.blogId}` });
-
   const { data } = await shopifyClient.request({
     query,
     variables: {

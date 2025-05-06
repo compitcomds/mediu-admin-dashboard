@@ -1,8 +1,9 @@
 <template>
-  <h1 class="text-3xl font-bold mb-4">Create Consultancy Service</h1>
+  <h1 class="mb-4 text-3xl font-bold">Create Consultancy Service</h1>
   <ConsultancyForm :on-submit="addConsultancyService" />
 </template>
 <script setup lang="ts">
+import { toast } from "vue-sonner";
 import createConsultancyService from "~/appwrite/consultancy/create-service";
 
 const router = useRouter();
@@ -15,7 +16,7 @@ const addConsultancyService = async (service: {
   tags: string[];
 }) => {
   const document = await createConsultancyService(service);
-  alert("Successfully created the service!");
+  toast.success("Successfully created the service!", { richColors: true });
   router.replace(`/consultancy/services/s/${document.$id}`);
 };
 

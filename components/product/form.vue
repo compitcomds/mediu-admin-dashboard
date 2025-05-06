@@ -324,6 +324,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "vue-sonner";
 
 const props = defineProps<{
   onSubmit?: (values: any) => Promise<void>;
@@ -421,7 +422,7 @@ const handleSubmit = async () => {
     await props.onSubmit(parsedData);
   } catch (error: any) {
     console.log(error);
-    alert(error.message);
+    toast.error(error.message, { richColors: true });
   } finally {
     isSubmitting.value = false;
   }

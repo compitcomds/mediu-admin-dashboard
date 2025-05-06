@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
+import { toast } from "vue-sonner";
 
 const route = useRoute();
 
@@ -63,7 +64,7 @@ try {
     })),
   };
 } catch (error: any) {
-  alert(error.message);
+  toast.error(error.message, { richColors: true });
 }
 
 useHead({

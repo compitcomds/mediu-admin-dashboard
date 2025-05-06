@@ -67,6 +67,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
+import { toast } from "vue-sonner";
 import {
   type Section,
   type Subcategory,
@@ -151,7 +152,7 @@ const fetchSelectedProducts = async () => {
       fetchedProducts.value[product.id] = cloneProduct(product);
     }
   } catch (e: any) {
-    alert(e.message);
+    toast.error(e.message, { richColors: true });
   }
 };
 
@@ -179,11 +180,12 @@ const saveChanges = async () => {
       }
     }
     if (promises.length > 0) await Promise.all(promises);
-    alert(
+    toast.success(
       "Successfully updated the home page! Please wait 1-2 minutes for the changes to be reflected. ",
+      { richColors: true },
     );
   } catch (error: any) {
-    alert(error.message);
+    toast.error(error.message, { richColors: true });
   } finally {
     isSaving.value = false;
   }

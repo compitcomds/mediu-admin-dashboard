@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from "vue-sonner";
 
 const open = ref(false);
 
@@ -28,7 +29,10 @@ const isSubmitting = ref(false);
 const handleSubmit = async () => {
   const { date, quantity, batchId } = form.value;
   if (!date || !quantity || !batchId) {
-    alert("All the fields are required. Please enter the values for all.");
+    toast.error(
+      "All the fields are required. Please enter the values for all.",
+      { richColors: true },
+    );
     return;
   }
   isSubmitting.value = true;
@@ -42,9 +46,9 @@ const handleSubmit = async () => {
     if (model.value) model.value.push(createdBatch);
     open.value = false;
     form.value = { date: null, quantity: 0, batchId: "" };
-    alert("Successfully created the batch.");
+    toast.success("Successfully created the batch.", { richColors: true });
   } catch (error: any) {
-    alert(error.message);
+    toast.error(error.message, { richColors: true });
   } finally {
     isSubmitting.value = false;
   }

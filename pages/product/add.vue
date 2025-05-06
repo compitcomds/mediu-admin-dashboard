@@ -5,6 +5,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
+import { toast } from "vue-sonner";
 
 const router = useRouter();
 
@@ -13,12 +14,15 @@ const addProduct = async (values: any) => {
 
   if (data.errors?.length > 0) {
     data.errors.forEach((e: string) => {
-      alert(e);
+      toast.error(e, { richColors: true });
     });
   }
 
   if (data.product?.id) {
-    alert("Successfully created the product. Redirecting you to product...");
+    toast.success(
+      "Successfully created the product. Redirecting you to product...",
+      { richColors: true },
+    );
     await router.replace(`/product/p/${data.product.id}`);
     return;
   }

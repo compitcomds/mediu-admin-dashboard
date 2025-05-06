@@ -51,6 +51,7 @@
 </template>
 
 <script setup>
+import { toast } from "vue-sonner";
 import { loginAdminUser } from "~/appwrite/login-admin";
 
 const email = ref("");
@@ -64,11 +65,11 @@ const handleSubmit = async () => {
   try {
     const back = route.query?.back;
     await loginAdminUser(email.value, password.value);
-    await reloadNuxtApp({
+    reloadNuxtApp({
       path: back ? `${back}` : "/",
     });
   } catch (error) {
-    alert(error.message);
+    toast.error(error.message, { richColors: true });
   }
   isLoading.value = false;
 };

@@ -38,6 +38,7 @@
 </template>
 
 <script setup lang="ts">
+import { toast } from "vue-sonner";
 import { updateUserPassword } from "~/appwrite/login-admin";
 
 const passwordForm = ref({
@@ -61,9 +62,9 @@ const handlePasswordChange = async () => {
       newPassword: "",
     };
 
-    alert("Password updated successfully");
+    toast.success("Password updated successfully", { richColors: true });
   } catch (error) {
-    alert("Failed to update password");
+    toast.error("Failed to update password", { richColors: true });
     console.error(error);
   } finally {
     isSubmitting.value = false;

@@ -1,5 +1,5 @@
 <template>
-  <h1 class="text-3xl font-bold mb-4">Edit Consultancy #{{ consultancyId }}</h1>
+  <h1 class="mb-4 text-3xl font-bold">Edit Consultancy #{{ consultancyId }}</h1>
 
   <div v-if="!consultancy">
     <p class="text-red-500">Consultancy Not Found.</p>
@@ -14,6 +14,7 @@
 </template>
 
 <script setup lang="ts">
+import { toast } from "vue-sonner";
 import {
   getConsultancyServiceById,
   updateConsultancyService,
@@ -44,7 +45,7 @@ const updateConsultancy = async (service: {
   tags: string[];
 }) => {
   await updateConsultancyService(consultancyId, service);
-  alert("Successfully updated the consultancy");
+  toast.success("Successfully updated the consultancy", { richColors: true });
 };
 
 useHead({

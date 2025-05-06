@@ -48,6 +48,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import decreaseBatchesQuantity from "~/appwrite/inventory/decrease-quantity";
+import { toast } from "vue-sonner";
 
 const { orderId, orderData } = defineProps<{
   orderId: string;
@@ -130,14 +131,15 @@ const confirmAndCreateShiprocketOrder = async () => {
     checkDimensions();
     await createOrder();
     await decreaseBatchesQuantity(batchData.value);
-    alert(
+    toast.success(
       "Successfully created the order for shipment. Please proceed to shiprocket dashboard to continue the process of shipment.",
+      { richColors: true },
     );
     emit("orderFulfilled");
     open.value = false;
   } catch (error: any) {
     console.log(error);
-    alert(error.message);
+    toast.error(error.message, { richColors: true });
   } finally {
     isSubmitting.value = false;
   }

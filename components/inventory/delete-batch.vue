@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
 import { Trash } from "lucide-vue-next";
+import { toast } from "vue-sonner";
 import { deleteBatchFromInventory } from "~/appwrite/inventory/delete-batch";
 
 const props = defineProps<{ batchId: string }>();
@@ -22,14 +23,15 @@ const deleteBatch = async () => {
   isDeleting.value = true;
   try {
     await deleteBatchFromInventory(props.batchId);
-    alert("Successfully deleted the batch!");
+    toast.success("Successfully deleted the batch!", { richColors: true });
     const index = batches.value.findIndex(
       (batch) => batch.$id === props.batchId,
     );
     if (index !== -1) batches.value.splice(index, 1);
   } catch (error: any) {
-    alert(
+    toast.error(
       error.response?.data?.message || error.message || "Something went wrong!",
+      { richColors: true },
     );
   } finally {
     isDeleting.value = false;

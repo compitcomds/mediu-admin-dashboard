@@ -68,6 +68,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from "vue-sonner";
 
 const props = defineProps<{
   title: string;
@@ -92,10 +93,11 @@ const handleSubmit = async () => {
     await props.onCategorySubmit(formData.value);
     if (props.closeOnSubmit) open.value = false;
   } catch (error: any) {
-    alert(
+    toast.error(
       error?.statusText ||
         error?.message ||
         "Unable to submit at the time. Please try again later.",
+      { richColors: true },
     );
   } finally {
     isSubmitting.value = false;

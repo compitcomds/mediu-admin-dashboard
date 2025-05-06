@@ -110,6 +110,7 @@ import {
 } from "@/components/ui/collapsible";
 import updateRole from "~/appwrite/customer/role/update-role";
 import deleteRole from "~/appwrite/customer/role/delete-role";
+import { toast } from "vue-sonner";
 
 interface RoleData {
   $id: string;
@@ -136,7 +137,7 @@ const deleteUserRole = async () => {
     await deleteRole(props.role.$id);
     emit("delete", props.role.$id);
   } catch (error: any) {
-    alert(`Error deleting role: ${error.message}`);
+    toast.error(`Error deleting role: ${error.message}`, { richColors: true });
   } finally {
     isDeleting.value = false;
   }

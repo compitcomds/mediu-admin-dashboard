@@ -72,6 +72,7 @@
 import { PlusCircle } from "lucide-vue-next";
 import axios from "axios";
 import exportProductParser from "~/utils/parsers/product";
+import { toast } from "vue-sonner";
 
 const route = computed(() => useRoute());
 
@@ -106,7 +107,7 @@ const fetchProducts = async ({
     products.value = data.products;
     pageInfo.value = data.pageInfo;
   } catch (e: any) {
-    alert(e.message);
+    toast.error(e.message, { richColors: true });
   }
 };
 

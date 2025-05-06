@@ -90,6 +90,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
+import { toast } from "vue-sonner";
 
 const route = useRoute();
 const router = useRouter();
@@ -142,10 +143,10 @@ const deleteCollection = async () => {
   try {
     if (!collection.value?.id) throw new Error("Invalid collection.");
     await axios.delete(`/api/collections/${collection.value.id}`);
-    alert("Collection deleted successfully!");
+    toast.success("Collection deleted successfully!", { richColors: true });
     router.push("/collections");
   } catch (err: any) {
-    alert(err.message);
+    toast.error(err.message, { richColors: true });
   } finally {
     isDeleting.value = false;
   }
@@ -153,7 +154,7 @@ const deleteCollection = async () => {
 
 const updateCollection = async () => {
   if (!collection.value || !collection.value?.id) {
-    alert("Invalid collection");
+    toast.error("Invalid collection", { richColors: true });
     return;
   }
 
@@ -179,9 +180,11 @@ const updateCollection = async () => {
       addedProductIds: addedIds,
       removedProductIds: removedIds,
     });
-    alert("Collection updated successfully!");
+    toast.success("Collection updated successfully!", { richColors: true });
   } catch (err: any) {
-    alert(`Failed to update collection: ${err.message}`);
+    toast.error(`Failed to update collection: ${err.message}`, {
+      richColors: true,
+    });
   } finally {
     isSubmitting.value = false;
   }

@@ -22,6 +22,7 @@ import { PlusCircle } from "lucide-vue-next";
 import DataTable from "~/components/ui/data-table.vue";
 import { columns } from "./columns";
 import axios from "axios";
+import { toast } from "vue-sonner";
 
 const route = computed(() => useRoute());
 
@@ -56,7 +57,7 @@ const fetchArticles = async ({
     articles.value = data.articles;
     pageInfo.value = data.pageInfo;
   } catch (e: any) {
-    alert(e.message);
+    toast.error(e.message, { richColors: true });
   }
 };
 

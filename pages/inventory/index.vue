@@ -1,34 +1,34 @@
 <template>
   <!-- Header Buttons -->
-  <div class="flex justify-between items-center mb-4 lg:mt-10">
-    <h1 class="text-3xl font-bold mb-4">Inventory Products</h1>
-    <div class="flex justify-center items-center gap-2">
+  <div class="mb-4 flex items-center justify-between lg:mt-10">
+    <h1 class="mb-4 text-3xl font-bold">Inventory Products</h1>
+    <div class="flex items-center justify-center gap-2">
       <ProductSearch path-to-redirect="/inventory" />
     </div>
   </div>
 
-  <div class="lg:hidden rounded-lg p-4">
+  <div class="rounded-lg p-4 lg:hidden">
     <template v-for="product in products" :key="product.id">
       <template
         v-for="variant in product.variants"
         :key="variant.legacyResourceId"
       >
         <div
-          class="border border-gray-200 bg-white rounded-lg p-4 mb-4 hover:shadow-md transition-shadow"
+          class="mb-4 rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md"
         >
-          <div class="flex gap-2 items-center">
+          <div class="flex items-center gap-2">
             <img
               v-if="product.featuredImage"
               :src="product.featuredImage.url"
               :alt="product.title"
-              class="product-image w-16 h-16 bg-white rounded-md border aspect-square"
+              class="product-image aspect-square h-16 w-16 rounded-md border bg-white"
             />
             <div class="flex-1">
               <NuxtLink
                 :to="`/inventory/${variant.legacyResourceId}`"
                 class="text-blue-600 hover:underline"
               >
-                <h3 class="font-semibold text-lg">{{ product.title }}</h3>
+                <h3 class="text-lg font-semibold">{{ product.title }}</h3>
               </NuxtLink>
               <span
                 :class="
@@ -36,7 +36,7 @@
                     ? 'bg-green-100 text-green-800'
                     : 'bg-gray-100 text-gray-800'
                 "
-                class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full mt-1"
+                class="mt-1 inline-flex rounded-full px-2 text-xs font-semibold leading-5"
               >
                 {{ product.status }}
               </span>
@@ -48,7 +48,7 @@
             </div>
             <nuxt-link
               :to="`/inventory/${variant.legacyResourceId}`"
-              class="bg-black text-white font-semibold p-2 rounded-lg mt-2 inline-block"
+              class="mt-2 inline-block rounded-lg bg-black p-2 font-semibold text-white"
             >
               View
             </nuxt-link>
@@ -58,7 +58,7 @@
     </template>
   </div>
 
-  <div class="hidden lg:block overflow-x-auto">
+  <div class="hidden overflow-x-auto lg:block">
     <Table>
       <TableCaption>A list of all the inventory.</TableCaption>
       <TableHeader>
@@ -81,7 +81,7 @@
                     v-if="product.featuredImage"
                     :src="product.featuredImage.url"
                     :alt="product.title"
-                    class="product-image bg-white rounded-md border aspect-square" /></nuxt-link
+                    class="product-image aspect-square rounded-md border bg-white" /></nuxt-link
               ></TableCell>
               <TableCell>
                 {{ variant.sku || "No SKU" }}
@@ -98,7 +98,7 @@
                       ? 'bg-green-100 text-green-800'
                       : 'bg-gray-100 text-gray-800'
                   "
-                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                  class="inline-flex rounded-full px-2 text-xs font-semibold leading-5"
                 >
                   {{ product.status }}
                 </span></TableCell
@@ -107,7 +107,7 @@
               <TableCell
                 ><nuxt-link
                   :to="`/inventory/${variant.legacyResourceId}`"
-                  class="bg-black text-white font-semibold p-2 rounded-lg mt-2 inline-block"
+                  class="mt-2 inline-block rounded-lg bg-black p-2 font-semibold text-white"
                 >
                   View
                 </nuxt-link></TableCell
@@ -118,7 +118,7 @@
       </TableBody>
     </Table>
 
-    <div class="flex items-center gap-5 my-5 justify-center">
+    <div class="my-5 flex items-center justify-center gap-5">
       <nuxt-link
         v-if="pageInfo.hasPreviousPage"
         :to="{
@@ -129,18 +129,18 @@
             after: undefined,
           },
         }"
-        class="py-3 px-8 rounded-lg hover:bg-gray-200"
+        class="rounded-lg px-8 py-3 hover:bg-gray-200"
         >Previous</nuxt-link
       >
       <button
         v-else
-        class="py-3 px-8 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
+        class="rounded-lg px-8 py-3 disabled:cursor-not-allowed disabled:opacity-60"
         disabled
       >
         Previous
       </button>
       <nuxt-link
-        class="py-3 px-8 rounded-lg hover:bg-gray-200"
+        class="rounded-lg px-8 py-3 hover:bg-gray-200"
         v-if="pageInfo.hasNextPage"
         :to="{
           path: '/inventory',
@@ -154,7 +154,7 @@
       >
       <button
         v-else
-        class="py-3 px-8 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed"
+        class="rounded-lg px-8 py-3 disabled:cursor-not-allowed disabled:opacity-60"
         disabled
       >
         Next
@@ -174,6 +174,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import axios from "axios";
+import { toast } from "vue-sonner";
 
 const route = useRoute();
 const products = ref<any[]>([]);
@@ -203,12 +204,12 @@ const fetchProducts = async ({
     const { data } = await axios.get(
       `/api/products?after=${after || ""}&before=${before || ""}&query=${
         query || ""
-      }`
+      }`,
     );
     products.value = data.products;
     pageInfo.value = data.pageInfo;
   } catch (e: any) {
-    alert(e.message);
+    toast.error(e.message, { richColors: true });
   }
 };
 
@@ -224,7 +225,7 @@ watch(
   {
     deep: true,
     immediate: true,
-  }
+  },
 );
 
 useHead({

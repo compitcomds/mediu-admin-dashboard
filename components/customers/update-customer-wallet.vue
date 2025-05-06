@@ -46,6 +46,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from "vue-sonner";
 import { type WalletType } from "~/appwrite/customer/get-wallet-amount";
 import updateWallet from "~/appwrite/customer/update-wallet";
 
@@ -70,7 +71,7 @@ const updateUserWallet = async () => {
     open.value = false;
     emit("update:customerWallet", updateDetails);
   } catch (error: any) {
-    alert(error.message);
+    toast.error(error.message, { richColors: true });
   } finally {
     isSubmitting.value = false;
   }

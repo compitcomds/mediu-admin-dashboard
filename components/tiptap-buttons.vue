@@ -265,6 +265,7 @@ import {
   Image,
   Youtube,
 } from "lucide-vue-next";
+import { toast } from "vue-sonner";
 
 // Props
 const props = defineProps<{
@@ -306,7 +307,7 @@ const addImagesToEditor = (images: { url: string; altText: string }[]) => {
 const setVideo = () => {
   const url = prompt("Enter YouTube URL");
   if (!url) {
-    alert("No url provided");
+    toast.error("No url provided", { richColors: true });
     return;
   }
 

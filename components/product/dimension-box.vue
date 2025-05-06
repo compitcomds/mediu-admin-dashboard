@@ -3,8 +3,8 @@
     v-if="isOpen"
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
   >
-    <div class="bg-white rounded-lg shadow-lg p-6 w-96">
-      <h2 class="text-xl font-semibold mb-4">Enter Dimensions and Weight</h2>
+    <div class="w-96 rounded-lg bg-white p-6 shadow-lg">
+      <h2 class="mb-4 text-xl font-semibold">Enter Dimensions and Weight</h2>
       <form @submit.prevent="submitForm">
         <div class="mb-4">
           <label for="length" class="block text-sm font-medium text-gray-700"
@@ -15,7 +15,7 @@
             type="text"
             id="length"
             required
-            class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            class="mt-1 block w-full rounded-md border border-gray-300 p-2"
           />
         </div>
 
@@ -28,7 +28,7 @@
             type="text"
             id="breadth"
             required
-            class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            class="mt-1 block w-full rounded-md border border-gray-300 p-2"
           />
         </div>
 
@@ -41,7 +41,7 @@
             type="text"
             id="height"
             required
-            class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            class="mt-1 block w-full rounded-md border border-gray-300 p-2"
           />
         </div>
 
@@ -54,21 +54,21 @@
             type="text"
             id="weight"
             required
-            class="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            class="mt-1 block w-full rounded-md border border-gray-300 p-2"
           />
         </div>
 
         <div class="flex justify-between">
           <button
             type="submit"
-            class="bg-[#28574e] text-white font-semibold py-2 px-4 rounded-md hover:bg-[#2d7d65]"
+            class="rounded-md bg-[#28574e] px-4 py-2 font-semibold text-white hover:bg-[#2d7d65]"
           >
             Submit
           </button>
           <button
             type="button"
             @click="closeDialog"
-            class="text-gray-600 py-2 px-4 rounded-md hover:bg-gray-200"
+            class="rounded-md px-4 py-2 text-gray-600 hover:bg-gray-200"
           >
             Cancel
           </button>
@@ -79,6 +79,8 @@
 </template>
 
 <script setup lang="ts">
+import { toast } from "vue-sonner";
+
 const props = defineProps({
   isOpen: Boolean,
 });
@@ -105,18 +107,21 @@ const submitForm = () => {
     Number.isNaN(l) ||
     Number.isNaN(w)
   ) {
-    alert(
-      "Length, breadth, height and weight must be decimal values. Please enter valid decimal values for each."
+    toast.error(
+      "Length, breadth, height and weight must be decimal values. Please enter valid decimal values for each.",
+      { richColors: true },
     );
     return;
   }
 
   if (b <= 0.5 || h <= 0.5 || l <= 0.5) {
-    alert("Length, height and width must be greater than 0.5 cms");
+    toast.error("Length, height and width must be greater than 0.5 cms", {
+      richColors: true,
+    });
     return;
   }
   if (w <= 0) {
-    alert("Weight must be greater than 0 kgs");
+    toast.error("Weight must be greater than 0 kgs", { richColors: true });
     return;
   }
   emit("submit", { length: l, breadth: b, height: h, weight: w });

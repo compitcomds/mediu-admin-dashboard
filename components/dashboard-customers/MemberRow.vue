@@ -2,6 +2,7 @@
 import { type Models } from "appwrite";
 import formatDate from "~/utils/formatData";
 import deleteMembership from "~/appwrite/customer/teams/delete-membership";
+import { toast } from "vue-sonner";
 
 const props = defineProps<{
   member: Models.Membership;
@@ -17,7 +18,10 @@ const deleteMember = async (memberId: string) => {
     await deleteMembership(props.teamId, memberId);
     if (props.removeMemberFromTeam) props.removeMemberFromTeam(memberId);
   } catch (error: any) {
-    alert(error.message || "Something went wrong. Please try again later.");
+    toast.error(
+      error.message || "Something went wrong. Please try again later.",
+      { richColors: true },
+    );
   } finally {
     isDeleting.value = false;
   }

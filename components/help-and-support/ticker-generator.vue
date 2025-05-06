@@ -1,7 +1,7 @@
 <template>
   <Dialog v-model:open="open">
     <DialogTrigger
-      class="py-2 px-6 bg-[#238878] text-white font-semibold rounded-xl hover:bg-[#328575]"
+      class="rounded-xl bg-[#238878] px-6 py-2 font-semibold text-white hover:bg-[#328575]"
     >
       Create New Ticket
     </DialogTrigger>
@@ -11,7 +11,7 @@
       </DialogHeader>
       <form
         @submit.prevent="submitTicket"
-        class="space-y-6 max-h-[80vh] px-1 overflow-y-auto"
+        class="max-h-[80vh] space-y-6 overflow-y-auto px-1"
       >
         <div class="flex flex-col">
           <label for="title" class="text-sm font-medium text-gray-700"
@@ -21,7 +21,7 @@
             type="text"
             id="title"
             v-model="ticket.title"
-            class="mt-3 p-4 rounded-xl border focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            class="mt-3 rounded-xl border p-4 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             placeholder="Enter a brief title"
             required
           />
@@ -35,7 +35,7 @@
             id="description"
             v-model="ticket.description"
             rows="5"
-            class="mt-3 p-4 rounded-xl border focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            class="mt-3 rounded-xl border p-4 focus:outline-none focus:ring-2 focus:ring-emerald-500"
             placeholder="Describe your issue in detail"
             required
           ></textarea>
@@ -50,13 +50,13 @@
             id="image"
             @change="handleImageUpload"
             accept="image/*"
-            class="mt-1 mb-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            class="mb-3 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
           />
           <div v-if="ticket.imageUrl" class="relative">
             <img :src="ticket.imageUrl" alt="Ticket Image" class="max-w-full" />
             <button
               @click="removeImage"
-              class="absolute right-2 top-2 text-white p-1 rounded-full bg-red-500 hover:bg-red-400"
+              class="absolute right-2 top-2 rounded-full bg-red-500 p-1 text-white hover:bg-red-400"
             >
               <X :width="16" :height="16" />
             </button>
@@ -66,7 +66,7 @@
         <button
           type="submit"
           :disabled="isSubmitting"
-          class="w-full py-4 flex items-start justify-center bg-[#238878] disabled:cursor-not-allowed text-white font-semibold rounded-xl"
+          class="flex w-full items-start justify-center rounded-xl bg-[#238878] py-4 font-semibold text-white disabled:cursor-not-allowed"
         >
           <span v-if="!isSubmitting">Submit Ticket</span>
           <span v-else class="flex items-center gap-1"
@@ -89,6 +89,7 @@ import {
 import uploadImageInAppwrite from "~/appwrite/upload-image";
 import createTicketInAppwrite from "~/appwrite/help-and-support/create-ticket";
 import { X } from "lucide-vue-next";
+import { toast } from "vue-sonner";
 
 const open = ref(false);
 const isSubmitting = ref(false);
@@ -121,7 +122,7 @@ const submitTicket = async () => {
     if (ticket.value.image)
       image = await uploadImageInAppwrite(
         ticket.value.image,
-        "help-and-support"
+        "help-and-support",
       );
 
     await createTicketInAppwrite({
@@ -129,12 +130,13 @@ const submitTicket = async () => {
       description: ticket.value.description,
       image,
     });
-    alert("Successfully raised the ticket.");
+    toast.success("Successfully raised the ticket.", { richColors: true });
     resetTicket();
     open.value = false;
   } catch (error: any) {
-    alert(
-      error.message || "Unable to raise the ticket. Please try again later."
+    toast.error(
+      error.message || "Unable to raise the ticket. Please try again later.",
+      { richColors: true },
     );
   } finally {
     isSubmitting.value = false;

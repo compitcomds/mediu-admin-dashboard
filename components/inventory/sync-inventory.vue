@@ -41,6 +41,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import axios from "axios";
+import { toast } from "vue-sonner";
 
 const props = defineProps<{
   batches: any[];
@@ -61,12 +62,13 @@ const syncInventory = async () => {
     await axios.put(`/api/inventory/${props.variantId}`, {
       absolute: totalBatchesQuantity.value,
     });
-    alert("Inventory Synced Successfully.");
+    toast.success("Inventory Synced Successfully.", { richColors: true });
     emit("update-inventory", totalBatchesQuantity.value);
   } catch (error: any) {
-    alert(
+    toast.error(
       error.message ||
         "Unable to sync the inventory at the moment. Please try again later.",
+      { richColors: true },
     );
   } finally {
     isSubmitting.value = false;

@@ -75,6 +75,8 @@
 </template>
 
 <script setup lang="ts">
+import { toast } from "vue-sonner";
+
 type ServiceType = {
   title: string;
   descriptionHtml: string;
@@ -102,11 +104,11 @@ const service = ref<ServiceType>(
 
 const checkValidForm = () => {
   if (isNaN(parseFloat(service.value.price as any))) {
-    alert("Please enter valid price.");
+    toast.error("Please enter valid price.", { richColors: true });
     return false;
   }
   if (service.value.tags.length === 0) {
-    alert("Please enter atleast one tag.");
+    toast.error("Please enter atleast one tag.", { richColors: true });
     return false;
   }
   return true;
@@ -119,7 +121,7 @@ const submitForm = async () => {
   try {
     props.onSubmit(service.value);
   } catch (error: any) {
-    alert(error.message);
+    toast.error(error.message, { richColors: true });
   } finally {
     isSubmitting.value = false;
   }

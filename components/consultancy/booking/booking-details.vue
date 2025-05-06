@@ -74,6 +74,7 @@
 <script setup lang="ts">
 import type { Models } from "appwrite";
 import axios from "axios";
+import { toast } from "vue-sonner";
 import updateConsultancyBooking from "~/appwrite/consultancy/update-booking-time";
 
 const { document } = defineProps<{
@@ -85,7 +86,7 @@ const showingDate = ref<string | Date | null>(document.bookingTime);
 const date = ref<Date | null>(null);
 const onSubmit = async () => {
   if (!date.value) {
-    alert("Please select a booking date and time.");
+    toast.error("Please select a booking date and time.", { richColors: true });
     return;
   }
 
@@ -97,10 +98,12 @@ const onSubmit = async () => {
       alottedTime: date.value,
       title: document.consultancy[0]?.title || "",
     });
-    alert("Successfully updated the booking time!");
+    toast.success("Successfully updated the booking time!", {
+      richColors: true,
+    });
     showingDate.value = date.value;
   } catch (error: any) {
-    alert(error.message);
+    toast.error(error.message, { richColors: true });
   } finally {
     isSubmitting.value = false;
   }

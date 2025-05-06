@@ -60,6 +60,7 @@
 
 <script setup lang="ts">
 import { CircleCheckBig, SquareArrowOutUpRight } from "lucide-vue-next";
+import { toast } from "vue-sonner";
 import verifyProductInventoryBatch from "~/appwrite/inventory/verify-batch";
 
 const { items } = defineProps<{
@@ -119,7 +120,7 @@ const verifyBatchId = async (variantId: string | number, index: number) => {
   const inputId = generateInputId(variantId, index);
   const input = document.getElementById(inputId) as HTMLInputElement;
   if (!input || !input.value) {
-    alert("Please enter a valid value.");
+    toast.error("Please enter a valid value.", { richColors: true });
     return;
   }
   toggleVerifyButtonSubmitting({ variantId, index, show: true });

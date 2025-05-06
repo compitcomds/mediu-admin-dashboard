@@ -46,6 +46,8 @@
 </template>
 
 <script setup lang="ts">
+import { toast } from "vue-sonner";
+
 type FormData = {
   name: string;
   email: string;
@@ -77,7 +79,9 @@ const submitForm = async () => {
     if (props.onSubmit) await props.onSubmit(form.value);
     if (props.showEmailMessage) successEmailMessage.value = true;
   } catch (error: any) {
-    alert(error.message || "Error adding user. Please try again later.");
+    toast.error(error.message || "Error adding user. Please try again later.", {
+      richColors: true,
+    });
   }
   isSubmitting.value = false;
 };

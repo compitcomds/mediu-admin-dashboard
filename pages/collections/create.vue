@@ -54,6 +54,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
+import { toast } from "vue-sonner";
 import Switch from "~/components/ui/switch/Switch.vue";
 
 const newCollection = ref<{
@@ -101,10 +102,13 @@ async function createCollection() {
       })),
     });
 
-    alert("Successfully created the collection.");
+    toast.success("Successfully created the collection.", { richColors: true });
     router.replace(`/collections/c/${data.handle}`);
   } catch (error: any) {
-    alert("Failed to create collection: " + (error.message || "Unknown error"));
+    toast.error(
+      "Failed to create collection: " + (error.message || "Unknown error"),
+      { richColors: true },
+    );
   } finally {
     isSubmitting.value = false;
   }

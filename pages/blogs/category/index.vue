@@ -30,6 +30,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
+import { toast } from "vue-sonner";
 
 const { data: categories } = await useLazyFetch("/api/articles/categories");
 
@@ -48,10 +49,11 @@ const deleteCategory = async (id: string) => {
     await axios.delete(`/api/articles/categories/${id}`);
     categories.value = categories.value?.filter((cat) => cat.id !== id) || [];
   } catch (error: any) {
-    alert(
+    toast.error(
       error.statusText ||
         error.message ||
         "Unable to delete the category. Please try agian later.",
+      { richColors: true },
     );
   }
 };

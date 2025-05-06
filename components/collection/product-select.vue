@@ -79,6 +79,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
+import { toast } from "vue-sonner";
 
 const props = defineProps<{
   hideAllProductsList?: boolean;
@@ -122,7 +123,7 @@ const fetchProducts = async ({
     products.value = data.products;
     pageInfo.value = data.pageInfo;
   } catch (e: any) {
-    alert(e.message);
+    toast.error(e.message, { richColors: true });
   }
 };
 
@@ -131,7 +132,7 @@ const fetchAllCollectionBrands = async () => {
     const { data } = await axios.get("/api/collections/all/brands");
     brands.value = data.collections;
   } catch (e: any) {
-    alert(e.message);
+    toast.error(e.message, { richColors: true });
   }
 };
 

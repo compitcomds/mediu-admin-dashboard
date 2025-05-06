@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
+import { toast } from "vue-sonner";
 
 const route = useRoute();
 const router = useRouter();
@@ -29,7 +30,7 @@ const editArticle = async (values: any) => {
 
 const deleteArticle = async () => {
   await axios.delete(`/api/articles/${blogId}`);
-  alert("Successfully deleted the article.");
+  toast.success("Successfully deleted the article.", { richColors: true });
   router.replace("/blogs");
 };
 </script>
