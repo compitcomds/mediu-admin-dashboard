@@ -78,7 +78,9 @@
 
       <div class="flex-1 space-y-4 md:col-span-2">
         <div>
-          <label for="image" class="block">Featured Image</label>
+          <label for="image" class="block"
+            >Featured Image <span class="text-red-500">*</span></label
+          >
           <div v-if="formData.image" class="relative mb-4">
             <img :src="formData.image.url" />
             <button
@@ -289,11 +291,18 @@ const removeFeaturedImage = () => {
   formData.value.image = null;
 };
 
+const validateFormData = () => {
+  if (!formData.value.image) {
+    throw new Error("Blog does not have a featured image.");
+  }
+  if (!formData.value.blogId)
+    throw new Error("Please select the blog category.");
+};
+
 const saveForm = async () => {
   isSubmitting.value = true;
   try {
-    if (!formData.value.blogId)
-      throw new Error("Please select the blog category.");
+    validateFormData();
     await props.onSubmit(formData.value);
     toast.success("Successfully submitted the article.", { richColors: true });
   } catch (error: any) {
