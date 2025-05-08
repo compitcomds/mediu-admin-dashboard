@@ -20,6 +20,13 @@ query getArticleQuery($id: ID!) {
       url
       altText
     }
+    metafields(first: 3) {
+      nodes {
+        key
+        namespace
+        value
+      }
+    }  
   }
 }
 `;
@@ -48,11 +55,32 @@ export default defineEventHandler(async (event) => {
     tags: string[];
     author: { name: string };
     image: { url: string; altText: string };
+    metafields: {
+      nodes: Array<{ key: string; namespace: string; value: string }>;
+    };
   };
 
   const blogId = blog.id.replace("gid://shopify/Blog/", "");
+  const parsedMetafields = parseMetafields(article.metafields.nodes);
+
   return {
     ...article,
     blogId,
+    metafields: parsedMetafields,
   };
 });
+
+function parseMetafields(
+  metafields?: null | Array<{ key: string; namespace: string; value: string }>,
+) {
+  const parsedMetafields: Record<string, string> = {
+    metaTitle: "",
+    metaDescription: "",
+    metaKeywords: "",
+  };
+  if (!metafields) return parsedMetafields;
+  for (const m of metafields) {
+    parsedMetafields[m.key] = m.value;
+  }
+  return parsedMetafields;
+}

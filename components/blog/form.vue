@@ -191,6 +191,57 @@
           />
         </div>
 
+        <div>
+          <label
+            for="metaTitle"
+            class="mb-1 block text-sm font-medium text-gray-700"
+            >Meta Title <span class="text-red-500">*</span></label
+          >
+          <input
+            v-model.trim="formData.metafields.metaTitle"
+            type="text"
+            id="metaTitle"
+            class="w-full rounded-md border-2 border-gray-300 bg-transparent px-4 py-2"
+            placeholder="Enter meta title"
+            :disabled="!!isDisabled"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            for="metaDescription"
+            class="mb-1 block text-sm font-medium text-gray-700"
+            >Meta Description <span class="text-red-500">*</span></label
+          >
+          <input
+            v-model.trim="formData.metafields.metaDescription"
+            type="text"
+            id="metaDescription"
+            class="w-full rounded-md border-2 border-gray-300 bg-transparent px-4 py-2"
+            placeholder="Enter meta description"
+            :disabled="!!isDisabled"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            for="metaKeywords"
+            class="mb-1 block text-sm font-medium text-gray-700"
+            >Meta Keywords <span class="text-red-500">*</span></label
+          >
+          <input
+            v-model.trim="formData.metafields.metaKeywords"
+            type="text"
+            id="metaKeywords"
+            class="w-full rounded-md border-2 border-gray-300 bg-transparent px-4 py-2"
+            placeholder="keyword1, keyword2..."
+            :disabled="!!isDisabled"
+            required
+          />
+        </div>
+
         <!-- Save Button -->
         <div class="mt-6">
           <button
@@ -263,6 +314,11 @@ const formData = ref(
         author: {
           name: "",
         },
+        metafields: {
+          metaTitle: "",
+          metaDescription: "",
+          metaKeywords: "",
+        },
       },
 );
 
@@ -299,11 +355,26 @@ const validateFormData = () => {
     throw new Error("Please select the blog category.");
 };
 
+const convertMetafields = () => {
+  const metafields: { namespace: "custom"; key: string; value: string }[] = [];
+  for (const key of Object.keys(formData.value.metafields)) {
+    metafields.push({
+      namespace: "custom",
+      key,
+      value: formData.value.metafields[key],
+    });
+  }
+  return metafields;
+};
+
 const saveForm = async () => {
   isSubmitting.value = true;
   try {
     validateFormData();
-    await props.onSubmit(formData.value);
+    await props.onSubmit({
+      ...formData.value,
+      metafields: convertMetafields(),
+    });
     toast.success("Successfully submitted the article.", { richColors: true });
   } catch (error: any) {
     toast.error(error.response?.statusText || error.message, {

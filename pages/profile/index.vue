@@ -32,12 +32,12 @@
       <!-- Contact Information -->
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700">Phone</label>
-          <p class="mt-1 text-gray-900">{{ userData.phone }}</p>
-        </div>
-        <div>
           <label class="block text-sm font-medium text-gray-700">Email</label>
           <p class="mt-1 text-gray-900">{{ userData.email }}</p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Phone</label>
+          <p class="mt-1 text-gray-900">{{ userData.phone || "N/A" }}</p>
         </div>
       </div>
 
