@@ -160,7 +160,8 @@
         <label
           for="safetyInformationAndPrecaution"
           class="block text-sm font-medium text-gray-700"
-          >Safety Information and Precautions</label
+          >Safety Information and Precautions
+          <span class="text-red-500">*</span></label
         >
         <textarea
           id="safetyInformationAndPrecaution"
@@ -168,6 +169,7 @@
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           rows="3"
           :disabled="!!disabledForm"
+          required
         ></textarea>
       </div>
 
