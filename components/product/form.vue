@@ -173,7 +173,7 @@
 
       <div>
         <label for="howToUse" class="block text-sm font-medium text-gray-700"
-          >How to Use</label
+          >How to Use <span class="text-red-500">*</span></label
         >
         <textarea
           id="howToUse"
@@ -181,12 +181,13 @@
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           rows="3"
           :disabled="!!disabledForm"
+          required
         ></textarea>
       </div>
 
       <div>
         <label for="keyBenefits" class="block text-sm font-medium text-gray-700"
-          >Key Benefits</label
+          >Key Benefits <span class="text-red-500">*</span></label
         >
         <textarea
           id="keyBenefits"
@@ -194,6 +195,7 @@
           class="mt-1 block w-full border border-gray-300 p-2 focus:border-[#28574e] focus:outline-none"
           rows="3"
           :disabled="!!disabledForm"
+          required
         ></textarea>
       </div>
     </div>
