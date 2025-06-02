@@ -84,6 +84,15 @@ async function createShiprocketOrder(
 
     return { accessToken };
   } catch (error: any) {
+    if (error.status === 422 && error.response?.data?.errors) {
+      let errMsg = "";
+      const contentErrors = error.response.data.errors;
+      for (const key of Object.keys(contentErrors)) {
+        errMsg = key + ": " + contentErrors[key].join(", ");
+      }
+      throw createError({ statusCode: 422, message: errMsg });
+    }
+
     console.error("ERROR OCCURED WHILE CREATING ORDER");
     console.log(error.response.data);
     console.error(`Status Code: ${error.status}, Retry: ${retry}`);

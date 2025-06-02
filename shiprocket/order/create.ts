@@ -16,6 +16,7 @@ export default async function createShiprocketOrder(
     orderData,
     dimensions,
   });
+  console.log(data);
   if (data?.accessToken && data.accessToken !== accessToken)
     setShiprocketAccessToken(data.accessToken);
 }

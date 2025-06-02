@@ -139,7 +139,9 @@ const confirmAndCreateShiprocketOrder = async () => {
     open.value = false;
   } catch (error: any) {
     console.log(error);
-    toast.error(error.message, { richColors: true });
+    toast.error(error.response?.data?.message || error.message, {
+      richColors: true,
+    });
   } finally {
     isSubmitting.value = false;
   }
